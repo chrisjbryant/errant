@@ -4,7 +4,9 @@ This repository contains the grammatical ERRor ANnotation Toolkit (ERRANT) descr
 
 > Christopher Bryant, Mariano Felice, and Ted Briscoe. 2017. [**Automatic annotation and evaluation of Error Types for Grammatical Error Correction**](https://www.cl.cam.ac.uk/~cjb255/acl2017.pdf). In Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). Vancouver, Canada. (To appear)
 
-If you make use of this code, please cite the above paper.
+> Mariano Felice, Christopher Bryant, and Ted Briscoe. 2016. [**Automatic extraction of learner errors in esl sentences using linguistically enhanced alignments**](http://aclweb.org/anthology/C/C16/C16-1079.pdf). In Proceedings of COLING 2016, the 26th International Conference on Computational Linguistics: Technical Papers. Osaka, Japan.
+
+If you make use of this code, please cite the above papers.
 
 # Overview
 
@@ -21,7 +23,7 @@ Output M2:&emsp;&nbsp;&nbsp;&nbsp;&nbsp; S This are gramamtical sentence .
 
 In M2 format, a line preceded by S denotes an original sentence while a line preceded by A indicates an edit annotation. Each edit line consists of the start and end token offset of the edit, the error type, and the tokenized correction string. The next two fields are included for historical reasons (see the CoNLL-2014 shared task) while the last field is the annotator id.  
 
-A "noop" edit is a special kind of edit that explicitly indicates an annotator made no changes to the original sentence. They are always necessary in files with multiple annotators, but are otherwise optional. Nevertheless, it is generally better to always include them in all m2 files to avoid evaluation errors.
+A "noop" edit is a special kind of edit that explicitly indicates an annotator made no changes to the original sentence. They are always necessary in files with multiple annotators, but are otherwise optional. Nevertheless, it is generally better to include them in all m2 files to avoid evaluation errors.
 
 # Pre-requisites
 
@@ -107,7 +109,7 @@ All edits are minimally classified in terms of edit operation, i.e. Missing, Rep
 
 A special case concerns edits such as [Man -> The man] or [The man -> Man]. While these look like substitution edits, the main intention of the edit is actually to insert or delete a word. We hence treat them as such and ignore the case change. They are detected by the following rule:  
 
-* The number of tokens on each side of the edit is not equal and the lower cased form of the last token is the same. Furthermore, removing the last token on both sides results in an empty string on one side.
+* The number of tokens on each side of the edit is not equal, the lower cased form of the last token is the same, and removing the last token on both sides results in an empty string on one side.
 
 Finally, any gold edit that changes A -> A or Ø -> Ø is labelled Unknown (UNK), since it ultimately has no effect on the text. These are normally gold edits that humans detected, but were unable or unsure how to correct. Automatically extracted edits are never classified as UNK.
 
@@ -117,7 +119,7 @@ Finally, any gold edit that changes A -> A or Ø -> Ø is labelled Unknown (UNK)
 
 POS-based error types are assigned based primarily on the POS tags of the edited tokens according to the [Stanford Universal Dependency](http://universaldependencies.org/tagset-conversion/en-penn-uposf.html) framework. These tags are sometimes too detailed for error annotation however, so we do not use: interjections (INTJ), numerals (NUM), symbols (SYM) or other (X). We also renamed adpositions (ADP) to prepositions (PREP) and treat proper nouns (PROPN) as regular nouns (NOUN). 
 
-In the majority of cases, an edit is only assigned a POS error category if it meets the following condition:
+In the majority of cases, an edit may be assigned a POS error category if it meets the following condition:
 
 * All tokens on both sides of the edit have the same POS tag.
 
@@ -162,6 +164,10 @@ During auto alignment, contractions may get separated from the word they depend 
 * There is exactly one token on both sides of the edit and the tokens have the same lemma or stem, but nothing else in common.  
 
 The morphology category captures derivational morphology errors, e.g. [*quick* (ADJ) -> *quickly* (ADV)], and cases where the POS tagger makes a mistake; e.g. [*catch* (NOUN) -> *catching* (VERB)]
+
+### Other: OTHER
+
+Edits that are not captured by any rules are classified as OTHER. They are typically edits such as [*at* (PREP) -> *the* (DET)], which have perhaps been improperly aligned, or else multi-token edits such as [*at his best* -> *well*] which are much more semantic in nature. 
 
 ### Orthography: ORTH
 
@@ -333,5 +339,5 @@ SOFTWARE.
 # Contact
 
 If you have any questions, suggestions or bug reports, you can contact the authors at:  
-christopher dot bryant at cl.cam.ac.uk  
-mariano dot felice at cl.cam.ac.uk  
+christopher d0t bryant at cl.cam.ac.uk  
+mariano d0t felice at cl.cam.ac.uk  
