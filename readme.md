@@ -63,7 +63,7 @@ Three main scripts are provided with ERRANT: `parallel_to_m2.py`, `m2_to_m2.py` 
 
 2. `m2_to_m2.py`  
 
-     This is a more sophisticated version of `parallel_to_m2.py` that operates on an m2 file instead of parallel text files. This makes it easier to process multiple sets of corrections simultaneously. You must specify whether you want to use auto or gold edits: `-auto` will extract and classify everything automatically, while `-gold` will only classify the existing edits.
+     This is a more sophisticated version of `parallel_to_m2.py` that operates on an m2 file instead of parallel text files. This makes it easier to process multiple sets of corrections simultaneously. You must specify whether you want to use auto or gold edits: `-auto` will extract and classify everything automatically, while `-gold` will only classify the existing edits. 
      Example:
 	 ```
 	 python3 m2_to_m2.py {-auto|-gold} m2_file -out <out_m2>
@@ -71,7 +71,7 @@ Three main scripts are provided with ERRANT: `parallel_to_m2.py`, `m2_to_m2.py` 
 	
 3. `compare_m2.py`  
 
-     This is the script to evaluate a hypothesis m2 file against a reference m2 file. The default behaviour evaluates the hypothesis overall in terms of correction. The `-cat {1,2,3}` flag is used to evaluate error types at increasing levels of granularity while the `-ds` or `-dt` flag is used to evaluate in terms of span-based or token-based detection (i.e. ignoring the correction). All scores are presented in terms of Precision, Recall and F-score (default: F0.5), and counts for True Positives (TP), False Positives (FP) and False Negatives (FN) are also shown.
+     This is the script to evaluate a hypothesis m2 file against a reference m2 file. The default behaviour evaluates the hypothesis overall in terms of correction. The `-cat {1,2,3}` flag is used to evaluate error types at increasing levels of granularity while the `-ds` or `-dt` flag is used to evaluate in terms of span-based or token-based detection (i.e. ignoring the correction). All scores are presented in terms of Precision, Recall and F-score (default: F0.5), and counts for True Positives (TP), False Positives (FP) and False Negatives (FN) are also shown.  
 	 Examples:  
 	 ```
      python3 compare_m2.py -hyp <hyp_m2> -ref <ref_m2> 
