@@ -44,8 +44,10 @@ def processM2(info):
 		gold_edits = []
 		offset = 0
 		for edit in edits:
-			# Do not apply noop or Um edits
-			if edit[2] in {"noop", "Um"}: continue
+			# Do not apply noop or Um edits, but save them
+			if edit[2] in {"noop", "Um"}: 
+				gold_edits.append(edit+[-1,-1])
+				continue
 			orig_start = edit[0]
 			orig_end = edit[1]
 			cor_toks = edit[3].split()
