@@ -34,8 +34,8 @@ def autoTypeEdit(edit, orig_sent, cor_sent, gb_spell, tag_map, nlp, stemmer):
 	# Get the tokens in the edit.
 	orig_toks = orig_sent[edit[0]:edit[1]]
 	cor_toks = cor_sent[edit[4]:edit[5]]
-	# Some detected, but not corrected, edits.
-	if edit[2] == "Um" or (not orig_toks and not cor_toks):
+	# Nothing to nothing is a detected, but not corrected edit.
+	if not orig_toks and not cor_toks:
 		return "UNK"
 	# Missing
 	elif not orig_toks and cor_toks:
@@ -47,7 +47,7 @@ def autoTypeEdit(edit, orig_sent, cor_sent, gb_spell, tag_map, nlp, stemmer):
 		cat = getOneSidedType(orig_toks, tag_map)
 	# Replacement and special cases
 	else:
-		# Special: Some more detected, but not corrected, edits.
+		# Same to same is a detected, but not corrected edit.
 		if orig_toks.text == cor_toks.text:
 			return "UNK"
 		# Special: First word edits look like R due to case; e.g. Doctor -> The doctor

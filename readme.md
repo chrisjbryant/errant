@@ -56,23 +56,23 @@ Three main scripts are provided with ERRANT: `parallel_to_m2.py`, `m2_to_m2.py` 
 1. `parallel_to_m2.py`  
 
      Extract and classify edits from parallel sentences automatically. This is the simplest annotation script, which requires an original text file, a corrected text file and an output filename. The original and corrected text file must have one sentence per line and be word tokenized.  
-	 Example:  
+	 Example:
 	 ```
 	 python3 parallel_to_m2.py -orig <orig_file> -cor <cor_file> -out <out_m2>
 	 ```
 
 2. `m2_to_m2.py`  
 
-     This is a more sophisticated version of `parallel_to_m2.py` that operates on an m2 file instead of parallel text files. This makes it easier to process multiple sets of corrections simultaneously. You must specify whether you want to use auto or gold edits: `-auto` will extract and classify everything automatically, while `-gold` will only classify the existing edits. 
+     This is a more sophisticated version of `parallel_to_m2.py` that operates on an m2 file instead of parallel text files. This makes it easier to process multiple sets of corrections simultaneously. In addition to an input m2 file, you must also specify whether you want to use gold or auto edits: `-gold` will only classify the existing edits, while `-auto` will extract and classify edits automatically. In both settings, uncorrected edits and noops are preserved in the original input file.  
      Example:
 	 ```
 	 python3 m2_to_m2.py {-auto|-gold} m2_file -out <out_m2>
 	 ```
-	
+
 3. `compare_m2.py`  
 
      This is the script to evaluate a hypothesis m2 file against a reference m2 file. The default behaviour evaluates the hypothesis overall in terms of correction. The `-cat {1,2,3}` flag is used to evaluate error types at increasing levels of granularity while the `-ds` or `-dt` flag is used to evaluate in terms of span-based or token-based detection (i.e. ignoring the correction). All scores are presented in terms of Precision, Recall and F-score (default: F0.5), and counts for True Positives (TP), False Positives (FP) and False Negatives (FN) are also shown.  
-	 Examples:  
+	 Examples:
 	 ```
      python3 compare_m2.py -hyp <hyp_m2> -ref <ref_m2> 
      python3 compare_m2.py -hyp <hyp_m2> -ref <ref_m2> -cat {1,2,3}
@@ -110,7 +110,7 @@ A special case concerns edits such as [Man -> The man] or [The man -> Man]. Whil
 
 * The number of tokens on each side of the edit is not equal, the lower cased form of the last token is the same, and removing the last token on both sides results in an empty string on one side.
 
-Finally, any gold edit that changes A -> A or Ø -> Ø is labelled Unknown (UNK), since it ultimately has no effect on the text. These are normally gold edits that humans detected, but were unable or unsure how to correct. Automatically extracted edits are never classified as UNK.
+Finally, any gold edit that changes A -> A or Ø -> Ø is labelled Unknown (UNK), since it ultimately has no effect on the text. These are normally gold edits that humans detected, but were unable or unsure how to correct. UNK edits are analagous to *Um* (Unclear Meaning) edits in the NUCLE framework.
 
 ## Token Tier
 

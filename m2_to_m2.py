@@ -45,10 +45,15 @@ def main(args):
 				# Orig is marked up only once for the first coder that needs it.
 				proc_orig = toolbox.applySpacy(orig_sent, nlp) if not proc_orig else proc_orig
 				proc_cor = toolbox.applySpacy(cor_sent, nlp)
-				# Gold edits
-				if args.gold:
-					# Loop through the gold edits.
-					for gold_edit in gold_edits:
+				# Loop through gold edits.
+				for gold_edit in gold_edits:
+					# Um and UNK edits (uncorrected errors) are always preserved.
+					if gold_edit[2] in {"Um", "UNK"}:
+						# Um should get changed to UNK unless using old categories.
+						if gold_edit[2] == "Um" and not args.old_cats: gold_edit[2] = "UNK"
+						out_m2.write(toolbox.formatEdit(gold_edit, coder)+"\n")				
+					# Gold edits
+					elif args.gold:
 						# Minimise the edit; e.g. [has eaten -> was eaten] = [has -> was]
 						if not args.max_edits:
 							gold_edit = toolbox.minimiseEdit(gold_edit, proc_orig, proc_cor)
@@ -61,7 +66,7 @@ def main(args):
 						# Write the edit to the output m2 file.
 						out_m2.write(toolbox.formatEdit(gold_edit, coder)+"\n")
 				# Auto edits
-				elif args.auto:
+				if args.auto:
 					# Auto align the parallel sentences and extract the edits.
 					auto_edits = align_text.getAutoAlignedEdits(proc_orig, proc_cor, nlp, args)				
 					# Loop through the edits.
