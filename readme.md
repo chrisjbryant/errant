@@ -23,11 +23,11 @@ Output M2:&emsp;&nbsp;&nbsp;&nbsp;&nbsp; S This are gramamtical sentence .
 
 In M2 format, a line preceded by S denotes an original sentence while a line preceded by A indicates an edit annotation. Each edit line consists of the start and end token offset of the edit, the error type, and the tokenized correction string. The next two fields are included for historical reasons (see the CoNLL-2014 shared task) while the last field is the annotator id.  
 
-A "noop" edit is a special kind of edit that explicitly indicates an annotator made no changes to the original sentence. They are always necessary in files with multiple annotators, but are otherwise optional. Nevertheless, it is generally better to include them in all m2 files to avoid evaluation errors.
+A "noop" edit is a special kind of edit that explicitly indicates an annotator/system made no changes to the original sentence. If there is only one annotator, noop edits are optional, otherwise a noop edit should be included whenever at least 1 out of n annotators believed the original to be correct. This is something to be aware of when combining individual m2 files, as missing noops can affect results. 
 
 # Pre-requisites
 
-Currently, we only support Python 3. You may need `sudo` access to install the following libraries.
+Currently, we only support Python 3. You may need `sudo` access to install the following libraries, or else you can install everything in a [virtualenv](http://python-guide-pt-br.readthedocs.io/en/latest/dev/virtualenvs/).
 
 ## spaCy
 
