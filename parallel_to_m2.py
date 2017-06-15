@@ -28,23 +28,25 @@ def main(args):
 		for orig_sent, cor_sent in zip(orig, cor):
 			# Write the original sentence to the output m2 file.
 			out_m2.write("S "+orig_sent)
-			# Markup the parallel sentences with spacy (assume tokenized)
-			proc_orig = toolbox.applySpacy(orig_sent.strip().split(), nlp)
-			proc_cor = toolbox.applySpacy(cor_sent.strip().split(), nlp)
-			# Auto align the parallel sentences and extract the edits.
-			auto_edits = align_text.getAutoAlignedEdits(proc_orig, proc_cor, nlp, args)
-			# If there are no edits, write an explicit noop edit and go to the next sentence.
-			if not auto_edits:
+			# Identical sentences have no edits, so just write noop.
+			if orig_sent == cor_sent:
 				out_m2.write("A -1 -1|||noop|||-NONE-|||REQUIRED|||-NONE-|||0\n")
-			# Loop through the edits.
-			for auto_edit in auto_edits:
-				# Give each edit an automatic error type.
-				cat = cat_rules.autoTypeEdit(auto_edit, proc_orig, proc_cor, gb_spell, tag_map, nlp, stemmer)
-				auto_edit[2] = cat
-				# Write the edit to the output m2 file.
-				out_m2.write(toolbox.formatEdit(auto_edit)+"\n")
+			# Otherwise, do extra processing.
+			else:
+				# Markup the parallel sentences with spacy (assume tokenized)
+				proc_orig = toolbox.applySpacy(orig_sent.strip().split(), nlp)
+				proc_cor = toolbox.applySpacy(cor_sent.strip().split(), nlp)
+				# Auto align the parallel sentences and extract the edits.
+				auto_edits = align_text.getAutoAlignedEdits(proc_orig, proc_cor, nlp, args)
+				# Loop through the edits.
+				for auto_edit in auto_edits:
+					# Give each edit an automatic error type.
+					cat = cat_rules.autoTypeEdit(auto_edit, proc_orig, proc_cor, gb_spell, tag_map, nlp, stemmer)
+					auto_edit[2] = cat
+					# Write the edit to the output m2 file.
+					out_m2.write(toolbox.formatEdit(auto_edit)+"\n")
 			# Write a newline when there are no more edits.
-			out_m2.write("\n")	
+			out_m2.write("\n")
 			
 if __name__ == "__main__":
 	# Define and parse program input

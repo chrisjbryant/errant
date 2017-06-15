@@ -29,47 +29,48 @@ def main(args):
 		orig_sent, coder_dict = toolbox.processM2(info)
 		# Write the orig_sent to the output m2 file.
 		out_m2.write("S "+" ".join(orig_sent)+"\n")
-		# Markup the original sentence with spacy (assume tokenized)
-		proc_orig = toolbox.applySpacy(orig_sent, nlp)
-		# Loop through the annotators
-		for coder, coder_info in sorted(coder_dict.items()):
-			cor_sent = coder_info[0]
-			gold_edits = coder_info[1]
-			# Markup the corrected sentence with spacy (assume tokenized)
-			proc_cor = toolbox.applySpacy(cor_sent, nlp)
-			# Gold edits
-			if args.gold:
-				# Loop through the gold edits.
-				for gold_edit in gold_edits:
-					# Write noop edits to the output m2 file.
-					if gold_edit[2] == "noop":
+		# Only process sentences with edits.
+		if coder_dict:
+			# Save marked up original sentence here, if required.
+			proc_orig = ""
+			# Loop through the annotators
+			for coder, coder_info in sorted(coder_dict.items()):
+				cor_sent = coder_info[0]
+				gold_edits = coder_info[1]
+				# If there is only 1 edit and it is noop, just write it.
+				if gold_edits[0][2] == "noop":
+					out_m2.write(toolbox.formatEdit(gold_edits[0], coder)+"\n")				
+					continue
+				# Markup the orig and cor sentence with spacy (assume tokenized)
+				# Orig is marked up only once for the first coder that needs it.
+				proc_orig = toolbox.applySpacy(orig_sent, nlp) if not proc_orig else proc_orig
+				proc_cor = toolbox.applySpacy(cor_sent, nlp)
+				# Gold edits
+				if args.gold:
+					# Loop through the gold edits.
+					for gold_edit in gold_edits:
+						# Minimise the edit; e.g. [has eaten -> was eaten] = [has -> was]
+						if not args.max_edits:
+							gold_edit = toolbox.minimiseEdit(gold_edit, proc_orig, proc_cor)
+							# If minimised to nothing, the edit disappears.
+							if not gold_edit: continue
+						# Give the edit an automatic error type.
+						if not args.old_cats:
+							cat = cat_rules.autoTypeEdit(gold_edit, proc_orig, proc_cor, gb_spell, tag_map, nlp, stemmer)
+							gold_edit[2] = cat
+						# Write the edit to the output m2 file.
 						out_m2.write(toolbox.formatEdit(gold_edit, coder)+"\n")
-						continue
-					# Minimise the edit; e.g. [has eaten -> was eaten] = [has -> was]
-					if not args.max_edits:
-						gold_edit = toolbox.minimiseEdit(gold_edit, proc_orig, proc_cor)
-						# If minimised to nothing, the edit disappears.
-						if not gold_edit: continue
-					# Give the edit an automatic error type.
-					if not args.old_cats:
-						cat = cat_rules.autoTypeEdit(gold_edit, proc_orig, proc_cor, gb_spell, tag_map, nlp, stemmer)
-						gold_edit[2] = cat
-					# Write the edit to the output m2 file.
-					out_m2.write(toolbox.formatEdit(gold_edit, coder)+"\n")
-			# Auto edits
-			elif args.auto:
-				# Auto align the parallel sentences and extract the edits.
-				auto_edits = align_text.getAutoAlignedEdits(proc_orig, proc_cor, nlp, args)				
-				# If there are no edits, write an explicit noop edit.
-				if not auto_edits:
-					out_m2.write("A -1 -1|||noop|||-NONE-|||REQUIRED|||-NONE-|||"+str(coder)+"\n")
-				# Loop through the edits.
-				for auto_edit in auto_edits:
-					# Give each edit an automatic error type.
-					cat = cat_rules.autoTypeEdit(auto_edit, proc_orig, proc_cor, gb_spell, tag_map, nlp, stemmer)
-					auto_edit[2] = cat
-					# Write the edit to the output m2 file.
-					out_m2.write(toolbox.formatEdit(auto_edit, coder)+"\n")
+				# Auto edits
+				elif args.auto:
+					# Auto align the parallel sentences and extract the edits.
+					auto_edits = align_text.getAutoAlignedEdits(proc_orig, proc_cor, nlp, args)				
+					# Loop through the edits.
+					for auto_edit in auto_edits:
+						# Give each edit an automatic error type.
+						cat = cat_rules.autoTypeEdit(auto_edit, proc_orig, proc_cor, gb_spell, tag_map, nlp, stemmer)
+						auto_edit[2] = cat
+						# Write the edit to the output m2 file.
+						out_m2.write(toolbox.formatEdit(auto_edit, coder)+"\n")
 		# Write a newline when there are no more coders.
 		out_m2.write("\n")
 
