@@ -50,10 +50,11 @@ def autoTypeEdit(edit, orig_sent, cor_sent, gb_spell, tag_map, nlp, stemmer):
 		# Same to same is a detected, but not corrected edit.
 		if orig_toks.text == cor_toks.text:
 			return "UNK"
-		# Special: First word edits look like R due to case; e.g. Doctor -> The doctor
-		# The case edit is less important however, so classify without that token.
-		elif orig_toks[0].text[0].isupper() and cor_toks[0].text[0].isupper() and \
-			len(orig_toks) != len(cor_toks) and orig_toks[-1].lower_ == cor_toks[-1].lower_:
+		# Special: Orthographic errors at the end of multi-token edits are ignored.
+		# E.g. [Doctor -> The doctor], [The doctor -> Dcotor], [, since -> . Since]
+		# Classify the edit as if the last token weren't there.
+		elif orig_toks[-1].lower_ == cor_toks[-1].lower_ and \
+			(len(orig_toks) > 1 or len(cor_toks) > 1):
 			min_edit = edit[:]
 			min_edit[1] -= 1
 			min_edit[5] -= 1
@@ -288,9 +289,6 @@ def getTwoSidedType(orig_toks, cor_toks, gb_spell, tag_map, nlp, stemmer):
 	if (orig_pos == ["NOUN", "PART"] or cor_pos == ["NOUN", "PART"]) and \
 		sameLemma(orig_toks[0], cor_toks[0], nlp):
 		return "NOUN:POSS"	
-	# Sentence boundary edits; e.g. , because -> . Because
-	if isSentenceBreak(orig_str, cor_str):
-		return "PUNCT"
 	# Adjective forms with "most" and "more"; e.g. more free -> freer
 	if (orig_str[0].lower() in {"most", "more"} or cor_str[0].lower() in {"most", "more"}) and \
 		sameLemma(orig_toks[-1], cor_toks[-1], nlp) and len(orig_str) <= 2 and len(cor_str) <= 2:
@@ -374,16 +372,5 @@ def precededByAux(orig_tok, cor_tok):
 		cor_deps = [cor_dep.dep_ for cor_dep in cor_tok[0].children]
 		if "aux" in orig_deps or "auxpass" in orig_deps:
 			if "aux" in cor_deps or "auxpass" in cor_deps:
-				return True
-	return False
-
-# Input 1: A list of original token strings
-# Input 2: A list of corrected token strings
-# Output: Boolean; the edit is like [, word -> . Word] or vice versa
-# Also includes "if" -> ". If" type errors.
-def isSentenceBreak(orig_str, cor_str):
-	if len(orig_str) <= 2 and len(cor_str) <= 2:
-		if orig_str[0] in punctuation or cor_str[0] in punctuation:
-			if orig_str[-1].lower() == cor_str[-1].lower():
 				return True
 	return False
