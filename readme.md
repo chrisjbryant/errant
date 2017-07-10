@@ -13,13 +13,16 @@ If you make use of this code, please cite the above papers.
 The main aim of ERRANT is to automatically annotate parallel English sentences with error type information. Specifically, given an original and corrected sentence pair, ERRANT will extract the edits that transform the former to the latter and then classify them according to a rule-based error type framework. The annotated output file is in M2 format.  
 
 ### Example:  
-Original: &emsp;&emsp;&emsp; This are gramamtical sentence .  
-Corrected:&emsp;&emsp;&nbsp;&nbsp; This is a grammatical sentence .  
-Output M2:&emsp;&nbsp;&nbsp;&nbsp;&nbsp; S This are gramamtical sentence .  
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; A 1 2|||R:VERB:SVA|||is|||REQUIRED|||-NONE-|||0  
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; A 2 2|||M:DET|||a|||REQUIRED|||-NONE-|||0  
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; A 2 3|||R:SPELL|||grammatical|||REQUIRED|||-NONE-|||0  
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; A -1 -1|||noop|||-NONE-|||REQUIRED|||-NONE-|||1
+Original:  
+This are gramamtical sentence .  
+Corrected:  
+This is a grammatical sentence .  
+Output M2:  
+S This are gramamtical sentence .  
+A 1 2|||R:VERB:SVA|||is|||REQUIRED|||-NONE-|||0  
+A 2 2|||M:DET|||a|||REQUIRED|||-NONE-|||0  
+A 2 3|||R:SPELL|||grammatical|||REQUIRED|||-NONE-|||0  
+A -1 -1|||noop|||-NONE-|||REQUIRED|||-NONE-|||1
 
 In M2 format, a line preceded by S denotes an original sentence while a line preceded by A indicates an edit annotation. Each edit line consists of the start and end token offset of the edit, the error type, and the tokenized correction string. The next two fields are included for historical reasons (see the CoNLL-2014 shared task) while the last field is the annotator id.  
 
@@ -27,7 +30,7 @@ A "noop" edit is a special kind of edit that explicitly indicates an annotator/s
 
 # Pre-requisites
 
-Currently, we only support Python 3. You may need `sudo` access to install the following libraries, or else you can install everything in a [virtualenv](http://python-guide-pt-br.readthedocs.io/en/latest/dev/virtualenvs/).
+Currently, we only support Python 3. It is safest to install everything in a clean [virtualenv](http://python-guide-pt-br.readthedocs.io/en/latest/dev/virtualenvs/) since we have had reports of conflicting dependencies.
 
 ## spaCy
 
