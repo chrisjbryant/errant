@@ -13,11 +13,9 @@ If you make use of this code, please cite the above papers.
 The main aim of ERRANT is to automatically annotate parallel English sentences with error type information. Specifically, given an original and corrected sentence pair, ERRANT will extract the edits that transform the former to the latter and then classify them according to a rule-based error type framework. The annotated output file is in M2 format.  
 
 ### Example:  
-Original:  
-This are gramamtical sentence .  
-Corrected:  
-This is a grammatical sentence .  
-Output M2:  
+**Original**: This are gramamtical sentence .  
+**Corrected**: This is a grammatical sentence .  
+**Output M2**:  
 S This are gramamtical sentence .  
 A 1 2|||R:VERB:SVA|||is|||REQUIRED|||-NONE-|||0  
 A 2 2|||M:DET|||a|||REQUIRED|||-NONE-|||0  
