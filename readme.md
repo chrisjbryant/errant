@@ -2,7 +2,7 @@
 
 This repository contains the grammatical ERRor ANnotation Toolkit (ERRANT) described in:
 
-> Christopher Bryant, Mariano Felice, and Ted Briscoe. 2017. [**Automatic annotation and evaluation of Error Types for Grammatical Error Correction**](https://www.cl.cam.ac.uk/~cjb255/acl2017.pdf). In Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). Vancouver, Canada. (To appear)
+> Christopher Bryant, Mariano Felice, and Ted Briscoe. 2017. [**Automatic annotation and evaluation of Error Types for Grammatical Error Correction**](http://aclweb.org/anthology/P/P17/P17-1074.pdf). In Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). Vancouver, Canada. (To appear)
 
 > Mariano Felice, Christopher Bryant, and Ted Briscoe. 2016. [**Automatic extraction of learner errors in esl sentences using linguistically enhanced alignments**](http://aclweb.org/anthology/C/C16/C16-1079.pdf). In Proceedings of COLING 2016, the 26th International Conference on Computational Linguistics: Technical Papers. Osaka, Japan.
 
