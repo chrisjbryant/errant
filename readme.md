@@ -10,7 +10,7 @@ If you make use of this code, please cite the above papers.
 
 # Overview
 
-The main aim of ERRANT is to automatically annotate parallel English sentences with error type information. Specifically, given an original and corrected sentence pair, ERRANT will extract the edits that transform the former to the latter and then classify them according to a rule-based error type framework. This can be used to standardise parallel datasets or facilitate detailed error type evaluation. The annotated output file is in M2 format and evaluation script is provided.
+The main aim of ERRANT is to automatically annotate parallel English sentences with error type information. Specifically, given an original and corrected sentence pair, ERRANT will extract the edits that transform the former to the latter and then classify them according to a rule-based error type framework. This can be used to standardise parallel datasets or facilitate detailed error type evaluation. The annotated output file is in M2 format and an  evaluation script is provided.
 
 ### Example:  
 **Original**: This are gramamtical sentence .  
