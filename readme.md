@@ -121,7 +121,7 @@ POS-based error types are assigned based primarily on the POS tags of the edited
 
 In the majority of cases, an edit may be assigned a POS error category if it meets the following condition:
 
-* All tokens on both sides of the edit have the same POS tag.
+* All tokens on both sides of the edit have the same POS tag and do not meet the criteria for a more specific type.
 
 This is not always sufficient however, and so we also make use of other information to determine certain POS-based edits. For example, there are several dependency parse labels that map to specific parts-of-speech. 
 
