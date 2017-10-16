@@ -71,7 +71,7 @@ def check_split(source, target, edits):
 			for t in tokens[1:-1]:
 				try:
 					i = string.index(t)
-					string = string[i+len():]
+					string = string[i+len(t):]
 				except:
 					# Token not found
 					return False
