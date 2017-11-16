@@ -43,7 +43,7 @@ def processM2(info):
 		cor_sent = orig_sent[:]
 		gold_edits = []
 		offset = 0
-		for edit in edits:
+		for edit in sorted(edits):
 			# Do not apply noop or Um edits, but save them
 			if edit[2] in {"noop", "Um"}: 
 				gold_edits.append(edit+[-1,-1])
