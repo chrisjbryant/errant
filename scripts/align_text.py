@@ -279,7 +279,7 @@ def getAutoAlignedEdits(orig, cor, spacy, args):
 	# Otherwise, use linguistically enhanced Damerau-Levenshtein
 	else: alignments = DL.WagnerFischer(orig_toks, cor_toks, orig, cor, substitution=token_substitution)
 	# Get the alignment with the highest score. There is usually only 1 best in DL due to custom costs.
-	alignment = next(alignments.alignments())
+	alignment = next(alignments.alignments(True)) # True uses Depth-first search.
 	# Convert the alignment into edits; choose merge strategy
 	if args.merge == "rules": edits = get_edits(orig, cor, get_opcodes(alignment))
 	elif args.merge == "all-split": edits = get_edits_split(get_opcodes(alignment))
