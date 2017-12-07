@@ -29,7 +29,7 @@ def main(args):
 			# Write the original sentence to the output m2 file.
 			out_m2.write("S "+orig_sent)
 			# Identical sentences have no edits, so just write noop.
-			if orig_sent.strip() == cor_sent.strip():
+			if orig_sent == cor_sent:
 				out_m2.write("A -1 -1|||noop|||-NONE-|||REQUIRED|||-NONE-|||0\n")
 			# Otherwise, do extra processing.
 			else:
