@@ -34,9 +34,11 @@ Currently, we only support Python 3. It is safest to install everything in a cle
 
 spaCy is a natural language processing (NLP) toolkit available here: https://spacy.io/.
 
+UPDATE 17/12/17: In early November, spaCy underwent significant changes when it became version 2.0.0. Although we have not tested ERRANT with this new version of spaCy, the main difference seems to be a slight increase in performance at a significant cost to speed. As such, we currently recommend the slightly older spaCy v1.9.0 for use with ERRANT.
+
 It can be installed for Python 3 as follows:  
 ```
-pip3 install -U spacy  
+pip3 install -U spacy==1.9.0
 python3 -m spacy download en  
 ```
 This installs both spaCy itself and the default English language model. More information on how to install spaCy can be found on its website. We used spaCy 1.7.3 in our original paper. Newer versions may affect the results slightly.  
