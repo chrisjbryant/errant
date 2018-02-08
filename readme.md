@@ -216,7 +216,7 @@ A second rule captures multi-token adjective form errors:
 
 ### Noun Inflection: NOUN:INFL
 
-Noun inflection errors are usually count-mass noun errors; e.g. [*advices* -> *advice*]. They are a special kind of non-word error that must meet the following criteria:
+Noun inflection errors are usually count-mass noun errors, e.g. [*advices* -> *advice*], but also include cases such as [*countrys* -> *countries*] and [*childs* -> *children*]. They are a special kind of non-word error that must meet the following criteria:
 
 1. There is exactly one token on both sides of the edit.
 2. The original token is entirely alphabetical (no numbers or punctuation).
@@ -231,9 +231,9 @@ Noun inflection errors are usually count-mass noun errors; e.g. [*advices* -> *a
 
 A fairly common POS tagger error concerns nouns that look like adjectives; e.g. [*musical* -> *musicals*]. These are handled by a separate rule that also makes use of fine PTB-style POS tags. 
 
-* There is exactly on token on both sides of the edit, both tokens have the same lemma, the original token is ADJ and the corrected token is a plural noun (NNS).
+* There is exactly one token on both sides of the edit, both tokens have the same lemma, the original token is ADJ and the corrected token is a plural noun (NNS).
 
-This rule was only found to be effective in the singular to plural direction and not the other way around.
+This second rule was only found to be effective in the singular to plural direction and not the other way around.
 
 ### Noun Possessive: NOUN:POSS
 
@@ -303,7 +303,7 @@ Tense errors are complicated. The simplest tense errors are inflectional, e.g. [
 
 &ensp;&ensp;A. A missing or unnecessary auxilliary verb cannot be a form or agreement error so must be tense.  
 &ensp;&ensp;B. As mentioned previously, certain contractions require a special rule.  
-&ensp;&ensp;C. In general, we found that edits with VBD on one side were form errors.  
+&ensp;&ensp;C. In general, we found that edits with VBD on one side were tense errors.  
 &ensp;&ensp;D. In some situations, auxiliaries might be tagged as infinitives (VB) or non-3rd-person forms (VBP). Nevertheless, if they are auxiliaries, they are likely to be tense errors.  
 &ensp;&ensp;E. If the POS tags are different, we rely only on the corrected POS tag.  
 &ensp;&ensp;F. Auxiliary verbs with different lemmas are all likely to be tense errors.  
@@ -314,7 +314,7 @@ It is worth mentioning that although auxiliaries can be further subdivided in te
 
 ## Rule Order
 
-As mentioned at the start of this section, the above rules have been described in isolation when in fact they sometimes interact and may be carefully ordered. The most complex example of this is verb morphology errors: while errors involving gerunds (VBG) or participles (VBN) are usually considered FORM, and errors involving past tense forms (VBD) are usually considered TENSE, edits such as VBG -> VBD, or vice versa, are more ambiguous (FORM or TENSE?). Similarly, SVA errors normally involve a 3rd-person form (VBZ), but there are also cases of VBZ -> VBN (SVA or FORM?). Ultimately, to resolve this problem, we manually inspected the data and determined FORM errors typically supersede SVA errors, while SVA errors typically supersede TENSE errors. This order seemed to produce the most reliable results, but must still be recognised as an approximation. 
+As mentioned at the start of this section, the above rules have been described in isolation when in fact they sometimes interact and may be carefully ordered. The most complex example of this is verb morphology errors: while errors involving gerunds (VBG) or participles (VBN) are usually considered FORM, and errors involving past tense forms (VBD) are usually considered TENSE, edits such as VBG -> VBD, or vice versa, are more ambiguous (FORM or TENSE?). Similarly, SVA errors normally involve a 3rd-person form (VBZ), but there are also cases of VBZ -> VBN (SVA or FORM?). Although such cases are normally the result of a POS tagging error, we ultimately resolved this issue by manually inspecting the data to determine an order of precedence. Specifically, ambiguous errors were first considered FORM if one side was VBG or VBN, second considered SVA if one side was VBP or VBZ, and third considered TENSE if one side was VBD. In our experiments, this order seemed to produce the most reliable results, but it must still be recognised as an approximation. 
 
 Ultimately, since the interactions between our rules are very difficult to describe in words, we refer the reader to the code for more information concerning rule order. Specifically, look at `getOneSidedType` and `getTwoSidedType` in `scripts/cat_rules.py`. In general, the rules presented in this section mirror the order they occur in these functions.
 
