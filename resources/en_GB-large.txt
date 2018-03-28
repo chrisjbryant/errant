@@ -2923,6 +2923,7 @@ Bela
 Bela's
 Belarus
 Belarus's
+Belarusian
 Belau
 Belau's
 Belem
@@ -3006,6 +3007,7 @@ Benchley
 Benchley's
 Bender
 Bender's
+Bendictus
 Bendigo
 Bendix
 Bendix's
@@ -3954,6 +3956,7 @@ Brewer
 Brewer's
 Brewster
 Brewster's
+Brexit
 Breyer
 Breyer's
 Brezhnev
@@ -4459,6 +4462,7 @@ CD
 CD's
 CDC
 CDT
+CDs
 CENTO
 CEO
 CEO's
@@ -6877,6 +6881,8 @@ Cytherea's
 Cyzicus
 Czech
 Czech's
+Czechia
+Czechia's
 Czechoslovak
 Czechoslovakia
 Czechoslovakia's
@@ -6941,6 +6947,7 @@ DTP
 DTs
 DUI
 DVD
+DVDs
 DVR
 DVR's
 DVRs
@@ -12373,7 +12380,7 @@ Honolulu
 Honolulu's
 Honor
 Honor's
-Honourable
+Honorable
 Honshu
 Honshu's
 Hooch
@@ -24312,6 +24319,8 @@ Segre
 Segre's
 Segundo
 Segundo's
+Segway
+Segways
 Seiko
 Seiko's
 Seine
@@ -31977,6 +31986,9 @@ aggregation
 aggregation's
 aggregations
 aggregative
+aggregator
+aggregator's
+aggregators
 aggress
 aggressed
 aggresses
@@ -33747,6 +33759,7 @@ anaesthetically
 anaesthetics
 anaesthetisation
 anaesthetisation's
+anaesthetisations
 anaesthetise
 anaesthetised
 anaesthetises
@@ -33756,6 +33769,7 @@ anaesthetist's
 anaesthetists
 anaesthetization
 anaesthetization's
+anaesthetizations
 anaesthetize
 anaesthetized
 anaesthetizes
@@ -34838,8 +34852,10 @@ antinarcotic
 antinationalist
 antinausea
 antineutrino
+antineutrino's
 antineutrinos
 antineutron
+antineutron's
 antineutrons
 anting
 antinode
@@ -34902,6 +34918,7 @@ antipope
 antipoverty
 antiprohibition
 antiproton
+antiproton's
 antiprotons
 antipsychotic
 antipsychotics
@@ -36914,6 +36931,7 @@ assistant's
 assistants
 assisted
 assisting
+assistive
 assists
 assize
 assize's
@@ -39250,6 +39268,11 @@ barbell's
 barbellate
 barbells
 barbels
+barbeque
+barbeque's
+barbequed
+barbeques
+barbequing
 barber
 barber's
 barbered
@@ -42674,6 +42697,8 @@ blowier
 blowiest
 blowing
 blowjob
+blowjob's
+blowjobs
 blowlamp
 blowlamps
 blown
@@ -45447,6 +45472,7 @@ bulldozing
 bulled
 bullet
 bullet's
+bulleted
 bulletin
 bulletin's
 bulletined
@@ -45502,6 +45528,7 @@ bullring
 bullring's
 bullrings
 bulls
+bullseye
 bullshit
 bullshit's
 bullshits
@@ -47703,12 +47730,15 @@ carbuncles
 carbuncular
 carburet
 carburetion
-carburetor
-carburetor's
-carburetors
 carburets
 carburetted
+carburetter
+carburetter's
+carburetters
 carburetting
+carburettor
+carburettor's
+carburettors
 carburisation
 carburise
 carburised
@@ -52824,6 +52854,7 @@ cockamamie
 cockateel
 cockateels
 cockatiel
+cockatiel's
 cockatiels
 cockatoo
 cockatoo's
@@ -57775,6 +57806,8 @@ counterstamp
 counterstatement
 counterstrike
 counterstroke
+counterstroke's
+counterstrokes
 countersubject
 countersunk
 countertenor
@@ -59571,6 +59604,7 @@ cultist's
 cultists
 cultivable
 cultivar
+cultivar's
 cultivars
 cultivatable
 cultivate
@@ -61337,8 +61371,10 @@ decidua
 deciduous
 deciduously
 deciduousness
+decigram
 decigramme
 decigrammes
+decigrams
 decile
 deciles
 decilitre
@@ -62177,8 +62213,10 @@ dejecting
 dejection
 dejection's
 dejects
+dekagram
 dekagramme
 dekagrammes
+dekagrams
 dekalitre
 dekalitres
 dekametre
@@ -72612,7 +72650,6 @@ esemplastic
 eserine
 esker
 esophageal
-esophagus
 esophagus's
 esoteric
 esoterica
@@ -73859,6 +73896,7 @@ exogamy
 exogenous
 exogenously
 exon
+exon's
 exonerate
 exonerated
 exonerates
@@ -73867,6 +73905,7 @@ exoneration
 exoneration's
 exonerative
 exonerator
+exons
 exophthalmos
 exophthalmoses
 exoplanet
@@ -74734,6 +74773,10 @@ faceless
 facelift
 facelift's
 facelifts
+facepalm
+facepalmed
+facepalming
+facepalms
 faceplate
 faceplates
 facer
@@ -76084,6 +76127,8 @@ festoons
 fests
 feta
 feta's
+fetal
+fetation
 fetch
 fetched
 fetcher
@@ -76097,6 +76142,8 @@ fete's
 feted
 fetes
 fetial
+feticide
+feticides
 fetid
 fetidly
 fetidness
@@ -77397,6 +77444,7 @@ flavoprotein
 flavopurpurin
 flavor
 flavorful
+flavorous
 flavors
 flavour
 flavour's
@@ -77406,7 +77454,6 @@ flavouring
 flavouring's
 flavourings
 flavourless
-flavourous
 flavours
 flavoursome
 flavoury
@@ -85368,6 +85415,7 @@ hadrosaurs
 hadst
 hae
 haecceity
+haem
 haemachrome
 haemagglutinate
 haemal
@@ -87255,7 +87303,6 @@ helve's
 helves
 hem
 hem's
-heme
 heme's
 hemelytron
 hemeralopia
@@ -87904,6 +87951,8 @@ highwayman's
 highwaymen
 highways
 hijab
+hijab's
+hijabs
 hijack
 hijack's
 hijacked
@@ -88509,9 +88558,14 @@ homeomorphisms
 homeopath
 homeopath's
 homeopathic
+homeopathically
+homeopathist
 homeopaths
 homeopathy
 homeopathy's
+homeostases
+homeostasis
+homeostasis's
 homeostatic
 homeotherm
 homeowner
@@ -88648,7 +88702,6 @@ homograph
 homograph's
 homographic
 homographs
-homolog
 homologate
 homological
 homologies
@@ -89652,6 +89705,7 @@ hummocky
 hummus
 hummus's
 humongous
+humoral
 humoresque
 humoresques
 humorist
@@ -89664,7 +89718,6 @@ humorousness
 humorousness's
 humour
 humour's
-humoural
 humoured
 humouring
 humourless
@@ -95464,6 +95517,7 @@ invertebrate's
 invertebrates
 inverted
 inverter
+inverter's
 inverters
 invertible
 inverting
@@ -99803,6 +99857,7 @@ leapfrogging
 leapfrogs
 leaping
 leaps
+leapt
 learn
 learned
 learnedly
@@ -100631,8 +100686,6 @@ licking's
 lickings
 licks
 lickspittle
-licorice
-licorice's
 licorices
 lictor
 lid
@@ -101251,6 +101304,8 @@ liquifying
 liquor
 liquor's
 liquored
+liquorice
+liquorice's
 liquoring
 liquorish
 liquors
@@ -101759,6 +101814,8 @@ lodestones
 lodge
 lodge's
 lodged
+lodgement
+lodgements
 lodger
 lodger's
 lodgers
@@ -104717,8 +104774,6 @@ maternity's
 mates
 matey
 mateys
-math
-math's
 mathematic
 mathematical
 mathematically
@@ -104898,6 +104953,7 @@ maxillary
 maxilliped
 maxim
 maxim's
+maxima
 maximal
 maximally
 maximin
@@ -105287,6 +105343,8 @@ meetings
 meetly
 meets
 meetup
+meetup's
+meetups
 meg
 mega
 megabit
@@ -107155,6 +107213,7 @@ minify
 minifying
 minim
 minim's
+minima
 minimal
 minimalism
 minimalism's
@@ -108356,8 +108415,6 @@ molybdenum
 molybdenum's
 molybdic
 molybdous
-mom
-mom's
 moment
 moment's
 momenta
@@ -108378,7 +108435,6 @@ momisms
 mommies
 mommy
 mommy's
-moms
 mon
 monachal
 monachism
@@ -109797,6 +109853,7 @@ multinationals
 multinuclear
 multipara
 multiparous
+multipart
 multipartite
 multiparty
 multiped
@@ -109910,6 +109967,7 @@ munched
 muncher
 munchers
 munches
+munchie
 munchies
 munchies's
 munching
@@ -114166,6 +114224,7 @@ oersted
 oersteds
 oesophagi
 oesophagitis
+oesophagus
 oesophaguses
 oestradiol
 oestrin
@@ -114568,6 +114627,7 @@ onanisms
 onanist
 onanistic
 onanists
+onboard
 once
 once's
 oncogene
@@ -115564,6 +115624,7 @@ ostriches
 otalgia
 otalgias
 other
+other's
 otherness
 othernesses
 others
@@ -117378,6 +117439,7 @@ palaces
 paladin
 paladin's
 paladins
+palaeethnology
 palaeobiologies
 palaeobiologist
 palaeobiology
@@ -117386,7 +117448,6 @@ palaeobotany
 palaeoclimatologies
 palaeoclimatology
 palaeoecology
-palaeoethnology
 palaeogeographies
 palaeogeography
 palaeographic
@@ -117460,7 +117521,6 @@ palefaces
 palely
 paleness
 paleness's
-paleoethnology
 paleographer
 paleographer's
 paleographers
@@ -118081,6 +118141,10 @@ paramedics
 parament
 parameter
 parameter's
+parameterise
+parameterised
+parameterize
+parameterized
 parameters
 parametric
 parametrically
@@ -121619,6 +121683,7 @@ picrite
 picrotoxin
 pics
 pictogram
+pictograms
 pictograph
 pictograph's
 pictographic
@@ -131874,6 +131939,7 @@ reducibility
 reducible
 reducing
 reductase
+reductase's
 reduction
 reduction's
 reductionism
@@ -139238,6 +139304,8 @@ screenplay's
 screenplays
 screens
 screensaver
+screensaver's
+screensavers
 screenshot
 screenshots
 screenwriter
@@ -139670,6 +139738,7 @@ sear
 sear's
 search
 search's
+searchable
 searched
 searcher
 searcher's
@@ -143381,17 +143450,16 @@ skiffs
 skiing
 skiing's
 skijoring
+skilful
 skilfully
+skilfulness
+skilfulness's
 skill
 skill's
 skilled
 skillet
 skillet's
 skillets
-skillful
-skillfully
-skillfulness
-skillfulness's
 skilling
 skills
 skim
@@ -150101,6 +150169,9 @@ subdividing
 subdivision
 subdivision's
 subdivisions
+subdomain
+subdomain's
+subdomains
 subdominant
 subdominants
 subdual
@@ -151245,6 +151316,7 @@ supercontinent
 supercool
 supercooled
 supercooling
+supercritical
 superdense
 superdominant
 superdreadnought
@@ -151341,6 +151413,7 @@ superman's
 supermarket
 supermarket's
 supermarkets
+supermassive
 supermen
 supermodel
 supermodel's
@@ -155016,6 +155089,8 @@ thanksgiving's
 thanksgivings
 thar
 that
+that'd
+that'll
 that's
 thatch
 thatch's
@@ -156135,6 +156210,10 @@ timeserving
 timeserving's
 timeshare
 timeshares
+timestamp
+timestamp's
+timestamped
+timestamps
 timetable
 timetable's
 timetabled
@@ -156802,6 +156881,7 @@ tool
 tool's
 toolbar
 toolbar's
+toolbars
 toolbox
 toolbox's
 toolboxes
@@ -160423,6 +160503,7 @@ unbosom
 unbosomed
 unbosoming
 unbosoms
+unbothered
 unbound
 unbounded
 unbowed
@@ -160600,7 +160681,10 @@ unclothed
 unclothes
 unclothing
 unclouded
+unclutter
 uncluttered
+uncluttering
+unclutters
 uncoated
 uncoil
 uncoiled
@@ -160965,6 +161049,7 @@ underhandedly
 underhandedness
 underhandedness's
 underhung
+underinflated
 underinvestment
 underlaid
 underlain
@@ -162526,6 +162611,7 @@ unrestricted
 unreturnable
 unreturned
 unrevealed
+unrevealing
 unrevenged
 unrevised
 unrevoked
@@ -166842,6 +166928,9 @@ weapon
 weapon's
 weaponeer
 weaponize
+weaponized
+weaponizes
+weaponizing
 weaponless
 weaponry
 weaponry's
@@ -167948,6 +168037,8 @@ wikiup
 wild
 wild's
 wildcard
+wildcard's
+wildcards
 wildcat
 wildcat's
 wildcats
@@ -168889,6 +168980,8 @@ workshop
 workshop's
 workshops
 workshy
+worksite
+worksites
 workspace
 workspaces
 workstation
