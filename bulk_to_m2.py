@@ -25,8 +25,6 @@ def main(args):
     for dir in os.listdir(args.dir):
         if dir == ".DS_Store":
             continue
-        if int(float(dir)) < 500676:
-            continue
         print("Processing dir... " + dir)
         orig = open(os.path.join(args.dir, dir, "orig.txt"))
         cor = open(os.path.join(args.dir, dir, "cor.txt"))
