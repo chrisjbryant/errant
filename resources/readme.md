@@ -21,6 +21,7 @@ Spacy includes some custom POS tags that were not part of the original PTB tagse
 
 en_GB-large.txt is a list of valid British English words according to the latest Hunspell dictionary.  
 
-It was obtained [here](https://sourceforge.net/projects/wordlist/files/speller/2017.01.22/).  
+It was obtained [here](https://sourceforge.net/projects/wordlist/files/speller/2017.08.24/). 
 
-The specific file bundled with this release is: wordlist-en_GB-large-2017.01.22.zip.
+The specific file bundled with this release is: wordlist-en_GB-large-2017.08.24.zip.
+
