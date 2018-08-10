@@ -58,10 +58,10 @@ Three main scripts are provided with ERRANT: `parallel_to_m2.py`, `m2_to_m2.py` 
 
 1. `parallel_to_m2.py`  
 
-     Extract and classify edits from parallel sentences automatically. This is the simplest annotation script, which requires an original text file, a corrected text file and an output filename. The original and corrected text file must have one sentence per line and be word tokenized.  
+     Extract and classify edits from parallel sentences automatically. This is the simplest annotation script, which requires an original text file, at least one corrected text file, and an output filename. The original and corrected text files must have one sentence per line and be word tokenized.  
 	 Example:
 	 ```
-	 python3 parallel_to_m2.py -orig <orig_file> -cor <cor_file> -out <out_m2>
+	 python3 parallel_to_m2.py -orig <orig_file> -cor <cor_file1> [<cor_file2> ...] -out <out_m2>
 	 ```
 
 2. `m2_to_m2.py`  
