@@ -34,8 +34,6 @@ Currently, we only support Python 3. It is safest to install everything in a cle
 
 spaCy is a natural language processing (NLP) toolkit available here: https://spacy.io/.
 
-UPDATE 17/12/17: In early November, spaCy underwent significant changes when it became version 2.0.0. Although we have not tested ERRANT with this new version of spaCy, the main difference seems to be a slight increase in performance at a significant cost to speed. As such, we currently recommend the slightly older spaCy v1.9.0 for use with ERRANT.
-
 It can be installed for Python 3 as follows:  
 ```
 pip3 install -U spacy==1.9.0
@@ -88,8 +86,6 @@ All these scripts also have additional advanced command line options which can b
 #### Runtime
 
 In terms of speed, automatic edit extraction is the bottleneck. As a guideline, it takes roughly 10 seconds (including loading times) to extract and classify the edits in 100 sentences on an Intel Core i5-6600 @ 3.30GHz machine. In contrast, it takes just 0.2 seconds to classify the edits in the same 100 sentences if the edit boundaries are already known. Bear in mind that these figures are only a rough estimate and runtime actually depends on how different the original and corrected sentences are and how many edits they contain.
-
-UPDATE 22/11/17: When sentences were long and very different, ERRANT would sometimes run into memory problems. We fixed this by changing the default alignment behaviour from breadth-first to depth-first. Experiments showed this barely affects the results and we even saw improvements. It should also make ERRANT faster.
 
 # Edit Extraction
 
