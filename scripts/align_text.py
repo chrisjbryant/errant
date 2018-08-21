@@ -190,7 +190,7 @@ def get_edits_split(edits):
 	return new_edits	
 
 # all-merge: Merge all adjacent edits of any operation type, except M.
-def get_edits_group_type(edits):
+def get_edits_group_all(edits):
 	new_edits = []
 	for op, group in groupby(edits, lambda x: True if x[0] == "M" else False):
 		if not op:
@@ -198,7 +198,7 @@ def get_edits_group_type(edits):
 	return new_edits
 	
 # all-equal: Merge all edits of the same operation type. 
-def get_edits_group_all(edits):
+def get_edits_group_type(edits):
 	new_edits = []
 	for op, group in groupby(edits, lambda x: x[0]):
 		if op != "M":
