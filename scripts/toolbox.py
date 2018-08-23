@@ -1,8 +1,10 @@
-# Load latest Hunspell dictionaries: 
+from operator import itemgetter
+
+# Load latest Hunspell dictionaries:
 def loadDictionary(path):
 	return set(open(path).read().split())
 
-# Load Stanford Universal Tags map file. 
+# Load Stanford Universal Tags map file.
 def loadTagMap(path):
 	map_dict = {}
 	open_file = open(path).readlines()
@@ -23,8 +25,8 @@ def loadTagMap(path):
 	map_dict["GW"] = "X"
 	map_dict["NFP"] = "X"
 	map_dict["XX"] = "X"
-	return map_dict	
-	
+	return map_dict
+
 # Input: A sentence + edit block in an m2 file.
 # Output 1: The original sentence (a list of tokens)
 # Output 2: A dictionary; key is coder id, value is a tuple. 
@@ -43,7 +45,10 @@ def processM2(info):
 		cor_sent = orig_sent[:]
 		gold_edits = []
 		offset = 0
-		for edit in sorted(edits):
+		# Sort edits by start and end offset only. If they are the same, do not reorder.
+		edits = sorted(edits, key=itemgetter(0)) # Sort by start offset
+		edits = sorted(edits, key=itemgetter(1)) # Sort by end offset
+		for edit in edits:
 			# Do not apply noop or Um edits, but save them
 			if edit[2] in {"noop", "Um"}: 
 				gold_edits.append(edit+[-1,-1])
@@ -121,7 +126,7 @@ def minimiseEdit(edit, orig, cor):
 	# If both sides are not null, save the new correction string.
 	if orig_toks or cor_toks:
 		edit[3] = " ".join([tok.text for tok in cor_toks])
-		return edit	
+		return edit
 	
 # Input 1: An edit list = [orig_start, orig_end, cat, cor, cor_start, cor_end]
 # Input 2: A coder id for the specific annotator.

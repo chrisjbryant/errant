@@ -2,6 +2,19 @@
 
 This document contains descriptions of all the significant changes made to ERRANT since its release.
 
+## 23-08-18
+
+Fix arbitrary reordering of edits with the same start and end span; e.g.  
+S I am happy .  
+A 2 2|||M:ADV|||really|||REQUIRED|||-NONE-|||0  
+A 2 2|||M:ADV|||very|||REQUIRED|||-NONE-|||0  
+
+VS.  
+
+S I am happy .  
+A 2 2|||M:ADV|||very|||REQUIRED|||-NONE-|||0  
+A 2 2|||M:ADV|||really|||REQUIRED|||-NONE-|||0  
+
 ## 10-08-18
 
 Added support for multiple annotators in `parallel_to_m2.py`.  
