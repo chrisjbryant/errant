@@ -34,7 +34,7 @@ def main(args):
 			# Save marked up original sentence here, if required.
 			proc_orig = ""
 			# Loop through the annotators
-			for coder, coder_info in coder_dict.items():
+			for coder, coder_info in sorted(coder_dict.items()):
 				cor_sent = coder_info[0]
 				gold_edits = coder_info[1]
 				# If there is only 1 edit and it is noop, just write it.
