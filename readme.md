@@ -111,7 +111,7 @@ A special case concerns edits such as [Man -> The man] or [The man -> Man]. Whil
 
 * The number of tokens on each side of the edit is not equal, the lower cased form of the last token is the same, and removing the last token on both sides results in an empty string on one side.
 
-Finally, any gold edit that changes A -> A or Ø -> Ø is labelled Unknown (UNK), since it ultimately has no effect on the text. These are normally gold edits that humans detected, but were unable or unsure how to correct. UNK edits are analagous to *Um* (Unclear Meaning) edits in the NUCLE framework.
+Finally, any gold edit that changes A -> A or Ø -> Ø is labelled Unknown (UNK), since it ultimately has no effect on the text. These are normally gold edits that humans detected, but were unable or unsure how to correct. UNK edits are analogous to *Um* (Unclear Meaning) edits in the NUCLE framework.
 
 ## Token Tier
 
