@@ -46,10 +46,15 @@ def check_split(source, target, edits):
 	t = []
 	# Collect the tokens
 	for e in edits:
-		s_tok = source[e[1]:e[2]].orth_.replace("'", "")
-		t_tok = target[e[3]:e[4]].orth_.replace("'", "")
-		if len(s_tok) >= 1: s.append(s_tok)
-		if len(t_tok) >= 1: t.append(t_tok)
+		if e[1] < e[2]:
+			s_tok = source[e[1]:e[2]].orth_.replace("'", "")
+			if len(s_tok) >= 1:
+				s.append(s_tok)
+		if e[3] < e[4]:
+			t_tok = target[e[3]:e[4]].orth_.replace("'", "")
+			if len(t_tok) >= 1:
+				t.append(t_tok)
+
 	
 	if len(s) == len(t):
 		return False
