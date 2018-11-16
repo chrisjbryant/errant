@@ -10,7 +10,7 @@ If you make use of this code, please cite the above papers.
 
 # Overview
 
-The main aim of ERRANT is to automatically annotate parallel English sentences with error type information. Specifically, given an original and corrected sentence pair, ERRANT will extract the edits that transform the former to the latter and then classify them according to a rule-based error type framework. This can be used to standardise parallel datasets or facilitate detailed error type evaluation. The annotated output file is in M2 format and an  evaluation script is provided.
+The main aim of ERRANT is to automatically annotate parallel English sentences with error type information. Specifically, given an original and corrected sentence pair, ERRANT will extract the edits that transform the former to the latter and then classify them according to a rule-based error type framework. This can be used to standardise parallel datasets or facilitate detailed error type evaluation. The annotated output file is in M2 format and an evaluation script is provided.
 
 ### Example:  
 **Original**: This are gramamtical sentence .  
@@ -85,13 +85,15 @@ All these scripts also have additional advanced command line options which can b
 
 #### Runtime
 
-In terms of speed, automatic edit extraction is the bottleneck. As a guideline, it takes roughly 10 seconds (including loading times) to extract and classify the edits in 100 sentences on an Intel Core i5-6600 @ 3.30GHz machine. In contrast, it takes just 0.2 seconds to classify the edits in the same 100 sentences if the edit boundaries are already known. Bear in mind that these figures are only a rough estimate and runtime actually depends on how different the original and corrected sentences are and how many edits they contain.
+In terms of speed, ERRANT processes ~70 sents/sec in the fully automatic edit extraction and classification setting, but ~350 sents/sec in the classification setting alone. These figures were calculated on an Intel Xeon E5-2630 v4 @ 2.20GHz machine, but results will vary depending on how different the original and corrected sentences are.  
 
 # Edit Extraction
 
 For more information about the edit extraction phase of annotation, we refer the reader to the following paper:
 
 > Mariano Felice, Christopher Bryant, and Ted Briscoe. 2016. [**Automatic extraction of learner errors in esl sentences using linguistically enhanced alignments**](http://aclweb.org/anthology/C/C16/C16-1079.pdf). In Proceedings of COLING 2016, the 26th International Conference on Computational Linguistics: Technical Papers. Osaka, Japan.
+
+Note that ERRANT has been updated since the release of this paper and that the alignment cost and merging rules have also changed slightly. See `scripts/align_text.py` for more information.  
 
 # Error Type Classification
 
