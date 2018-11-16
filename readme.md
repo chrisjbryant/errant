@@ -28,7 +28,7 @@ A "noop" edit is a special kind of edit that explicitly indicates an annotator/s
 
 # Pre-requisites
 
-Currently, we only support Python 3. It is safest to install everything in a clean [virtualenv](https://docs.python-guide.org/dev/virtualenvs/#lower-level-virtualenv) since we have had reports of conflicting dependencies.
+We only support Python 3. It is safest to install everything in a clean [virtualenv](https://docs.python-guide.org/dev/virtualenvs/#lower-level-virtualenv).
 
 ## spaCy
 

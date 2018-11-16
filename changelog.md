@@ -2,6 +2,11 @@
 
 This document contains descriptions of all the significant changes made to ERRANT since its release.
 
+## 16-11-18
+
+The `compare_m2.py` evaluation script was refactored to make it easier to use.
+
+
 ## 23-08-18
 
 Fix arbitrary reordering of edits with the same start and end span; e.g.  
