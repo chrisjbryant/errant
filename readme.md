@@ -39,7 +39,7 @@ It can be installed for Python 3 as follows:
 pip3 install -U spacy==1.9.0
 python3 -m spacy download en  
 ```
-This installs both spaCy itself and the default English language model. More information on how to install spaCy can be found on its website. We used spaCy 1.7.3 in our original paper. Newer versions may affect the results slightly.  
+This installs both spaCy itself and the default English language model. We do not recommend spaCy 2.0 at this time because it is slower and less compatible with ERRANT. More information on how to install spaCy can be found on its website. We used spaCy 1.7.3 in our original paper. 
 
 ## NLTK
 
