@@ -2,6 +2,8 @@ from typing import List, Dict
 from difflib import SequenceMatcher
 from string import punctuation
 import spacy.parts_of_speech as spos
+from spacy.tokens import Token
+from spacy.language import Language
 import copy
 from errant.edit import ErrorType, Edit
 
@@ -33,9 +35,9 @@ _DEP_MAP = { "acomp": "ADJ",
 # Input 6: A preloaded spacy processing object.
 # Input 7: The Lancaster stemmer in NLTK.
 # Output: The input edit with new error tag, in M2 edit format.
-def categorize(edit: Edit, orig_sent: 'spacy.Doc', cor_sent: 'spacy.Doc', 
+def categorize(edit: Edit, orig_sent: List[Token], cor_sent: List[Token], 
                gb_spell: List[str], tag_map: Dict[str, str], 
-               nlp: 'spacy.language.Language', stemmer: 'nltk.stem.api.StemmerI') -> ErrorType:
+               nlp: Language, stemmer: 'nltk.stem.api.StemmerI') -> ErrorType:
     # Get the tokens in the edit.
     orig_toks = orig_sent[edit.original_span[0] : edit.original_span[1]]
     cor_toks =  cor_sent[edit.corrected_span[0] : edit.corrected_span[1]]
@@ -88,7 +90,7 @@ def categorize(edit: Edit, orig_sent: 'spacy.Doc', cor_sent: 'spacy.Doc',
 # Input 1: Spacy tokens
 # Input 2: A map dict from PTB to universal dependency pos tags.
 # Output: A list of token, pos and dep tag strings.
-def get_edit_info(toks, tag_map):
+def get_edit_info(toks: List[Token], tag_map: Dict[str, str]):
     text = []
     pos = []
     dep = []
@@ -102,7 +104,7 @@ def get_edit_info(toks, tag_map):
 # Input 2: A map dict from PTB to universal dependency pos tags.
 # Output: An error type string.
 # When one side of the edit is null, we can only use the other side.
-def get_one_sided_type(toks, tag_map):
+def get_one_sided_type(toks: List[Token], tag_map: Dict[str, str]):
     # Extract strings, pos tags and parse info from the toks.
     str_list, pos_list, dep_list = get_edit_info(toks, tag_map)
     
@@ -140,7 +142,9 @@ def get_one_sided_type(toks, tag_map):
 # Input 5: A preloaded spacy processing object.
 # Input 6: The Lancaster stemmer in NLTK.
 # Output: An error type string.
-def get_two_sided_category(orig_toks, cor_toks, gb_spell, tag_map, nlp, stemmer):
+def get_two_sided_category(orig_toks: List[Token], cor_toks: List[Token], 
+                           gb_spell: List[str], tag_map: Dict[str, str], 
+                           nlp: Language, stemmer: 'nltk.stem.api.StemmerI'):
     # Extract strings, pos tags and parse info from the toks.
     orig_str, orig_pos, orig_dep = get_edit_info(orig_toks, tag_map)
     cor_str, cor_pos, cor_dep = get_edit_info(cor_toks, tag_map)
@@ -321,7 +325,7 @@ def get_two_sided_category(orig_toks, cor_toks, gb_spell, tag_map, nlp, stemmer)
 # Input 1: A list of original token strings
 # Input 2: A list of corrected token strings
 # Output: Boolean; the difference between the inputs is only whitespace or case.
-def only_orth_change(orig_str, cor_str):
+def only_orth_change(orig_str: List[Token], cor_str: List[Token]):
     orig_join = "".join(orig_str).lower()
     cor_join = "".join(cor_str).lower()
     if orig_join == cor_join:
@@ -331,7 +335,7 @@ def only_orth_change(orig_str, cor_str):
 # Input 1: A list of original token strings
 # Input 2: A list of corrected token strings
 # Output: Boolean; the tokens are exactly the same but in a different order.
-def exact_reordering(orig_str, cor_str):
+def exact_reordering(orig_str: List[Token], cor_str: List[Token]):
     # Sorting lets us keep duplicates.
     orig_set = sorted([tok.lower() for tok in orig_str])
     cor_set = sorted([tok.lower() for tok in cor_str])
@@ -345,7 +349,7 @@ def exact_reordering(orig_str, cor_str):
 # Output: Boolean; the tokens have the same lemma.
 # Spacy only finds lemma for its predicted POS tag. Sometimes these are wrong,
 # so we also consider alternative POS tags to improve chance of a match.
-def same_lemma(orig_tok, cor_tok, nlp):
+def same_lemma(orig_tok: Token , cor_tok: Token, nlp: Language):
     orig_lemmas = []
     cor_lemmas = []
     for pos in _OPEN_POS:
@@ -359,7 +363,7 @@ def same_lemma(orig_tok, cor_tok, nlp):
 # Input 1: An original text spacy token. 
 # Input 2: A corrected text spacy token.
 # Output: Boolean; both tokens have a dependant auxiliary verb.
-def preceded_by_aux(orig_tok, cor_tok):
+def preceded_by_aux(orig_tok: List[Token] , cor_tok: List[Token]):
     # If the toks are aux, we need to check if they are the first aux.
     if orig_tok[0].dep_.startswith("aux") and cor_tok[0].dep_.startswith("aux"):
         # Find the parent verb

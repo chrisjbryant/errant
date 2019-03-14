@@ -3,7 +3,7 @@ from operator import itemgetter
 import os
 import pathlib
 from spacy.language import Language
-from spacy.tokens import Doc
+from spacy.tokens import Doc, Token
 from errant.edit import Edit, ErrorType
 
 _BASENAME = os.path.dirname(os.path.realpath(__file__))
@@ -112,29 +112,29 @@ def process_edits(edits: List[str]) -> Dict[str, Tuple[int, int, str, str]]:
 # Input 3: A corrected SpaCy sentence.
 # Output: A minimised edit with duplicate words on both sides removed.
 # E.g. [was eaten -> has eaten] becomes [was -> has]
-def minimise_edit(edit, orig, cor):
+def minimise_edit(edit: Edit, orig: List[Token], cor: List[Token]):
     # edit = [orig_start, orig_end, cat, cor, cor_start, cor_end]
-    orig_toks = orig[edit[0]:edit[1]]
-    cor_toks = cor[edit[4]:edit[5]]
+    orig_toks = orig[edit.original_span[0]:edit.original_span[1]]
+    cor_toks = cor[edit.corrected_span[0]:edit.corrected_span[1]]
     # While the first token is the same string in both (and both are not null)
     while orig_toks and cor_toks and orig_toks[0].text == cor_toks[0].text:
         # Remove that token from the span, and adjust the start offset.
         orig_toks = orig_toks[1:]
         cor_toks = cor_toks[1:]
-        edit[0] += 1
-        edit[4] += 1
+        edit.original_span = (edit.original_span[0]+1, edit.original_span[1])
+        edit.corrected_span = (edit.corrected_span[0]+1, edit.corrected_span[1])
     # Then do the same from the last token.
     while orig_toks and cor_toks and orig_toks[-1].text == cor_toks[-1].text:
         # Remove that token from the span, and adjust the start offset.
         orig_toks = orig_toks[:-1]
         cor_toks = cor_toks[:-1]
-        edit[1] -= 1
-        edit[5] -= 1
+        edit.original_span = (edit.original_span[0], edit.original_span[1]-1)
+        edit.corrected_span = (edit.corrected_span[0], edit.corrected_span[1]-1)
     # If both sides are not null, save the new correction string.
     if orig_toks or cor_toks:
-        edit[3] = " ".join([tok.text for tok in cor_toks])
+        edit.edit_text = " ".join([tok.text for tok in cor_toks])
         return edit
-    
+
 # Input 1: An edit list = [orig_start, orig_end, cat, cor, cor_start, cor_end]
 # Input 2: A coder id for the specific annotator.
 # Output: An edit in m2 file format.
