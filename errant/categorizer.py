@@ -1,5 +1,5 @@
 from typing import List, Dict
-from difflib import SequenceMatcher
+import Levenshtein
 from string import punctuation
 import spacy.parts_of_speech as spos
 from spacy.tokens import Token
@@ -192,7 +192,7 @@ def get_two_sided_category(orig_toks: List[Token], cor_toks: List[Token],
                         return "MORPH"
                 # Use string similarity to detect true spelling errors.
                 else:
-                    char_ratio = SequenceMatcher(None, orig_str[0], cor_str[0]).ratio()
+                    char_ratio = Levenshtein.ratio(orig_str[0], cor_str[0])
                     # Ratio > 0.5 means both side share at least half the same chars.
                     # WARNING: THIS IS AN APPROXIMATION.
                     if char_ratio > 0.5:
