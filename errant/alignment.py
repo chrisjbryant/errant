@@ -205,7 +205,7 @@ def _lemma_cost(a: Token, b: Token):
 # Cost is 0 if POS are the same, else 0.25 if both are content, else 0.5.
 # Content words more likely to align to other content words.
 def _pos_cost(a: Token, b: Token):
-    if a.pos == a.pos:
+    if a.pos == b.pos:
         return 0
     elif _is_content(a) and _is_content(b):
         return 0.25

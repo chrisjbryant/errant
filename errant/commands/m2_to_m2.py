@@ -27,11 +27,11 @@ class M2ToM2(Subcommand):
                                     "all-split: Merge nothing; e.g. MSSDI -> M, S, S, D, I\n"
                                     "all-merge: Merge adjacent non-matches; e.g. MSSDI -> M, SSDI\n"
                                     "all-equal: Merge adjacent same-type non-matches; e.g. MSSDI -> M, SS, D, I")        
-        subparser.set_defaults(func=compare_m2_with_args)
+        subparser.set_defaults(func=m2_to_m2_with_args)
         return subparser
 
 # Input: Command line args
-def compare_m2_with_args(args: argparse.Namespace) -> None:
+def m2_to_m2_with_args(args: argparse.Namespace) -> None:
 
     print("Loading resources...")
     # Load Errant Annotator
@@ -47,6 +47,7 @@ def compare_m2_with_args(args: argparse.Namespace) -> None:
         orig_sent, coder_dict = toolbox.process_m2(info)
         # Write the orig_sent to the output m2 file.
         out_m2.write("S "+" ".join(orig_sent)+"\n")
+
         # Only process sentences with edits.
         if coder_dict:
             # Save marked up original sentence here, if required.
@@ -61,8 +62,8 @@ def compare_m2_with_args(args: argparse.Namespace) -> None:
                     continue
                 # Markup the orig and cor sentence with spacy (assume tokenized)
                 # Orig is marked up only once for the first coder that needs it.
-                proc_orig = errant.parse(orig_sent, tokenize=False) if not proc_orig else proc_orig
-                proc_cor = errant.parse(cor_sent, tokenize=False)
+                proc_orig = errant.parse(" ".join(orig_sent), tokenize=False) if not proc_orig else proc_orig
+                proc_cor = errant.parse(" ".join(cor_sent), tokenize=False)
                 # Loop through gold edits.
                 for gold_edit in gold_edits:
                     # Um and UNK edits (uncorrected errors) are always preserved.
@@ -79,8 +80,8 @@ def compare_m2_with_args(args: argparse.Namespace) -> None:
                             if not gold_edit: continue
                         # Give the edit an automatic error type.
                         if not args.old_cats:
-                            cat = errant.find_error_type(gold_edit, proc_orig, proc_cor)
-                            gold_edit[2] = cat
+                            error_type = errant.find_error_type(gold_edit, proc_orig, proc_cor)
+                            gold_edit.error_type = error_type
                         # Write the edit to the output m2 file.
                         out_m2.write(toolbox.format_edit(gold_edit, coder)+"\n")
                 # Auto edits

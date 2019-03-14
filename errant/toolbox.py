@@ -46,7 +46,7 @@ def load_tag_map(path: pathlib.Path = _DEFAULT_TAG_PATH):
 # Output 2: A dictionary; key is coder id, value is a tuple. 
 # tuple[0] is the corrected sentence (a list of tokens), tuple[1] is the edits.
 # Process M2 to extract sentences and edits.
-def process_m2(info: str) -> Tuple[str, Dict[str, Tuple[str, List[Edit]]]]:
+def process_m2(info: str) -> Tuple[List[str], Dict[str, Tuple[List[str], List[Edit]]]]:
     info = info.split("\n")
     orig_sent = info[0][2:].split() # [2:] ignore the leading "S "
     all_edits = info[1:]
@@ -65,7 +65,10 @@ def process_m2(info: str) -> Tuple[str, Dict[str, Tuple[str, List[Edit]]]]:
         for edit in edits:
             # Do not apply noop or Um edits, but save them
             if edit[2] in {"noop", "Um"}:
-                gold_edits.append(edit+[-1,-1])
+                error_type = ErrorType.from_string(edit[2])
+                edit = Edit((edit[0], edit[1]), (-1, -1), edit[3], error_type)
+                gold_edits.append(edit)
+                gold_edits.append(edit)
                 continue
             orig_start = edit[0]
             orig_end = edit[1]
@@ -79,9 +82,9 @@ def process_m2(info: str) -> Tuple[str, Dict[str, Tuple[str, List[Edit]]]]:
             offset = offset-(orig_end-orig_start)+len(cor_toks)
             # Save the edit with cor_start and cor_end
             
-            error_type = ErrorType.from_string(edit[1])
+            error_type = ErrorType.from_string(edit[2])
             edit = Edit((orig_start, orig_end), (cor_start, cor_end), edit[3], error_type)
-            gold_edits.append(edit+[cor_start]+[cor_end])
+            gold_edits.append(edit)
         # Save the cor_sent and gold_edits for each annotator in the out_dict.
         out_dict[coder] = (cor_sent, gold_edits)
     return orig_sent, out_dict

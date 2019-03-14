@@ -30,6 +30,14 @@ A "noop" edit is a special kind of edit that explicitly indicates an annotator/s
 
 We only support Python 3. It is safest to install everything in a clean [virtualenv](https://docs.python-guide.org/dev/virtualenvs/#lower-level-virtualenv).
 
+## Install the library
+
+You can use install the library and its dependencies using pip.
+
+```
+pip install git+https://github.com/sai-prasanna/errant.git
+```
+
 ## spaCy
 
 spaCy is a natural language processing (NLP) toolkit available here: https://spacy.io/.
@@ -37,7 +45,7 @@ spaCy is a natural language processing (NLP) toolkit available here: https://spa
 It can be installed for Python 3 as follows:  
 ```
 pip3 install -U spacy==1.9.0
-python3 -m spacy download en  
+python3 -m spacy download en
 ```
 This installs both spaCy itself and the default English language model. We do not recommend spaCy 2.0 at this time because it is slower and less compatible with ERRANT. More information on how to install spaCy can be found on its website. We used spaCy 1.7.3 in our original paper. 
 
@@ -45,41 +53,36 @@ This installs both spaCy itself and the default English language model. We do no
 
 NLTK is another well-known NLP library: http://www.nltk.org/. We use it only for the Lancaster Stemmer.  
 
-It can be installed for Python 3 as follows:
-```
-pip3 install -U nltk  
-```
-
 # Usage
 
-Three main scripts are provided with ERRANT: `parallel_to_m2.py`, `m2_to_m2.py` and `compare_m2.py`.  
+Three main commands are provided with ERRANT: `parallel_to_m2`, `m2_to_m2` and `compare_m2`.  
 
-1. `parallel_to_m2.py`  
+1. `errant parallel_to_m2`
 
      Extract and classify edits from parallel sentences automatically. This is the simplest annotation script, which requires an original text file, at least one corrected text file, and an output filename. The original and corrected text files must have one sentence per line and be word tokenized.  
-	 Example:
-	 ```
-	 python3 parallel_to_m2.py -orig <orig_file> -cor <cor_file1> [<cor_file2> ...] -out <out_m2>
-	 ```
+     Example:
+     ```
+     errant parallel_to_m2 -orig <orig_file> -cor <cor_file1> [<cor_file2> ...] -out <out_m2>
+     ```
 
-2. `m2_to_m2.py`  
+2. `errant m2_to_m2`
 
      This is a more sophisticated version of `parallel_to_m2.py` that operates on an m2 file instead of parallel text files. This makes it easier to process multiple sets of corrections simultaneously. In addition to an input m2 file, you must also specify whether you want to use gold or auto edits: `-gold` will only classify the existing edits, while `-auto` will extract and classify edits automatically. In both settings, uncorrected edits and noops are preserved in the original input file.  
      Example:
-	 ```
-	 python3 m2_to_m2.py {-auto|-gold} m2_file -out <out_m2>
-	 ```
+     ```
+     errant m2_to_m2 {-auto|-gold} m2_file -out <out_m2>
+     ```
 
-3. `compare_m2.py`  
+3. `errant compare_m2`
 
-     This is the script to evaluate a hypothesis m2 file against a reference m2 file. The default behaviour evaluates the hypothesis overall in terms of correction. The `-cat {1,2,3}` flag is used to evaluate error types at increasing levels of granularity while the `-ds` or `-dt` flag is used to evaluate in terms of span-based or token-based detection (i.e. ignoring the correction). All scores are presented in terms of Precision, Recall and F-score (default: F0.5), and counts for True Positives (TP), False Positives (FP) and False Negatives (FN) are also shown.  
-	 Examples:
-	 ```
-     python3 compare_m2.py -hyp <hyp_m2> -ref <ref_m2> 
-     python3 compare_m2.py -hyp <hyp_m2> -ref <ref_m2> -cat {1,2,3}
-     python3 compare_m2.py -hyp <hyp_m2> -ref <ref_m2> -ds
-     python3 compare_m2.py -hyp <hyp_m2> -ref <ref_m2> -ds -cat {1,2,3}
-	 ```	
+     This is the command to evaluate a hypothesis m2 file against a reference m2 file. The default behaviour evaluates the hypothesis overall in terms of correction. The `-cat {1,2,3}` flag is used to evaluate error types at increasing levels of granularity while the `-ds` or `-dt` flag is used to evaluate in terms of span-based or token-based detection (i.e. ignoring the correction). All scores are presented in terms of Precision, Recall and F-score (default: F0.5), and counts for True Positives (TP), False Positives (FP) and False Negatives (FN) are also shown.  
+     Examples:
+     ```
+     errant compare_m2 -hyp <hyp_m2> -ref <ref_m2> 
+     errant compare_m2 -hyp <hyp_m2> -ref <ref_m2> -cat {1,2,3}
+     errant compare_m2 -hyp <hyp_m2> -ref <ref_m2> -ds
+     errant compare_m2 -hyp <hyp_m2> -ref <ref_m2> -ds -cat {1,2,3}
+     ```
 
 All these scripts also have additional advanced command line options which can be displayed using the `-h` flag.  
 
@@ -93,7 +96,7 @@ For more information about the edit extraction phase of annotation, we refer the
 
 > Mariano Felice, Christopher Bryant, and Ted Briscoe. 2016. [**Automatic extraction of learner errors in esl sentences using linguistically enhanced alignments**](http://aclweb.org/anthology/C/C16/C16-1079.pdf). In Proceedings of COLING 2016, the 26th International Conference on Computational Linguistics: Technical Papers. Osaka, Japan.
 
-Note that ERRANT has been updated since the release of this paper and that the alignment cost and merging rules have also changed slightly. See `scripts/align_text.py` for more information.  
+Note that ERRANT has been updated since the release of this paper and that the alignment cost and merging rules have also changed slightly. See `errant/alignment.py` for more information.  
 
 # Error Type Classification
 
@@ -295,7 +298,8 @@ Tense errors are complicated. The simplest tense errors are inflectional, e.g. [
 &ensp;&ensp;E. There is exactly one token on both sides of the edit, they both have the same lemma, do not have the same POS tag, but the corrected token is a past tense verb form (VBD).  
 &ensp;&ensp;F. There is exactly one token on both sides of the edit, they do not have the same lemma, but are both parsed *aux* or *auxpass*; e.g. [*was* (eaten) -> *has* (eaten)].  
 &ensp;&ensp;G. All tokens on both side of the edit are parsed *aux* or *auxpass*; e.g. [*has been* (eaten) -> *is* (eaten)].  
-&ensp;&ensp;H. All tokens on both sides of the edit are VERB and the last token on both sides has the same lemma; e.g. [*has eaten* -> *was eating*].  
+&ensp;&ensp;H. All tokens on both sides of the edit are VERB and the last token on both sides has the same lemma; e.g. [*has eaten* -> *was eating*]. 
+
 
 #### Explanation
 
@@ -314,7 +318,7 @@ It is worth mentioning that although auxiliaries can be further subdivided in te
 
 As mentioned at the start of this section, the above rules have been described in isolation when in fact they sometimes interact and may be carefully ordered. The most complex example of this is verb morphology errors: while errors involving gerunds (VBG) or participles (VBN) are usually considered FORM, and errors involving past tense forms (VBD) are usually considered TENSE, edits such as VBG -> VBD, or vice versa, are more ambiguous (FORM or TENSE?). Similarly, SVA errors normally involve a 3rd-person form (VBZ), but there are also cases of VBZ -> VBN (SVA or FORM?). Although such cases are normally the result of a POS tagging error, we ultimately resolved this issue by manually inspecting the data to determine an order of precedence. Specifically, ambiguous errors were first considered FORM if one side was VBG or VBN, second considered SVA if one side was VBP or VBZ, and third considered TENSE if one side was VBD. In our experiments, this order seemed to produce the most reliable results, but it must still be recognised as an approximation. 
 
-Ultimately, since the interactions between our rules are very difficult to describe in words, we refer the reader to the code for more information concerning rule order. Specifically, look at `getOneSidedType` and `getTwoSidedType` in `scripts/cat_rules.py`. In general, the rules presented in this section mirror the order they occur in these functions.
+Ultimately, since the interactions between our rules are very difficult to describe in words, we refer the reader to the code for more information concerning rule order. Specifically, look at `get_one_sided_type` and `get_two_sided_type` in `errant/categorizer.py`. In general, the rules presented in this section mirror the order they occur in these functions.
 
 # MIT License
 
