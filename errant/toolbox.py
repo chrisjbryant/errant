@@ -1,4 +1,4 @@
-from typing import Dict, Tuple, List
+from typing import Dict, Tuple, List, Optional
 from operator import itemgetter
 import os
 import pathlib
@@ -115,7 +115,7 @@ def process_edits(edits: List[str]) -> Dict[str, Tuple[int, int, str, str]]:
 # Input 3: A corrected SpaCy sentence.
 # Output: A minimised edit with duplicate words on both sides removed.
 # E.g. [was eaten -> has eaten] becomes [was -> has]
-def minimise_edit(edit: Edit, orig: List[Token], cor: List[Token]):
+def minimise_edit(edit: Edit, orig: List[Token], cor: List[Token]) -> Optional[Edit]:
     # edit = [orig_start, orig_end, cat, cor, cor_start, cor_end]
     orig_toks = orig[edit.original_span[0]:edit.original_span[1]]
     cor_toks = cor[edit.corrected_span[0]:edit.corrected_span[1]]

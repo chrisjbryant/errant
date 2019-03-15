@@ -25,11 +25,11 @@ class ParallelToM2(Subcommand):
                                 "all-merge: Merge adjacent non-matches; e.g. MSSDI -> M, SSDI\n"
                                 "all-equal: Merge adjacent same-type non-matches; e.g. MSSDI -> M, SS, D, I")
 
-        subparser.set_defaults(func=parallel_2_m2_with_args)
+        subparser.set_defaults(func=parallel_to_m2_with_args)
         return subparser
 
 # Input: Command line args
-def parallel_2_m2_with_args(args: argparse.Namespace) -> None:
+def parallel_to_m2_with_args(args: argparse.Namespace) -> None:
 
     # Get base working directory.
     print("Loading resources...")

@@ -5,7 +5,7 @@ from string import punctuation
 import re
 import spacy.parts_of_speech as POS
 from spacy.tokens import Doc, Token
-from errant.minimum_edits import WagnerFischer
+from errant.minimum_edits import WagnerFischer, Opcode
 from errant.edit import Edit
 
 _CONTENT_POS = {POS.ADJ, POS.ADV, POS.NOUN, POS.VERB}
@@ -61,7 +61,7 @@ def _merge_edits(edits):
 # Input 2: Spacy target sentence
 # Input 3: The alignment between the 2; [e.g. M, M, S ,S M]
 # Output: A list of processed edits that have been merged or split.
-def _get_edits(source, target, edits):
+def _get_edits(source: List[Token], target: List[Token], edits: List[Opcode]) -> List[Opcode]:
     out_edits = []
     # Start: Split alignment intro groups of M, T and rest. T has a number after it.
     for op, group in groupby(edits, lambda x: x[0][0] if x[0][0] in {"M", "T"} else False):
@@ -79,7 +79,7 @@ def _get_edits(source, target, edits):
 # Input 2: Spacy target sentence
 # Input 3: A list of non-matching alignments: D, I and/or S
 # Output: A list of processed edits that have been merged or split.
-def _process_edits(source, target, edits):
+def _process_edits(source: List[Token], target: List[Token], edits: List[Opcode]) -> List[Opcode]:
     # Return single alignments
     if len(edits) <= 1: return edits
     # Get the ops for the whole edit sequence
@@ -140,7 +140,7 @@ def _process_edits(source, target, edits):
 
 
 # all-split: No edits are ever merged. Everything is 1:1, 1:0 or 0:1 only.
-def _get_edits_split(edits):
+def _get_edits_split(edits: List[Opcode]) -> List[Opcode]:
     new_edits = []
     for edit in edits:
         op = edit[0]
@@ -149,7 +149,7 @@ def _get_edits_split(edits):
     return new_edits
 
 # all-merge: Merge all adjacent edits of any operation type, except M.
-def _get_edits_group_all(edits):
+def _get_edits_group_all(edits: List[Opcode]) -> List[Opcode]:
     new_edits = []
     for op, group in groupby(edits, lambda x: True if x[0] == "M" else False):
         if not op:
@@ -157,7 +157,7 @@ def _get_edits_group_all(edits):
     return new_edits
 
 # all-equal: Merge all edits of the same operation type.
-def _get_edits_group_type(edits):
+def _get_edits_group_type(edits: List[Opcode]) -> List[Opcode]:
     new_edits = []
     for op, group in groupby(edits, lambda x: x[0]):
         if op != "M":
@@ -166,7 +166,7 @@ def _get_edits_group_type(edits):
 
 
 # If there is a substitution, calculate the more informative cost.
-def _token_substitution(a: Token, b: Token):
+def _token_substitution(a: Token, b: Token) -> float:
     # If lower case strings are the same, don't bother checking pos etc.
     # This helps catch case marking substitution errors.
     if a.text.lower() == b.text.lower():
@@ -177,26 +177,26 @@ def _token_substitution(a: Token, b: Token):
     return cost
 
 # Change cost of Transpositions to be the same as Levenshtein.
-def _levenshtein_transposition(a: Token, b: Token):
+def _levenshtein_transposition(a: Token, b: Token) -> float:
     return float("inf")
 
 # Change cost of Substitution to be the same as Levenshtein.
-def _levenshtein_substitution(a: Token, b: Token):
-    return 1
+def _levenshtein_substitution(a: Token, b: Token) -> float:
+    return 1.0
 
 
 # Is the token a content word?
-def _is_content(a: Token):
+def _is_content(a: Token) -> bool:
     return a.pos in _CONTENT_POS
 
 # Check whether token is punctuation
-def _is_punct(token: Token):
+def _is_punct(token: Token) -> bool:
     return token.pos == POS.PUNCT or token.text in punctuation
 
 
 # Cost is 0 if lemmas are the same, otherwise 0.499. Maximum S cost is 1.999.
 # This prevents unintuitive transpositions.
-def _lemma_cost(a: Token, b: Token):
+def _lemma_cost(a: Token, b: Token) -> float:
     if a.lemma == b.lemma:
         return 0
     else: 
@@ -204,7 +204,7 @@ def _lemma_cost(a: Token, b: Token):
 
 # Cost is 0 if POS are the same, else 0.25 if both are content, else 0.5.
 # Content words more likely to align to other content words.
-def _pos_cost(a: Token, b: Token):
+def _pos_cost(a: Token, b: Token) -> float:
     if a.pos == b.pos:
         return 0
     elif _is_content(a) and _is_content(b):
@@ -213,5 +213,5 @@ def _pos_cost(a: Token, b: Token):
         return 0.5
 
 # Calculate the cost of character alignment; i.e. char similarity
-def _char_cost(a: str, b: str):
+def _char_cost(a: str, b: str) -> float:
     return 1 - Levenshtein.ratio(a, b)

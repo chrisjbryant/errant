@@ -4,6 +4,8 @@ import collections
 
 T = TypeVar('T')
 
+Opcode = Tuple[str, int, int, int, int]
+
 class _Trace(NamedTuple):
     cost: int
     ops: List[str]
@@ -130,7 +132,7 @@ class WagnerFischer:
                                     opcounts.items()})
 
     @staticmethod
-    def get_opcodes(alignment: List[List[str]]) -> List[Tuple[str, int, int, int, int]]:
+    def get_opcodes(alignment: List[List[str]]) -> List[Opcode]:
         s_start = 0
         s_end   = 0
         t_start = 0
@@ -180,7 +182,7 @@ class WagnerFischer:
             else:
                 raise ValueError("Unknown op {!r}".format(op))
     
-    def get_best_match_opcodes(self):
+    def get_best_match_opcodes(self) -> List[Opcode]:
         best_alignment = next(self.alignments(depth_first=True))
         return WagnerFischer.get_opcodes(best_alignment)
 

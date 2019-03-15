@@ -9,10 +9,6 @@ class ErrorType:
     UNECESSARY_OP = "U"
     REPLACEMENT_OP = "R"
 
-    operation: str
-    category: Optional[str]
-    sub_category: Optional[str]
-
     def __init__(self, 
                  operation: str,
                  category: Optional[str] = None,
@@ -38,8 +34,8 @@ class ErrorType:
             representation += self.operation + ":"
         if self.category:
             representation += self.category
-        if self.sub_category:
-            representation += ":" + self.sub_category
+            if self.sub_category:
+                representation += ":" + self.sub_category
         return representation
 
 class Edit:

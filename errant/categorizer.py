@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 import Levenshtein
 from string import punctuation
 import spacy.parts_of_speech as spos
@@ -90,7 +90,7 @@ def categorize(edit: Edit, orig_sent: List[Token], cor_sent: List[Token],
 # Input 1: Spacy tokens
 # Input 2: A map dict from PTB to universal dependency pos tags.
 # Output: A list of token, pos and dep tag strings.
-def get_edit_info(toks: List[Token], tag_map: Dict[str, str]):
+def get_edit_info(toks: List[Token], tag_map: Dict[str, str]) -> Tuple[List[str], List[str], List[str]]:
     text = []
     pos = []
     dep = []
@@ -104,7 +104,7 @@ def get_edit_info(toks: List[Token], tag_map: Dict[str, str]):
 # Input 2: A map dict from PTB to universal dependency pos tags.
 # Output: An error type string.
 # When one side of the edit is null, we can only use the other side.
-def get_one_sided_type(toks: List[Token], tag_map: Dict[str, str]):
+def get_one_sided_type(toks: List[Token], tag_map: Dict[str, str]) -> str:
     # Extract strings, pos tags and parse info from the toks.
     str_list, pos_list, dep_list = get_edit_info(toks, tag_map)
     
@@ -144,7 +144,7 @@ def get_one_sided_type(toks: List[Token], tag_map: Dict[str, str]):
 # Output: An error type string.
 def get_two_sided_category(orig_toks: List[Token], cor_toks: List[Token], 
                            gb_spell: List[str], tag_map: Dict[str, str], 
-                           nlp: Language, stemmer: 'nltk.stem.api.StemmerI'):
+                           nlp: Language, stemmer: 'nltk.stem.api.StemmerI') -> str:
     # Extract strings, pos tags and parse info from the toks.
     orig_str, orig_pos, orig_dep = get_edit_info(orig_toks, tag_map)
     cor_str, cor_pos, cor_dep = get_edit_info(cor_toks, tag_map)
@@ -289,7 +289,7 @@ def get_two_sided_category(orig_toks: List[Token], cor_toks: List[Token],
     # Multi-token replacements (uncommon)
     # All auxiliaries
     if set(orig_dep+cor_dep).issubset({"aux", "auxpass"}):
-        return "VERB:TENSE"		
+        return "VERB:TENSE"
     # All same POS
     if len(set(orig_pos+cor_pos)) == 1:
         # Final verbs with the same lemma are tense; e.g. eat -> has eaten 
@@ -300,7 +300,7 @@ def get_two_sided_category(orig_toks: List[Token], cor_toks: List[Token],
             return orig_pos[0]
     # All same special dep labels.
     if len(set(orig_dep+cor_dep)) == 1 and orig_dep[0] in _DEP_MAP.keys():
-        return _DEP_MAP[orig_dep[0]]			
+        return _DEP_MAP[orig_dep[0]]
     # Infinitives, gerunds, phrasal verbs.
     if set(orig_pos+cor_pos) == {"PART", "VERB"}:
         # Final verbs with the same lemma are form; e.g. to eat -> eating
@@ -312,11 +312,11 @@ def get_two_sided_category(orig_toks: List[Token], cor_toks: List[Token],
     # Possessive nouns; e.g. friends -> friend 's
     if (orig_pos == ["NOUN", "PART"] or cor_pos == ["NOUN", "PART"]) and \
         same_lemma(orig_toks[0], cor_toks[0], nlp):
-        return "NOUN:POSS"	
+        return "NOUN:POSS"
     # Adjective forms with "most" and "more"; e.g. more free -> freer
     if (orig_str[0].lower() in {"most", "more"} or cor_str[0].lower() in {"most", "more"}) and \
         same_lemma(orig_toks[-1], cor_toks[-1], nlp) and len(orig_str) <= 2 and len(cor_str) <= 2:
-        return "ADJ:FORM"		
+        return "ADJ:FORM"
         
     # Tricky cases.
     else:
@@ -325,7 +325,7 @@ def get_two_sided_category(orig_toks: List[Token], cor_toks: List[Token],
 # Input 1: A list of original token strings
 # Input 2: A list of corrected token strings
 # Output: Boolean; the difference between the inputs is only whitespace or case.
-def only_orth_change(orig_str: List[Token], cor_str: List[Token]):
+def only_orth_change(orig_str: List[Token], cor_str: List[Token]) -> bool:
     orig_join = "".join(orig_str).lower()
     cor_join = "".join(cor_str).lower()
     if orig_join == cor_join:
@@ -335,7 +335,7 @@ def only_orth_change(orig_str: List[Token], cor_str: List[Token]):
 # Input 1: A list of original token strings
 # Input 2: A list of corrected token strings
 # Output: Boolean; the tokens are exactly the same but in a different order.
-def exact_reordering(orig_str: List[Token], cor_str: List[Token]):
+def exact_reordering(orig_str: List[Token], cor_str: List[Token]) -> bool:
     # Sorting lets us keep duplicates.
     orig_set = sorted([tok.lower() for tok in orig_str])
     cor_set = sorted([tok.lower() for tok in cor_str])
@@ -349,7 +349,7 @@ def exact_reordering(orig_str: List[Token], cor_str: List[Token]):
 # Output: Boolean; the tokens have the same lemma.
 # Spacy only finds lemma for its predicted POS tag. Sometimes these are wrong,
 # so we also consider alternative POS tags to improve chance of a match.
-def same_lemma(orig_tok: Token , cor_tok: Token, nlp: Language):
+def same_lemma(orig_tok: Token , cor_tok: Token, nlp: Language) -> bool:
     orig_lemmas = []
     cor_lemmas = []
     for pos in _OPEN_POS:
@@ -363,7 +363,7 @@ def same_lemma(orig_tok: Token , cor_tok: Token, nlp: Language):
 # Input 1: An original text spacy token. 
 # Input 2: A corrected text spacy token.
 # Output: Boolean; both tokens have a dependant auxiliary verb.
-def preceded_by_aux(orig_tok: List[Token] , cor_tok: List[Token]):
+def preceded_by_aux(orig_tok: List[Token] , cor_tok: List[Token]) -> bool:
     # If the toks are aux, we need to check if they are the first aux.
     if orig_tok[0].dep_.startswith("aux") and cor_tok[0].dep_.startswith("aux"):
         # Find the parent verb
