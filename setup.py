@@ -30,8 +30,8 @@ setup(
                                     "tests.*", "tests"]),
     install_requires=[
         "spacy==1.9.0",
-        "nltk",
-        "python-Levenshtein"
+        "nltk>=3.0",
+        "python-Levenshtein>=0.12.0'"
     ],
     entry_points={
         "console_scripts": [
