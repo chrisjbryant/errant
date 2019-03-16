@@ -1,4 +1,7 @@
 # ERRANT
+ 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 This repository contains the grammatical ERRor ANnotation Toolkit (ERRANT) described in:
 
@@ -30,30 +33,71 @@ A "noop" edit is a special kind of edit that explicitly indicates an annotator/s
 
 We only support Python 3. It is safest to install everything in a clean [virtualenv](https://docs.python-guide.org/dev/virtualenvs/#lower-level-virtualenv).
 
-## Install the library
+# Installing the library and dependencies
 
-You can use install the library and its dependencies using pip.
+Installing the library and dependencies is simple using pip.
 
 ```
-pip install git+https://github.com/sai-prasanna/errant.git
+pip install errant
 ```
 
-## spaCy
+Download spacy models using 
+```
+python3 -m spacy download en
+```
+
+
+### spaCy
 
 spaCy is a natural language processing (NLP) toolkit available here: https://spacy.io/.
 
-It can be installed for Python 3 as follows:  
+You would have to download the spacy model for english to get errant to work.  
 ```
-pip3 install -U spacy==1.9.0
 python3 -m spacy download en
 ```
 This installs both spaCy itself and the default English language model. We do not recommend spaCy 2.0 at this time because it is slower and less compatible with ERRANT. More information on how to install spaCy can be found on its website. We used spaCy 1.7.3 in our original paper. 
 
-## NLTK
+### NLTK
 
-NLTK is another well-known NLP library: http://www.nltk.org/. We use it only for the Lancaster Stemmer.  
+NLTK is another well-known NLP library: http://www.nltk.org/. We use it only for the Lancaster Stemmer.
+
+# Installing from source
+
+You can also install errant by cloning our git repository:
+```
+git clone https://github.com/sai-prasanna/errant.git
+```
+Create a Python 3.6 virtual environment, and install the necessary requirements by running:
+```
+scripts/install_requirements.sh
+```
+Once the requirements have been installed, run:
+```
+pip install --editable .
+```
+To install the Errant library in editable mode into your environment. This will make errant available on your system but it will use the sources from the local clone you made of the source repository.
+
 
 # Usage
+
+We provide a python API and three cli commands to use errant.
+
+## API
+
+Basic Usage to get aligned spacy token level edits along with error types.
+
+``` python3
+from errant import Errant
+
+annotate = Errant()
+original = 'This widespread propaganda benefits only to he companys.'
+corrected = 'This widespread publicity only benefits their companies.'
+orignal_tokens = annotate.parse(original)
+corrected_tokens = annotate.parse(corrected)
+edits = annotate.get_typed_edits(orignal_tokens, corrected_tokens)
+```
+
+## CLI
 
 Three main commands are provided with ERRANT: `parallel_to_m2`, `m2_to_m2` and `compare_m2`.  
 
@@ -319,28 +363,6 @@ It is worth mentioning that although auxiliaries can be further subdivided in te
 As mentioned at the start of this section, the above rules have been described in isolation when in fact they sometimes interact and may be carefully ordered. The most complex example of this is verb morphology errors: while errors involving gerunds (VBG) or participles (VBN) are usually considered FORM, and errors involving past tense forms (VBD) are usually considered TENSE, edits such as VBG -> VBD, or vice versa, are more ambiguous (FORM or TENSE?). Similarly, SVA errors normally involve a 3rd-person form (VBZ), but there are also cases of VBZ -> VBN (SVA or FORM?). Although such cases are normally the result of a POS tagging error, we ultimately resolved this issue by manually inspecting the data to determine an order of precedence. Specifically, ambiguous errors were first considered FORM if one side was VBG or VBN, second considered SVA if one side was VBP or VBZ, and third considered TENSE if one side was VBD. In our experiments, this order seemed to produce the most reliable results, but it must still be recognised as an approximation. 
 
 Ultimately, since the interactions between our rules are very difficult to describe in words, we refer the reader to the code for more information concerning rule order. Specifically, look at `get_one_sided_type` and `get_two_sided_type` in `errant/categorizer.py`. In general, the rules presented in this section mirror the order they occur in these functions.
-
-# MIT License
-
-Copyright (c) 2017 Christopher Bryant, Mariano Felice
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 # Contact
 

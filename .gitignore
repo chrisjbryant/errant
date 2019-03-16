@@ -21,3 +21,5 @@ pip-delete-this-directory.txt
 # IDE
 .vscode/
 
+# mypy
+.mypy_cache/
