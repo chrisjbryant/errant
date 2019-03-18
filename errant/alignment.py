@@ -89,7 +89,7 @@ def _get_edits(
             continue
         # Do not merge T
         elif op == "T":
-            out_edits.extend(group)
+            out_edits.extend(op_code_group)
         # Further processing required
         else:
             out_edits.extend(_process_edits(source, target, op_code_group))
