@@ -26,21 +26,21 @@ def main(args):
         if dir == ".DS_Store":
             continue
         print("Processing dir... " + dir)
-        orig = open(os.path.join(args.dir, dir, "orig.txt"))
-        cor = open(os.path.join(args.dir, dir, "cor.txt"))
-        out_m2 = open(os.path.join(args.dir, dir, "out.m2"), "w")
+        orig = open(os.path.join(args.dir, dir, "original.txt"))
+        cor = open(os.path.join(args.dir, dir, "corrected.txt"))
+        out_m2 = open(os.path.join(args.dir, dir, dir + ".m2.txt"), "w")
 
         for orig_sent, cor_sent in zip(orig, cor):
             # Write the original sentence to the output m2 file.
-            out_m2.write("S "+ orig_sent)
+            out_m2.write("S "+ " ".join(token.text for token in nlp(orig_sent.strip())) + "\n")
             # Identical sentences have no edits, so just write noop.
             if orig_sent.strip() == cor_sent.strip():
-                out_m2.write("A -1 -1|||noop|||-NONE-|||REQUIRED|||-NONE-|||0\n")
+                out_m2.write("A -1 -1|||noop|||-NONE-|||REQUIRED|||-NONE-|||0\n\n")
                 # Otherwise, do extra processing.
             else:
                 # Markup the parallel sentences with spacy (assume tokenized)
-                proc_orig = toolbox.applySpacy(orig_sent.strip().split(), nlp)
-                proc_cor = toolbox.applySpacy(cor_sent.strip().split(), nlp)
+                proc_orig = nlp(orig_sent.strip())
+                proc_cor = nlp(cor_sent.strip())
                 # Auto align the parallel sentences and extract the edits.
                 auto_edits = align_text.getAutoAlignedEdits(proc_orig, proc_cor, nlp, args)
                 # Loop through the edits.
@@ -51,7 +51,7 @@ def main(args):
                     # Write the edit to the output m2 file.
                     out_m2.write(toolbox.formatEdit(auto_edit)+"\n")
                     # Write a newline when there are no more edits.
-                    out_m2.write("\n")
+                out_m2.write("\n")
 
 if __name__ == "__main__":
     # Define and parse program input
