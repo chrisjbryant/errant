@@ -1,51 +1,90 @@
 import argparse
-from os.path import isfile
+from collections import Counter
 
-# Input: A path to an m2 file.
-# Output: A list of sentence+edits in that file.
-def loadM2(path):
-	if isfile(path):
-		return open(path).read().strip().split("\n\n")
-	else:
-		print("Error: "+path+" is not a file.")
-		exit()
+# Input: Command line args
+def main(args):
+	# Open hypothesis and reference m2 files and split into chunks
+	hyp_m2 = open(args.hyp).read().strip().split("\n\n")
+	ref_m2 = open(args.ref).read().strip().split("\n\n")
+	# Make sure they have the same number of sentences
+	assert len(hyp_m2) == len(ref_m2)
 
-# Input 1: An m2 format sentence with edits.
-# Input 2: Command line options.
-# Output: A dictionary where key is coder and value is edit dict.
-# Each subdict might be for detection, correction, or token based detection.
-def extractEdits(sent, args):
-	coder_dict = {}
+	# Store global corpus level best counts here
+	best_dict = Counter({"tp":0, "fp":0, "fn":0})
+	best_cats = {}
+	# Process each sentence
+	sents = zip(hyp_m2, ref_m2)
+	for sent_id, sent in enumerate(sents):
+		# Simplify the edits into lists of lists
+		hyp_edits = simplifyEdits(sent[0])
+		ref_edits = simplifyEdits(sent[1])
+		# Process the edits for detection/correction based on args
+		hyp_dict = processEdits(hyp_edits, args)
+		ref_dict = processEdits(ref_edits, args)
+		# Evaluate the edits and get the best TP, FP, FN counts for the best hyp+ref combo.
+		count_dict, cat_dict = evaluateEdits(hyp_dict, ref_dict, best_dict, sent_id, args)
+		# Merge these dicts with best_dict and best_cats
+		best_dict += Counter(count_dict)
+		best_cats = mergeDict(best_cats, cat_dict)
+	# Print results
+	printResults(best_dict, best_cats, args)
+
+# Input: An m2 format sentence with edits.
+# Output: A list of lists. Each edit: [start, end, cat, cor, coder]
+def simplifyEdits(sent):
+	out_edits = []
+	# Get the edit lines from an m2 block.
 	edits = sent.split("\n")[1:]
-	# If there are no edits, pretend there was an explicit noop
-	if not edits: edits = ["A -1 -1|||noop|||-NONE-|||REQUIRED|||-NONE-|||0"]
+	# Loop through the edits
 	for edit in edits:
 		# Preprocessing
 		edit = edit[2:].split("|||") # Ignore "A " then split.
-		span = [int(i) for i in edit[0].split()]
-		start = span[0]
-		end = span[1]
+		span = edit[0].split()
+		start = int(span[0])
+		end = int(span[1])
 		cat = edit[1]
 		cor = edit[2]
-		cor_len = len(cor.split())
 		coder = int(edit[-1])
-		# Save coder in dict
-		if coder not in coder_dict.keys(): coder_dict[coder] = {}
-		
-		# Some filters based on args.
-		# Exclude uncorrected errors (UNK) in correction evaluation. Gold edits.
-		if not args.det_tok and not args.det_span and cat == "UNK": continue
-		# Only evaluate edits with more than one token on at least one side.
-		if args.multi and end-start < 2 and cor_len < 2: continue
-		
+		out_edit = [start, end, cat, cor, coder]
+		out_edits.append(out_edit)
+	return out_edits
+
+# Input 1: A list of edits. Each edit: [start, end, cat, cor, coder]
+# Input 2: Command line args
+# Output: A dict; key is coder, value is edit dict. edit dict format varies based on args.
+def processEdits(edits, args):
+	coder_dict = {}
+	# Add an explicit noop edit if there are no edits.
+	if not edits: edits = [[-1, -1, "noop", "-NONE-", 0]]
+	# Loop through the edits
+	for edit in edits:
+		# Name the edit elements for clarity
+		start = edit[0]
+		end = edit[1]
+		cat = edit[2]
+		cor = edit[3]
+		coder = edit[4]
+		# Add the coder to the coder_dict if necessary
+		if coder not in coder_dict: coder_dict[coder] = {}
+
+		# Optionally apply filters based on args
+		# 1. UNK type edits are only useful for detection, not correction.
+		if not args.dt and not args.ds and cat == "UNK": continue
+		# 2. Only evaluate single token edits; i.e. 0:1, 1:0 or 1:1
+		if args.single and (end-start >= 2 or len(cor.split()) >= 2): continue
+		# 3. Only evaluate multi token edits; i.e. 2+:n or n:2+
+		if args.multi and end-start < 2 and len(cor.split()) < 2: continue
+		# 4. If there is a filter, ignore the specified error types
+		if args.filt and cat in args.filt: continue
+
 		# Token Based Detection
-		if args.det_tok:
-			# Keep noop edits as they are.
+		if args.dt:
+			# Preserve noop edits.
 			if start == -1:
 				if (start, start) in coder_dict[coder].keys():
 					coder_dict[coder][(start, start)].append(cat)
 				else:
-					coder_dict[coder][(start, start)] = [cat]			
+					coder_dict[coder][(start, start)] = [cat]
 			# Insertions defined as affecting the token on the right
 			elif start == end and start >= 0:
 				if (start, start+1) in coder_dict[coder].keys():
@@ -58,19 +97,19 @@ def extractEdits(sent, args):
 					if (tok_id, tok_id+1) in coder_dict[coder].keys():
 						coder_dict[coder][(tok_id, tok_id+1)].append(cat)
 					else:
-						coder_dict[coder][(tok_id, tok_id+1)] = [cat]			
+						coder_dict[coder][(tok_id, tok_id+1)] = [cat]
 
 		# Span Based Detection
-		elif args.det_span:
+		elif args.ds:
 			if (start, end) in coder_dict[coder].keys():
 				coder_dict[coder][(start, end)].append(cat)
 			else:
-				coder_dict[coder][(start, end)] = [cat]		
-		
+				coder_dict[coder][(start, end)] = [cat]
+
 		# Span Based Correction
 		else:
 			# With error type classification
-			if args.cor_span_err:
+			if args.cse:
 				if (start, end, cat, cor) in coder_dict[coder].keys():
 					coder_dict[coder][(start, end, cat, cor)].append(cat)
 				else:
@@ -83,15 +122,72 @@ def extractEdits(sent, args):
 					coder_dict[coder][(start, end, cor)] = [cat]
 	return coder_dict
 
-# Input 1: A dictionary of hypothesis edits.
+# Input 1: A hyp dict; key is coder_id, value is dict of processed hyp edits.
+# Input 2: A ref dict; key is coder_id, value is dict of processed ref edits.
+# Input 3: A dictionary of the best corpus level TP, FP and FN counts so far.
+# Input 4: Sentence ID (for verbose output only)
+# Input 5: Command line args
+# Output 1: A dict of the best corpus level TP, FP and FN counts for the input sentence.
+# Output 2: A dict of the equivalent error types for the best corpus level TP, FP and FNs.
+def evaluateEdits(hyp_dict, ref_dict, best, sent_id, args):
+	# Store the best sentence level scores and hyp+ref combination IDs
+	# best_f is initialised as -1 cause 0 is a valid result.
+	best_tp, best_fp, best_fn, best_f, best_hyp, best_ref = 0, 0, 0, -1, 0, 0
+	best_cat = {}
+	# Compare each hyp and ref combination
+	for hyp_id in hyp_dict.keys():
+		for ref_id in ref_dict.keys():
+			# Get the local counts for the current combination.
+			tp, fp, fn, cat_dict = compareEdits(hyp_dict[hyp_id], ref_dict[ref_id])
+			# Compute the local sentence scores (for verbose output only)
+			loc_p, loc_r, loc_f = computeFScore(tp, fp, fn, args.beta)
+			# Compute the global sentence scores
+			p, r, f = computeFScore(tp+best["tp"], fp+best["fp"], fn+best["fn"], args.beta)
+			# Save the scores if they are the current best hyp+ref combo in terms of:
+			# 1. Higher F-score
+			# 2. Same F-score, higher TP
+			# 3. Same F-score and TP, lower FP
+			# 4. Same F-score, TP and FP, lower FN
+			if 	(f > best_f) or \
+				(f == best_f and tp > best_tp) or \
+				(f == best_f and tp == best_tp and fp < best_fp) or \
+				(f == best_f and tp == best_tp and fp == best_fp and fn < best_fn):
+				best_tp, best_fp, best_fn, best_f, best_hyp, best_ref = tp, fp, fn, f, hyp_id, ref_id
+				best_cat = cat_dict
+			# Verbose output
+			if args.verbose:
+				# Prepare verbose output edits.
+				hyp_verb = list(sorted(hyp_dict[hyp_id].keys()))
+				ref_verb = list(sorted(ref_dict[ref_id].keys()))
+				# Ignore noop edits
+				if not hyp_verb or hyp_verb[0][0] == -1: hyp_verb = []
+				if not ref_verb or ref_verb[0][0] == -1: ref_verb = []
+				# Print verbose info
+				print('{:-^40}'.format(""))
+				print("SENTENCE "+str(sent_id)+" - HYP "+str(hyp_id)+" - REF "+str(ref_id))
+				print("HYPOTHESIS EDITS :", hyp_verb)
+				print("REFERENCE EDITS  :", ref_verb)
+				print("Local TP/FP/FN   :", str(tp), str(fp), str(fn))
+				print("Local P/R/F"+str(args.beta)+"  :", str(loc_p), str(loc_r), str(loc_f))
+				print("Global TP/FP/FN  :", str(tp+best["tp"]), str(fp+best["fp"]), str(fn+best["fn"]))
+				print("Global P/R/F"+str(args.beta)+"  :", str(p), str(r), str(f))
+	# Verbose output: display the best hyp+ref combination
+	if args.verbose:
+		print('{:-^40}'.format(""))
+		print("^^ HYP "+str(best_hyp)+", REF "+str(best_ref)+" chosen for sentence "+str(sent_id))
+	# Save the best TP, FP and FNs as a dict, and return this and the best_cat dict
+	best_dict = {"tp":best_tp, "fp":best_fp, "fn":best_fn}
+	return best_dict, best_cat
+
+# Input 1: A dictionary of hypothesis edits for a single system.
 # Input 2: A dictionary of reference edits for a single annotator.
 # Output 1-3: The TP, FP and FN for the hyp vs the given ref annotator.
-# Output 4: A dictionary of the error type scores.
+# Output 4: A dictionary of the error type counts.
 def compareEdits(hyp_edits, ref_edits):	
 	tp = 0	# True Positives
 	fp = 0	# False Positives
 	fn = 0	# False Negatives
-	cat_dict = {} # {cat: [tp, fp, fn], ...} 
+	cat_dict = {} # {cat: [tp, fp, fn], ...}
 
 	for h_edit, h_cats in hyp_edits.items():
 		# noop hyp edits cannot be TP or FP
@@ -130,7 +226,7 @@ def compareEdits(hyp_edits, ref_edits):
 				else:
 					cat_dict[r_cat] = [0, 0, 1]
 	return tp, fp, fn, cat_dict
-	
+
 # Input 1-3: True positives, false positives, false negatives
 # Input 4: Value of beta in F-score.
 # Output 1-3: Precision, Recall and F-score rounded to 4dp.
@@ -149,10 +245,10 @@ def mergeDict(dict1, dict2):
 		else:
 			dict1[cat] = stats
 	return dict1
-	
-# Input 1: A dictionary of category TP, FP and FN per category.
-# Input 2: Numerical setting on level of detail to process categories.
-# 1: M, R, U, UNK only.  2: Everything without M, R, U.  3: Everything.
+
+# Input 1: A dict; key is error cat, value is counts for [tp, fp, fn]
+# Input 2: Integer value denoting level of error category granularity.
+# Specifically, 1: Operation tier; e.g. M, R, U.  2: Main tier; e.g. NOUN, VERB  3: Everything.
 # Output: A dictionary of category TP, FP and FN based on Input 2.
 def processCategories(cat_dict, setting):
 	# Otherwise, do some processing.
@@ -167,7 +263,7 @@ def processCategories(cat_dict, setting):
 				proc_cat_dict[cat[0]] = [x+y for x, y in zip(proc_cat_dict[cat[0]], cnt)]
 			else:
 				proc_cat_dict[cat[0]] = cnt
-		# Everything without M, U or R.		
+		# Everything without M, U or R.
 		elif setting == 2:
 			if cat[2:] in proc_cat_dict.keys():
 				proc_cat_dict[cat[2:]] = [x+y for x, y in zip(proc_cat_dict[cat[2:]], cnt)]
@@ -178,112 +274,23 @@ def processCategories(cat_dict, setting):
 			return cat_dict
 	return proc_cat_dict
 
-	
-if __name__ == "__main__":
-	# Define and parse program input
-	parser = argparse.ArgumentParser(description="Calculate F-scores for error detection and/or correction "
-						"between HYP and REF M2 files.\nDefault behaviour evaluates "
-						"just correction in terms of spans.\nFlags let you evaluate "
-						"both span and token based detection etc.",
-						formatter_class=argparse.RawTextHelpFormatter,
-						usage="%(prog)s [options] -hyp HYP -ref REF")
-	parser.add_argument("-hyp", help="The hypothesis M2 file", required=True)
-	parser.add_argument("-ref", help="The reference M2 file", required=True)
-	parser.add_argument("-v", "--verbose", help="Print verbose output.", action="store_true", required=False)
-	parser.add_argument("-b", "--beta", help="Value of beta in F-score. (default: 0.5)",
-						default=0.5, type=float, required=False)
-	parser.add_argument("-multi", help="Only evaluate edits with >1 tokens on at least one side.",
-						action="store_true", required=False)						
-	parser.add_argument("-cat",	help="Show error category scores.\n"
-						"1: Only show overall first level category scores; e.g. R.\n"
-						"2: Only show overall non-first level category scores; e.g. NOUN.\n"
-						"3: Show all combinations of category scores; e.g. R:NOUN.",
-						choices=[1, 2, 3], type=int, required=False)
-	type_group = parser.add_mutually_exclusive_group(required=False)
-	type_group.add_argument("-dt", "--det_tok",	help="Evaluate Token-level Detection only.", 
-						action="store_true")
-	type_group.add_argument("-ds", "--det_span", help="Evaluate Span-level Detection only.", 
-						action="store_true")
-	type_group.add_argument("-cse", "--cor_span_err",
-						help="Evaluate Span-level Correction including error types.", action="store_true")
-	args = parser.parse_args()
-
-	# Load input files.
-	hyp_m2 = loadM2(args.hyp)
-	ref_m2 = loadM2(args.ref)
-	# Make sure they have the same number of sentences
-	assert len(hyp_m2) == len(ref_m2)
-
-	# Variables storing global TP, FP, FN and cat dicts
-	best_tp, best_fp, best_fn = 0, 0, 0
-	best_cat_dict = {}
-	
-	# Process each sentence
-	sents = zip(hyp_m2, ref_m2)
-	for sent_id, sent in enumerate(sents):
-		# Process the edits according to input args.
-		hyp_dict = extractEdits(sent[0], args)
-		ref_dict = extractEdits(sent[1], args)
-		# Compare the hyp against each ref and keep track of best so far.
-		best_coder = 0
-		tmp_f = -1
-		tmp_tp, tmp_fp, tmp_fn = 0, 0, 0
-		tmp_cat_dict = {}
-		for coder, ref_edits in ref_dict.items():
-			# Raw counts for a single annotator.
-			tp, fp, fn, cat_dict = compareEdits(hyp_dict[0], ref_edits)
-			# Score these cumulatively with previous global results.
-			p, r, f = computeFScore(tp+best_tp, fp+best_fp, fn+best_fn, args.beta)
-			# 1. Save sentence with highest F-score.
-			# 2. If both have same F-score, save largest TP.
-			# 3. If both have same F-score and TP, save lowest FP.
-			# 4. If both have same F-score, TP and FP, save lowest FN.
-			if (f > tmp_f) or (f == tmp_f and tp > tmp_tp) or \
-				(f == tmp_f and tp == tmp_tp and fp < tmp_fp) or \
-				(f == tmp_f and tp == tmp_tp and fp == tmp_fp and fn < tmp_fn):
-				best_coder = coder
-				tmp_f = f
-				tmp_tp, tmp_fp, tmp_fn = tp, fp, fn
-				tmp_cat_dict = cat_dict
-			# Verbose output
-			if args.verbose:
-				# Prepare verbose output edits.
-				hyp_verb = list(sorted(hyp_dict[0].keys()))
-				ref_verb = list(sorted(ref_edits.keys()))
-				if not hyp_verb or hyp_verb[0][0] == -1: hyp_verb = []
-				if not ref_verb or ref_verb[0][0] == -1: ref_verb = []
-				# Print verbose info
-				print('{:-^40}'.format(""))
-				print("ANNOTATOR "+str(coder))
-				print("HYPOTHESIS EDITS :", hyp_verb)
-				print("REFERENCE EDITS  :", ref_verb)
-				print("Local TP/FP/FN   :", str(tp), str(fp), str(fn))
-				print("Global TP/FP/FN  :", str(tp+best_tp), str(fp+best_fp), str(fn+best_fn))
-				print("Global P/R/F"+str(args.beta)+"  :", str(p), str(r), str(f))
-		# Having processed all ref, save the best tp, fp, fn etc.
-		best_tp += tmp_tp
-		best_fp += tmp_fp
-		best_fn += tmp_fn
-		best_cat_dict = mergeDict(best_cat_dict, tmp_cat_dict)
-		# Verbose output
-		if args.verbose:
-			print('{:-^40}'.format(""))
-			print("^^ Annotator "+str(best_coder)+" chosen for sentence "+str(sent_id))
-
+# Input 1: A dict of global best TP, FP and FNs
+# Input 2: A dict of error types and counts for those TP, FP and FNs
+# Input 3: Command line args
+def printResults(best, best_cats, args):
 	# Prepare output title.
-	if args.det_tok: title = " Token-Based Detection "
-	elif args.det_span: title = " Span-Based Detection "
-	elif args.cor_span_err: title = " Span-Based Correction + Classification "
-	else: title = " Span-Based Correction "			
+	if args.dt: title = " Token-Based Detection "
+	elif args.ds: title = " Span-Based Detection "
+	elif args.cse: title = " Span-Based Correction + Classification "
+	else: title = " Span-Based Correction "
 
 	# Category Scores
 	if args.cat:
-		best_cat_dict = processCategories(best_cat_dict, args.cat)
+		best_cats = processCategories(best_cats, args.cat)
 		print("")
 		print('{:=^66}'.format(title))
 		print("Category".ljust(14), "TP".ljust(8), "FP".ljust(8), "FN".ljust(8), "P".ljust(8), "R".ljust(8), "F"+str(args.beta))
-		for cat, cnts in sorted(best_cat_dict.items()):
-			if cnts[0] + cnts[2] == 0: continue # Ignore hyp file placeholder error type.
+		for cat, cnts in sorted(best_cats.items()):
 			cat_p, cat_r, cat_f = computeFScore(cnts[0], cnts[1], cnts[2], args.beta)
 			print(cat.ljust(14), str(cnts[0]).ljust(8), str(cnts[1]).ljust(8), str(cnts[2]).ljust(8), str(cat_p).ljust(8), str(cat_r).ljust(8), cat_f)
 
@@ -291,6 +298,33 @@ if __name__ == "__main__":
 	print("")
 	print('{:=^46}'.format(title))
 	print("\t".join(["TP", "FP", "FN", "Prec", "Rec", "F"+str(args.beta)]))
-	print("\t".join(map(str, [best_tp, best_fp, best_fn]+list(computeFScore(best_tp, best_fp, best_fn, args.beta)))))
+	print("\t".join(map(str, [best["tp"], best["fp"], best["fn"]]+list(computeFScore(best["tp"], best["fp"], best["fn"], args.beta)))))
 	print('{:=^46}'.format(""))
 	print("")
+
+if __name__ == "__main__":
+	# Define and parse program input
+	parser = argparse.ArgumentParser(description="Calculate F-scores for error detection and/or correction.\n"
+						"Flags let you evaluate error types at different levels of granularity.",
+						formatter_class=argparse.RawTextHelpFormatter,
+						usage="%(prog)s [options] -hyp HYP -ref REF")
+	parser.add_argument("-hyp", help="A hypothesis M2 file", required=True)
+	parser.add_argument("-ref", help="A reference M2 file", required=True)
+	parser.add_argument("-b", "--beta", help="Value of beta in F-score. (default: 0.5)", default=0.5, type=float)
+	parser.add_argument("-v", "--verbose", help="Print verbose output.", action="store_true")
+	eval_type = parser.add_mutually_exclusive_group()
+	eval_type.add_argument("-dt", help="Evaluate Detection in terms of Tokens.", action="store_true")
+	eval_type.add_argument("-ds", help="Evaluate Detection in terms of Spans.", action="store_true")
+	eval_type.add_argument("-cs", help="Evaluate Correction in terms of Spans. (default)", action="store_true")
+	eval_type.add_argument("-cse", help="Evaluate Correction in terms of Spans and Error types.", action="store_true")
+	parser.add_argument("-single", help="Only evaluate single token edits; i.e. 0:1, 1:0 or 1:1", action="store_true")
+	parser.add_argument("-multi", help="Only evaluate multi token edits; i.e. 2+:n or n:2+", action="store_true")
+	parser.add_argument("-filt", help="Do not evaluate the specified error types", default=[], nargs="+")
+	parser.add_argument("-cat",	help="Show error category scores.\n"
+						"1: Only show operation tier scores; e.g. R.\n"
+						"2: Only show main tier scores; e.g. NOUN.\n"
+						"3: Show all category scores; e.g. R:NOUN.",
+						choices=[1, 2, 3], type=int)
+	args = parser.parse_args()
+	# Run the program
+	main(args)

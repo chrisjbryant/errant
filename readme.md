@@ -10,7 +10,7 @@ If you make use of this code, please cite the above papers.
 
 # Overview
 
-The main aim of ERRANT is to automatically annotate parallel English sentences with error type information. Specifically, given an original and corrected sentence pair, ERRANT will extract the edits that transform the former to the latter and then classify them according to a rule-based error type framework. This can be used to standardise parallel datasets or facilitate detailed error type evaluation. The annotated output file is in M2 format and an  evaluation script is provided.
+The main aim of ERRANT is to automatically annotate parallel English sentences with error type information. Specifically, given an original and corrected sentence pair, ERRANT will extract the edits that transform the former to the latter and then classify them according to a rule-based error type framework. This can be used to standardise parallel datasets or facilitate detailed error type evaluation. The annotated output file is in M2 format and an evaluation script is provided.
 
 ### Example:  
 **Original**: This are gramamtical sentence .  
@@ -28,20 +28,18 @@ A "noop" edit is a special kind of edit that explicitly indicates an annotator/s
 
 # Pre-requisites
 
-Currently, we only support Python 3. It is safest to install everything in a clean [virtualenv](http://python-guide-pt-br.readthedocs.io/en/latest/dev/virtualenvs/) since we have had reports of conflicting dependencies.
+We only support Python 3. It is safest to install everything in a clean [virtualenv](https://docs.python-guide.org/dev/virtualenvs/#lower-level-virtualenv).
 
 ## spaCy
 
 spaCy is a natural language processing (NLP) toolkit available here: https://spacy.io/.
-
-UPDATE 17/12/17: In early November, spaCy underwent significant changes when it became version 2.0.0. Although we have not tested ERRANT with this new version of spaCy, the main difference seems to be a slight increase in performance at a significant cost to speed. As such, we currently recommend the slightly older spaCy v1.9.0 for use with ERRANT.
 
 It can be installed for Python 3 as follows:  
 ```
 pip3 install -U spacy==1.9.0
 python3 -m spacy download en  
 ```
-This installs both spaCy itself and the default English language model. More information on how to install spaCy can be found on its website. We used spaCy 1.7.3 in our original paper. Newer versions may affect the results slightly.  
+This installs both spaCy itself and the default English language model. We do not recommend spaCy 2.0 at this time because it is slower and less compatible with ERRANT. More information on how to install spaCy can be found on its website. We used spaCy 1.7.3 in our original paper. 
 
 ## NLTK
 
@@ -58,10 +56,10 @@ Three main scripts are provided with ERRANT: `parallel_to_m2.py`, `m2_to_m2.py` 
 
 1. `parallel_to_m2.py`  
 
-     Extract and classify edits from parallel sentences automatically. This is the simplest annotation script, which requires an original text file, a corrected text file and an output filename. The original and corrected text file must have one sentence per line and be word tokenized.  
+     Extract and classify edits from parallel sentences automatically. This is the simplest annotation script, which requires an original text file, at least one corrected text file, and an output filename. The original and corrected text files must have one sentence per line and be word tokenized.  
 	 Example:
 	 ```
-	 python3 parallel_to_m2.py -orig <orig_file> -cor <cor_file> -out <out_m2>
+	 python3 parallel_to_m2.py -orig <orig_file> -cor <cor_file1> [<cor_file2> ...] -out <out_m2>
 	 ```
 
 2. `m2_to_m2.py`  
@@ -87,15 +85,15 @@ All these scripts also have additional advanced command line options which can b
 
 #### Runtime
 
-In terms of speed, automatic edit extraction is the bottleneck. As a guideline, it takes roughly 10 seconds (including loading times) to extract and classify the edits in 100 sentences on an Intel Core i5-6600 @ 3.30GHz machine. In contrast, it takes just 0.2 seconds to classify the edits in the same 100 sentences if the edit boundaries are already known. Bear in mind that these figures are only a rough estimate and runtime actually depends on how different the original and corrected sentences are and how many edits they contain.
-
-UPDATE 22/11/17: When sentences were long and very different, ERRANT would sometimes run into memory problems. We fixed this by changing the default alignment behaviour from breadth-first to depth-first. Experiments showed this barely affects the results and we even saw improvements. It should also make ERRANT faster.
+In terms of speed, ERRANT processes ~70 sents/sec in the fully automatic edit extraction and classification setting, but ~350 sents/sec in the classification setting alone. These figures were calculated on an Intel Xeon E5-2630 v4 @ 2.20GHz machine, but results will vary depending on how different the original and corrected sentences are.  
 
 # Edit Extraction
 
 For more information about the edit extraction phase of annotation, we refer the reader to the following paper:
 
 > Mariano Felice, Christopher Bryant, and Ted Briscoe. 2016. [**Automatic extraction of learner errors in esl sentences using linguistically enhanced alignments**](http://aclweb.org/anthology/C/C16/C16-1079.pdf). In Proceedings of COLING 2016, the 26th International Conference on Computational Linguistics: Technical Papers. Osaka, Japan.
+
+Note that ERRANT has been updated since the release of this paper and that the alignment cost and merging rules have also changed slightly. See `scripts/align_text.py` for more information.  
 
 # Error Type Classification
 
@@ -115,7 +113,7 @@ A special case concerns edits such as [Man -> The man] or [The man -> Man]. Whil
 
 * The number of tokens on each side of the edit is not equal, the lower cased form of the last token is the same, and removing the last token on both sides results in an empty string on one side.
 
-Finally, any gold edit that changes A -> A or Ø -> Ø is labelled Unknown (UNK), since it ultimately has no effect on the text. These are normally gold edits that humans detected, but were unable or unsure how to correct. UNK edits are analagous to *Um* (Unclear Meaning) edits in the NUCLE framework.
+Finally, any gold edit that changes A -> A or Ø -> Ø is labelled Unknown (UNK), since it ultimately has no effect on the text. These are normally gold edits that humans detected, but were unable or unsure how to correct. UNK edits are analogous to *Um* (Unclear Meaning) edits in the NUCLE framework.
 
 ## Token Tier
 
