@@ -6,7 +6,6 @@ import spacy.parts_of_speech as POS
 import scripts.rdlextra as DL
 
 # Some global variables
-NLP = None
 CONTENT_POS = {POS.ADJ, POS.ADV, POS.NOUN, POS.VERB}
 
 ### FUNCTIONS ###
@@ -198,14 +197,10 @@ def levSubstitution(a,b,c,d):
 
 # Input 1: A Spacy annotated original sentence.
 # Input 2: A Spacy annotated corrected sentence.
-# Input 3: A preloaded Spacy processing object.
-# Input 4: Command line args.
+# Input 3: Command line args.
 # Output: A list of lists. Each sublist is an edit of the form:
 # edit = [orig_start, orig_end, cat, cor, cor_start, cor_end]
-def getAutoAlignedEdits(orig, cor, spacy, args):
-	# Save the spacy object globally.
-	global NLP
-	NLP = spacy
+def getAutoAlignedEdits(orig, cor, args):
 	# Get a list of strings from the spacy objects.
 	orig_toks = [tok.text for tok in orig]
 	cor_toks = [tok.text for tok in cor]

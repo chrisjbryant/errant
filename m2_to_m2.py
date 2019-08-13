@@ -68,7 +68,7 @@ def main(args):
 				# Auto edits
 				if args.auto:
 					# Auto align the parallel sentences and extract the edits.
-					auto_edits = align_text.getAutoAlignedEdits(proc_orig, proc_cor, nlp, args)				
+					auto_edits = align_text.getAutoAlignedEdits(proc_orig, proc_cor, args)				
 					# Loop through the edits.
 					for auto_edit in auto_edits:
 						# Give each edit an automatic error type.
