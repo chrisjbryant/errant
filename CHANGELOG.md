@@ -2,6 +2,19 @@
 
 This log describes all the significant changes made to ERRANT since its release.
 
+## v2.1.0 (09-01-20)
+
+1. The character level cost in the sentence alignment function is now computed by the much faster [python-Levenshtein](https://pypi.org/project/python-Levenshtein/) library instead of python's native `difflib.SequenceMatcher`. This makes ERRANT 3x faster!
+
+2. Various minor updates:  
+* Updated the English wordlist.
+* Fixed a broken rule for classifying contraction errors.
+* Changed a condition in the calculation of transposition errors to be more intuitive.
+* Partially updated the ERRANT POS tag map to match the updated [Universal POS tag map](https://universaldependencies.org/tagset-conversion/en-penn-uposf.html). Specifically, EX now maps to PRON rather than ADV, LS maps to X rather than PUNCT, and CONJ has been renamed CCONJ. I did not change the mapping of RP from PART to ADP yet because this breaks several rules involving phrasal verbs.
+* Added an `errant.__version__` attribute.
+* Added a warning about using ERRANT with spaCy 2.
+* Tidied some code in the classifier.
+
 ## v2.0.0 (10-12-19)
 
 1. ERRANT has been significantly refactored to accommodate a new API (see README). It should now also be much easier to extend to other languages.

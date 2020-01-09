@@ -1,6 +1,7 @@
-from difflib import SequenceMatcher
-from nltk.stem import LancasterStemmer
 from pathlib import Path
+import Levenshtein
+from nltk.stem import LancasterStemmer
+import spacy
 import spacy.parts_of_speech as POS
 
 # Load Hunspell word list
@@ -16,9 +17,11 @@ def load_pos_map(path):
         for line in map_file:
             line = line.strip().split("\t")
             # Change ADP to PREP for readability
-            if line[1].strip() == "ADP": map_dict[line[0]] = "PREP"
-            # Also change PROPN to NOUN; we don't need a prop noun tag
-            elif line[1].strip() == "PROPN": map_dict[line[0]] = "NOUN"
+            if line[1] == "ADP": map_dict[line[0]] = "PREP"
+            # Change PROPN to NOUN; we don't need a prop noun tag
+            elif line[1] == "PROPN": map_dict[line[0]] = "NOUN"
+            # Change CCONJ to CONJ
+            elif line[1] == "CCONJ": map_dict[line[0]] = "CONJ"
             # Otherwise
             else: map_dict[line[0]] = line[1].strip()
         # Add some spacy PTB tags not in the original mapping.
@@ -105,24 +108,19 @@ def classify(edit):
     return edit
 
 # Input: Spacy tokens
-# Output: A list of token, pos and dep tag strings
+# Output: A list of pos and dep tag strings
 def get_edit_info(toks):
-    str = []
     pos = []
     dep = []
     for tok in toks:
-        str.append(tok.text)
         pos.append(pos_map[tok.tag_])
         dep.append(tok.dep_)
-    return str, pos, dep
+    return pos, dep
 
 # Input: Spacy tokens
 # Output: An error type string based on input tokens from orig or cor
 # When one side of the edit is null, we can only use the other side
 def get_one_sided_type(toks):
-    # Extract strings, pos tags and parse info from the toks
-    str_list, pos_list, dep_list = get_edit_info(toks)
-
     # Special cases
     if len(toks) == 1:
         # Possessive noun suffixes; e.g. ' -> 's
@@ -135,6 +133,8 @@ def get_one_sided_type(toks):
         if toks[0].lower_ == "to" and toks[0].pos == POS.PART and \
                 toks[0].dep_ != "prep":
             return "VERB:FORM"
+    # Extract pos tags and parse info from the toks
+    pos_list, dep_list = get_edit_info(toks)
     # Auxiliary verbs
     if set(dep_list).issubset({"aux", "auxpass"}):
         return "VERB:TENSE"
@@ -155,62 +155,62 @@ def get_one_sided_type(toks):
 # Input 2: Spacy cor tokens
 # Output: An error type string based on orig AND cor
 def get_two_sided_type(o_toks, c_toks):
-    # Extract strings, pos tags and parse info from the toks as lists
-    orig_str, orig_pos, orig_dep = get_edit_info(o_toks)
-    cor_str, cor_pos, cor_dep = get_edit_info(c_toks)
+    # Extract pos tags and parse info from the toks as lists
+    o_pos, o_dep = get_edit_info(o_toks)
+    c_pos, c_dep = get_edit_info(c_toks)
 
     # Orthography; i.e. whitespace and/or case errors.
-    if only_orth_change(orig_str, cor_str):
+    if only_orth_change(o_toks, c_toks):
         return "ORTH"
     # Word Order; only matches exact reordering.
-    if exact_reordering(orig_str, cor_str):
+    if exact_reordering(o_toks, c_toks):
         return "WO"
 
     # 1:1 replacements (very common)
-    if len(orig_str) == len(cor_str) == 1:
+    if len(o_toks) == len(c_toks) == 1:
         # 1. SPECIAL CASES
         # Possessive noun suffixes; e.g. ' -> 's
         if o_toks[0].tag_ == "POS" or c_toks[0].tag_ == "POS":
             return "NOUN:POSS"
         # Contraction. Rule must come after possessive.
-        if (orig_str[0].lower() in conts or \
-                cor_str[0].lower() in conts) and \
-                orig_pos == cor_pos:
+        if (o_toks[0].lower_ in conts or \
+                c_toks[0].lower_ in conts) and \
+                o_pos == c_pos:
             return "CONTR"
         # Special auxiliaries in contractions (1); e.g. ca -> can, wo -> will
         # Rule was broken in V1. Turned off this fix for compatibility.
-#        if (orig_str[0].lower() in res_dict["aux_conts"] and \
-#                cor_str[0].lower() == res_dict["aux_conts"][orig_str[0].lower()]) or \
-#                (cor_str[0].lower() in res_dict["aux_conts"] and \
-#                orig_str[0].lower() == res_dict["aux_conts"][cor_str[0].lower()]):
-#            return "CONTR"
+        if (o_toks[0].lower_ in aux_conts and \
+                c_toks[0].lower_ == aux_conts[o_toks[0].lower_]) or \
+                (c_toks[0].lower_ in aux_conts and \
+                o_toks[0].lower_ == aux_conts[c_toks[0].lower_]):
+            return "CONTR"
         # Special auxiliaries in contractions (2); e.g. ca -> could, wo -> should
-        if orig_str[0].lower() in aux_conts or \
-                cor_str[0].lower() in aux_conts:
+        if o_toks[0].lower_ in aux_conts or \
+                c_toks[0].lower_ in aux_conts:
             return "VERB:TENSE"
         # Special: "was" and "were" are the only past tense SVA
-        if {orig_str[0].lower(), cor_str[0].lower()} == {"was", "were"}:
+        if {o_toks[0].lower_, c_toks[0].lower_} == {"was", "were"}:
             return "VERB:SVA"
 
         # 2. SPELLING AND INFLECTION
         # Only check alphabetical strings on the original side
         # Spelling errors take precedence over POS errors; this rule is ordered
-        if orig_str[0].isalpha():
+        if o_toks[0].text.isalpha():
             # Check a GB English dict for both orig and lower case.
             # E.g. "cat" is in the dict, but "Cat" is not.
-            if orig_str[0] not in spell and \
-                    orig_str[0].lower() not in spell:
+            if o_toks[0].text not in spell and \
+                    o_toks[0].lower_ not in spell:
                 # Check if both sides have a common lemma
                 if same_lemma(o_toks[0], c_toks[0]):
                     # Inflection; often count vs mass nouns or e.g. got vs getted
-                    if orig_pos == cor_pos and orig_pos[0] in {"NOUN", "VERB"}:
-                        return orig_pos[0]+":INFL"
+                    if o_pos == c_pos and o_pos[0] in {"NOUN", "VERB"}:
+                        return o_pos[0]+":INFL"
                     # Unknown morphology; i.e. we cannot be more specific.
                     else:
                         return "MORPH"
                 # Use string similarity to detect true spelling errors.
                 else:
-                    char_ratio = SequenceMatcher(None, orig_str[0], cor_str[0]).ratio()
+                    char_ratio = Levenshtein.ratio(o_toks[0].text, c_toks[0].text)
                     # Ratio > 0.5 means both side share at least half the same chars.
                     # WARNING: THIS IS AN APPROXIMATION.
                     if char_ratio > 0.5:
@@ -218,28 +218,28 @@ def get_two_sided_type(o_toks, c_toks):
                     # If ratio is <= 0.5, the error is more complex e.g. tolk -> say
                     else:
                         # If POS is the same, this takes precedence over spelling.
-                        if orig_pos == cor_pos and \
-                                orig_pos[0] not in rare_pos:
-                            return orig_pos[0]
+                        if o_pos == c_pos and \
+                                o_pos[0] not in rare_pos:
+                            return o_pos[0]
                         # Tricky cases.
                         else:
                             return "OTHER"
-        
+
         # 3. MORPHOLOGY
         # Only ADJ, ADV, NOUN and VERB can have inflectional changes.
         if same_lemma(o_toks[0], c_toks[0]) and \
-                orig_pos[0] in open_pos2 and \
-                cor_pos[0] in open_pos2:
+                o_pos[0] in open_pos2 and \
+                c_pos[0] in open_pos2:
             # Same POS on both sides
-            if orig_pos == cor_pos:
+            if o_pos == c_pos:
                 # Adjective form; e.g. comparatives
-                if orig_pos[0] == "ADJ":
+                if o_pos[0] == "ADJ":
                     return "ADJ:FORM"
                 # Noun number
-                if orig_pos[0] == "NOUN":
+                if o_pos[0] == "NOUN":
                     return "NOUN:NUM"
                 # Verbs - various types
-                if orig_pos[0] == "VERB":
+                if o_pos[0] == "VERB":
                     # NOTE: These rules are carefully ordered.
                     # Use the dep parse to find some form errors.
                     # Main verbs preceded by aux cannot be tense or SVA.
@@ -257,16 +257,16 @@ def get_two_sided_type(o_toks, c_toks):
                     if o_toks[0].tag_ == "VBZ" or c_toks[0].tag_ == "VBZ":
                         return "VERB:SVA"
                     # Any remaining aux verbs are called TENSE.
-                    if orig_dep[0].startswith("aux") and \
-                            cor_dep[0].startswith("aux"):
+                    if o_dep[0].startswith("aux") and \
+                            c_dep[0].startswith("aux"):
                         return "VERB:TENSE"
             # Use dep labels to find some more ADJ:FORM
-            if set(orig_dep+cor_dep).issubset({"acomp", "amod"}):
+            if set(o_dep+c_dep).issubset({"acomp", "amod"}):
                 return "ADJ:FORM"
             # Adj to plural noun is usually noun number; e.g. musical -> musicals.
-            if orig_pos[0] == "ADJ" and c_toks[0].tag_ == "NNS":
+            if o_pos[0] == "ADJ" and c_toks[0].tag_ == "NNS":
                 return "NOUN:NUM"
-            # For remaining verb errors (rare), rely on cor_pos
+            # For remaining verb errors (rare), rely on c_pos
             if c_toks[0].tag_ in {"VBG", "VBN"}:
                 return "VERB:FORM"
             if c_toks[0].tag_ == "VBD":
@@ -277,32 +277,32 @@ def get_two_sided_type(o_toks, c_toks):
             else:
                 return "MORPH"
         # Derivational morphology.
-        if stemmer.stem(orig_str[0]) == stemmer.stem(cor_str[0]) and \
-                orig_pos[0] in open_pos2 and \
-                cor_pos[0] in open_pos2:
+        if stemmer.stem(o_toks[0].text) == stemmer.stem(c_toks[0].text) and \
+                o_pos[0] in open_pos2 and \
+                c_pos[0] in open_pos2:
             return "MORPH"
 
         # 4. GENERAL
         # Auxiliaries with different lemmas
-        if orig_dep[0].startswith("aux") and cor_dep[0].startswith("aux"):
+        if o_dep[0].startswith("aux") and c_dep[0].startswith("aux"):
             return "VERB:TENSE"
         # POS-based tags. Some of these are context sensitive mispellings.
-        if orig_pos == cor_pos and orig_pos[0] not in rare_pos:
-            return orig_pos[0]
+        if o_pos == c_pos and o_pos[0] not in rare_pos:
+            return o_pos[0]
         # Some dep labels map to POS-based tags.
-        if orig_dep == cor_dep and orig_dep[0] in dep_map.keys():
-            return dep_map[orig_dep[0]]
+        if o_dep == c_dep and o_dep[0] in dep_map.keys():
+            return dep_map[o_dep[0]]
         # Phrasal verb particles.
-        if set(orig_pos+cor_pos) == {"PART", "PREP"} or \
-                set(orig_dep+cor_dep) == {"prt", "prep"}:
+        if set(o_pos+c_pos) == {"PART", "PREP"} or \
+                set(o_dep+c_dep) == {"prt", "prep"}:
             return "PART"
         # Can use dep labels to resolve DET + PRON combinations.
-        if set(orig_pos+cor_pos) == {"DET", "PRON"}:
+        if set(o_pos+c_pos) == {"DET", "PRON"}:
             # DET cannot be a subject or object.
-            if cor_dep[0] in {"nsubj", "nsubjpass", "dobj", "pobj"}:
+            if c_dep[0] in {"nsubj", "nsubjpass", "dobj", "pobj"}:
                 return "PRON"
             # "poss" indicates possessive determiner
-            if cor_dep[0] == "poss":
+            if c_dep[0] == "poss":
                 return "DET"
         # Tricky cases.
         else:
@@ -310,23 +310,23 @@ def get_two_sided_type(o_toks, c_toks):
 
     # Multi-token replacements (uncommon)
     # All auxiliaries
-    if set(orig_dep+cor_dep).issubset({"aux", "auxpass"}):
+    if set(o_dep+c_dep).issubset({"aux", "auxpass"}):
         return "VERB:TENSE"
     # All same POS
-    if len(set(orig_pos+cor_pos)) == 1:
+    if len(set(o_pos+c_pos)) == 1:
         # Final verbs with the same lemma are tense; e.g. eat -> has eaten 
-        if orig_pos[0] == "VERB" and \
+        if o_pos[0] == "VERB" and \
                 same_lemma(o_toks[-1], c_toks[-1]):
             return "VERB:TENSE"
         # POS-based tags.
-        elif orig_pos[0] not in rare_pos:
-            return orig_pos[0]
+        elif o_pos[0] not in rare_pos:
+            return o_pos[0]
     # All same special dep labels.
-    if len(set(orig_dep+cor_dep)) == 1 and \
-            orig_dep[0] in dep_map.keys():
-        return dep_map[orig_dep[0]]
+    if len(set(o_dep+c_dep)) == 1 and \
+            o_dep[0] in dep_map.keys():
+        return dep_map[o_dep[0]]
     # Infinitives, gerunds, phrasal verbs.
-    if set(orig_pos+cor_pos) == {"PART", "VERB"}:
+    if set(o_pos+c_pos) == {"PART", "VERB"}:
         # Final verbs with the same lemma are form; e.g. to eat -> eating
         if same_lemma(o_toks[-1], c_toks[-1]):
             return "VERB:FORM"
@@ -334,37 +334,37 @@ def get_two_sided_type(o_toks, c_toks):
         else:
             return "VERB"
     # Possessive nouns; e.g. friends -> friend 's
-    if (orig_pos == ["NOUN", "PART"] or cor_pos == ["NOUN", "PART"]) and \
+    if (o_pos == ["NOUN", "PART"] or c_pos == ["NOUN", "PART"]) and \
             same_lemma(o_toks[0], c_toks[0]):
-        return "NOUN:POSS"    
+        return "NOUN:POSS"
     # Adjective forms with "most" and "more"; e.g. more free -> freer
-    if (orig_str[0].lower() in {"most", "more"} or \
-            cor_str[0].lower() in {"most", "more"}) and \
+    if (o_toks[0].lower_ in {"most", "more"} or \
+            c_toks[0].lower_ in {"most", "more"}) and \
             same_lemma(o_toks[-1], c_toks[-1]) and \
-            len(orig_str) <= 2 and len(cor_str) <= 2:
+            len(o_toks) <= 2 and len(c_toks) <= 2:
         return "ADJ:FORM"
 
     # Tricky cases.
     else:
         return "OTHER"
 
-# Input 1: A list of original token strings
-# Input 2: A list of corrected token strings
+# Input 1: Spacy orig tokens
+# Input 2: Spacy cor tokens
 # Output: Boolean; the difference between orig and cor is only whitespace or case
-def only_orth_change(o_str, c_str):
-    o_join = "".join(o_str).lower()
-    c_join = "".join(c_str).lower()
+def only_orth_change(o_toks, c_toks):
+    o_join = "".join([o.lower_ for o in o_toks])
+    c_join = "".join([c.lower_ for c in c_toks])
     if o_join == c_join:
         return True
     return False
 
-# Input 1: A list of original token strings
-# Input 2: A list of corrected token strings
+# Input 1: Spacy orig tokens
+# Input 2: Spacy cor tokens
 # Output: Boolean; the tokens are exactly the same but in a different order
-def exact_reordering(o_str, c_str):
+def exact_reordering(o_toks, c_toks):
     # Sorting lets us keep duplicates.
-    o_set = sorted([tok.lower() for tok in o_str])
-    c_set = sorted([tok.lower() for tok in c_str])
+    o_set = sorted([o.lower_ for o in o_toks])
+    c_set = sorted([c.lower_ for c in c_toks])
     if o_set == c_set:
         return True
     return False
@@ -375,10 +375,16 @@ def exact_reordering(o_str, c_str):
 # Spacy only finds lemma for its predicted POS tag. Sometimes these are wrong,
 # so we also consider alternative POS tags to improve chance of a match.
 def same_lemma(o_tok, c_tok):
+    # Basic lemmatisation for spacy >= 2 (avoids an error at least)
+    if spacy.__version__ != "1.9.0":
+        if o_tok.lemma == c_tok.lemma:
+            return True
+        return False
+    # Multi-POS lemmatisation for spacy 1.9.0
     o_lemmas = []
     c_lemmas = []
     for pos in open_pos1:
-        # Lemmatise the lower cased form of the word.
+        # Lemmatise the lower cased form of the word
         o_lemmas.append(nlp.vocab.morphology.lemmatize(
             pos, o_tok.lower, nlp.vocab.morphology.tag_map))
         c_lemmas.append(nlp.vocab.morphology.lemmatize(

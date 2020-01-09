@@ -1,7 +1,7 @@
-from difflib import SequenceMatcher
 from itertools import combinations, groupby
 from re import sub
 from string import punctuation
+import Levenshtein
 import spacy.parts_of_speech as POS
 from errant.edit import Edit
 
@@ -93,8 +93,8 @@ def process_seq(seq, alignment):
                 return process_seq(seq[:start+1], alignment) + \
                     process_seq(seq[start+1:], alignment)
             # Split similar substitutions at sequence boundaries
-            if (ops[start] == "S" and char_cost(o[0], c[0]) < 0.25) or \
-                    (ops[end] == "S" and char_cost(o[-1], c[-1]) < 0.25):
+            if (ops[start] == "S" and char_cost(o[0], c[0]) > 0.75) or \
+                    (ops[end] == "S" and char_cost(o[-1], c[-1]) > 0.75):
                 return process_seq(seq[:start+1], alignment) + \
                     process_seq(seq[start+1:], alignment)
             # Split final determiners
@@ -114,7 +114,7 @@ def is_punct(token):
 
 # Calculate the cost of character alignment; i.e. char similarity
 def char_cost(a, b):
-    return 1-SequenceMatcher(None, a.text, b.text).ratio()
+    return Levenshtein.ratio(a.text, b.text)
     
 # Merge the input alignment sequence to a single edit span
 def merge_edits(seq):
