@@ -2,6 +2,12 @@
 
 This log describes all the significant changes made to ERRANT since its release.
 
+## v2.2.0 (06-05-20)
+
+1. ERRANT now works with spaCy v2.2. It is 4x slower, but this change was necessary to make it work on Python 3.7.  
+
+2. SpaCy 2 uses slightly different POS tags to spaCy 1 (e.g. auxiliary verbs are now tagged AUX rather than VERB) so I updated some of the merging rules to maintain performance.
+
 ## v2.1.0 (09-01-20)
 
 1. The character level cost in the sentence alignment function is now computed by the much faster [python-Levenshtein](https://pypi.org/project/python-Levenshtein/) library instead of python's native `difflib.SequenceMatcher`. This makes ERRANT 3x faster!

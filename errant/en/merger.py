@@ -2,11 +2,11 @@ from itertools import combinations, groupby
 from re import sub
 from string import punctuation
 import Levenshtein
-import spacy.parts_of_speech as POS
+import spacy.symbols as POS
 from errant.edit import Edit
 
 # Merger resources
-open_pos = {POS.ADJ, POS.ADV, POS.NOUN, POS.VERB}
+open_pos = {POS.ADJ, POS.AUX, POS.ADV, POS.NOUN, POS.VERB}
 
 # Input: An Alignment object
 # Output: A list of Edit objects
@@ -78,11 +78,11 @@ def process_seq(seq, alignment):
             return process_seq(seq[:start], alignment) + \
                 merge_edits(seq[start:end+1]) + \
                 process_seq(seq[end+1:], alignment)
-        # Merge same POS or infinitive/phrasal verbs: 
+        # Merge same POS or auxiliary/infinitive/phrasal verbs:
         # [to eat -> eating], [watch -> look at]
         pos_set = set([tok.pos for tok in o]+[tok.pos for tok in c])
-        if (len(pos_set) == 1 and len(o) != len(c)) or \
-                pos_set == {POS.PART, POS.VERB}:
+        if len(o) != len(c) and (len(pos_set) == 1 or \
+                pos_set.issubset({POS.AUX, POS.PART, POS.VERB})):
             return process_seq(seq[:start], alignment) + \
                 merge_edits(seq[start:end+1]) + \
                 process_seq(seq[end+1:], alignment)

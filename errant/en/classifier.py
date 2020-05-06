@@ -2,7 +2,7 @@ from pathlib import Path
 import Levenshtein
 from nltk.stem import LancasterStemmer
 import spacy
-import spacy.parts_of_speech as POS
+import spacy.symbols as POS
 
 # Load Hunspell word list
 def load_word_list(path):
@@ -201,7 +201,7 @@ def get_two_sided_type(o_toks, c_toks):
             if o_toks[0].text not in spell and \
                     o_toks[0].lower_ not in spell:
                 # Check if both sides have a common lemma
-                if same_lemma(o_toks[0], c_toks[0]):
+                if o_toks[0].lemma == c_toks[0].lemma:
                     # Inflection; often count vs mass nouns or e.g. got vs getted
                     if o_pos == c_pos and o_pos[0] in {"NOUN", "VERB"}:
                         return o_pos[0]+":INFL"
@@ -227,7 +227,7 @@ def get_two_sided_type(o_toks, c_toks):
 
         # 3. MORPHOLOGY
         # Only ADJ, ADV, NOUN and VERB can have inflectional changes.
-        if same_lemma(o_toks[0], c_toks[0]) and \
+        if o_toks[0].lemma == c_toks[0].lemma and \
                 o_pos[0] in open_pos2 and \
                 c_pos[0] in open_pos2:
             # Same POS on both sides
@@ -316,7 +316,7 @@ def get_two_sided_type(o_toks, c_toks):
     if len(set(o_pos+c_pos)) == 1:
         # Final verbs with the same lemma are tense; e.g. eat -> has eaten 
         if o_pos[0] == "VERB" and \
-                same_lemma(o_toks[-1], c_toks[-1]):
+                o_toks[-1].lemma == c_toks[-1].lemma:
             return "VERB:TENSE"
         # POS-based tags.
         elif o_pos[0] not in rare_pos:
@@ -328,19 +328,19 @@ def get_two_sided_type(o_toks, c_toks):
     # Infinitives, gerunds, phrasal verbs.
     if set(o_pos+c_pos) == {"PART", "VERB"}:
         # Final verbs with the same lemma are form; e.g. to eat -> eating
-        if same_lemma(o_toks[-1], c_toks[-1]):
+        if o_toks[-1].lemma == c_toks[-1].lemma:
             return "VERB:FORM"
         # Remaining edits are often verb; e.g. to eat -> consuming, look at -> see
         else:
             return "VERB"
     # Possessive nouns; e.g. friends -> friend 's
     if (o_pos == ["NOUN", "PART"] or c_pos == ["NOUN", "PART"]) and \
-            same_lemma(o_toks[0], c_toks[0]):
+            o_toks[0].lemma == c_toks[0].lemma:
         return "NOUN:POSS"
     # Adjective forms with "most" and "more"; e.g. more free -> freer
     if (o_toks[0].lower_ in {"most", "more"} or \
             c_toks[0].lower_ in {"most", "more"}) and \
-            same_lemma(o_toks[-1], c_toks[-1]) and \
+            o_toks[-1].lemma == c_toks[-1].lemma and \
             len(o_toks) <= 2 and len(c_toks) <= 2:
         return "ADJ:FORM"
 
@@ -366,30 +366,6 @@ def exact_reordering(o_toks, c_toks):
     o_set = sorted([o.lower_ for o in o_toks])
     c_set = sorted([c.lower_ for c in c_toks])
     if o_set == c_set:
-        return True
-    return False
-
-# Input 1: A spacy orig token
-# Input 2: A spacy cor token
-# Output: Boolean; the tokens have the same lemma
-# Spacy only finds lemma for its predicted POS tag. Sometimes these are wrong,
-# so we also consider alternative POS tags to improve chance of a match.
-def same_lemma(o_tok, c_tok):
-    # Basic lemmatisation for spacy >= 2 (avoids an error at least)
-    if spacy.__version__ != "1.9.0":
-        if o_tok.lemma == c_tok.lemma:
-            return True
-        return False
-    # Multi-POS lemmatisation for spacy 1.9.0
-    o_lemmas = []
-    c_lemmas = []
-    for pos in open_pos1:
-        # Lemmatise the lower cased form of the word
-        o_lemmas.append(nlp.vocab.morphology.lemmatize(
-            pos, o_tok.lower, nlp.vocab.morphology.tag_map))
-        c_lemmas.append(nlp.vocab.morphology.lemmatize(
-            pos, c_tok.lower, nlp.vocab.morphology.tag_map))
-    if set(o_lemmas).intersection(set(c_lemmas)):
         return True
     return False
 
