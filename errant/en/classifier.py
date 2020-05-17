@@ -27,6 +27,9 @@ def load_pos_map(path):
         # Add some spacy PTB tags not in the original mapping.
         map_dict['""'] = "PUNCT"
         map_dict["SP"] = "SPACE"
+        map_dict["_SP"] = "SPACE"
+        map_dict["BES"] = "VERB"
+        map_dict["HVS"] = "VERB"
         map_dict["ADD"] = "X"
         map_dict["GW"] = "X"
         map_dict["NFP"] = "X"

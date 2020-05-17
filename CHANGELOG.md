@@ -1,6 +1,10 @@
 # Changelog
 
-This log describes all the significant changes made to ERRANT since its release.
+This log describes all the changes made to ERRANT since its release.
+
+## v2.2.1 (17-05-20)
+
+Fixed key error in the classifier for rare spaCy 2 POS tags: _SP, BES, HVS.
 
 ## v2.2.0 (06-05-20)
 
