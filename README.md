@@ -3,7 +3,7 @@
 # Overview
 
 This repository is under construction. If you want to use, please contact us first:
-leshem.choshen@mail.huji.ac.il
+leshem.choshen@mail.huji.ac.il,
 matanel.oren@mail.huji.ac.il
 
 
@@ -11,9 +11,6 @@ matanel.oren@mail.huji.ac.il
 
 Just like source install in ERRANT:
 
-## Source Install
-
-If you prefer to install ERRANT from source, you can instead run the following commands:
 ```
 git clone https://github.com/matanel-oren/serrant.git
 cd serrant
@@ -22,7 +19,7 @@ source serrant_env/bin/activate_syntactically
 pip3 install -e .
 python3 -m spacy download en
 ```
-This will clone the github ERRANT source into the current directory, build and activate a python environment inside it, and then install ERRANT and all its dependencies. If you wish to modify ERRANT code, this is the recommended way to install it.
+This will clone the github SERRANT source into the current directory, build and activate a python environment inside it, and then install SERRANT and all its dependencies.
 
 # Usage
 
