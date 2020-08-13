@@ -20,8 +20,12 @@ def load(lang, nlp=None):
 
     # Load language edit classifier
     classifier = import_module("errant.%s.classifier" % lang)
+    # Load sercl (syntactic classifier)
+    syntax_classifier = import_module("errant.syntactic_classifier")
+    # Load combiner
+    combiner = import_module("errant.%s.sercl_errant_combine" % lang)
     # The English classifier needs spacy
     if lang == "en": classifier.nlp = nlp
 
     # Return a configured ERRANT annotator
-    return Annotator(lang, nlp, merger, classifier)
+    return Annotator(lang, nlp, merger, classifier, syntax_classifier, combiner)

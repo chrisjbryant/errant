@@ -38,7 +38,7 @@ def main():
                     # Parse cor with spacy
                     cor = annotator.parse(cor, args.tok)
                     # Align the texts and extract and classify the edits
-                    edits = annotator.annotate(orig, cor, args.lev, args.merge)
+                    edits = annotator.annotate(orig, cor, args.lev, args.merge, args.annotator)
                     # Loop through the edits
                     for edit in edits:
                         # Write the edit to the output m2 file
@@ -86,6 +86,14 @@ def parse_args():
             "all-equal: Merge adjacent same-type non-matches: MSSDI -> M, SS, D, I",
         choices=["rules", "all-split", "all-merge", "all-equal"],
         default="rules")
+    parser.add_argument(
+        "-annotator",
+        help="Choose the classifier for the annotation.\n"
+            "errant: original rules of errant.\n"
+            "sercl: pure syntactic annotation.\n"
+            "combined: rule-based combining of errant and sercl",
+        choices=["errant", "sercl", "combined"],
+        default="combined")
     args=parser.parse_args()
     return args
 

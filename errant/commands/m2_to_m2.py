@@ -41,7 +41,7 @@ def main():
                 # Do not minimise detection edits
                 if gold_edit[-2] in {"Um", "UNK"}:
                     edit = annotator.import_edit(orig, cor, gold_edit[:-1],
-                        min=False, old_cat=args.old_cats)
+                        min=False, old_cat=args.old_cats, annotator=args.annotator)
                     # Overwrite the pseudo correction and set it in the edit
                     edit.c_toks = annotator.parse(gold_edit[-1])
                     # Save the edit for auto
@@ -53,13 +53,13 @@ def main():
                 # Gold annotation
                 elif args.gold:
                     edit = annotator.import_edit(orig, cor, gold_edit[:-1],
-                        not args.no_min, args.old_cats)
+                        not args.no_min, args.old_cats, annotator=args.annotator)
                     # Write the edit
                     out_m2.write(edit.to_m2(id)+"\n")
             # Auto annotations
             if args.auto:
                 # Auto edits
-                edits = annotator.annotate(orig, cor, args.lev, args.merge)
+                edits = annotator.annotate(orig, cor, args.lev, args.merge, args.annotator)
                 # Combine detection and auto edits and sort by orig offsets
                 edits = sorted(det_edits+edits, key=lambda e:(e.o_start, e.o_end))
                 # Write the edits to the output M2 file
@@ -111,6 +111,14 @@ def parse_args():
             "all-equal: Merge adjacent same-type non-matches: MSSDI -> M, SS, D, I",
         choices = ["rules", "all-split", "all-merge", "all-equal"],
         default = "rules")
+    parser.add_argument(
+        "-annotator",
+        help="Choose the classifier for the annotation.\n"
+            "errant: original rules of errant.\n"
+            "sercl: pure syntactic annotation.\n"
+            "combined: rule-based combining of errant and sercl",
+        choices=["errant", "sercl", "combined"],
+        default="combined")
     args = parser.parse_args()
     return args
 

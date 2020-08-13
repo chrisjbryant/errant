@@ -5,7 +5,7 @@ class Edit:
     # Input 2: A corrected text string parsed by spacy
     # Input 3: A token span edit list: [o_start, o_end, c_start, c_end]
     # Input 4: An error type string, if known
-    def __init__(self, orig, cor, edit, type="NA"):
+    def __init__(self, orig, cor, edit, type="NA", cond=0):
         # Orig offsets, spacy tokens and string
         self.o_start = edit[0]
         self.o_end = edit[1]
@@ -18,6 +18,8 @@ class Edit:
         self.c_str = self.c_toks.text if self.c_toks else ""
         # Error type
         self.type = type
+        # Number of condition
+        self.cond = cond
 
     # Minimise the edit; e.g. [a b -> a c] = [b -> c]
     def minimise(self):
@@ -53,4 +55,5 @@ class Edit:
         orig = "Orig: "+str([self.o_start, self.o_end, self.o_str])
         cor = "Cor: "+str([self.c_start, self.c_end, self.c_str])
         type = "Type: "+repr(self.type)
-        return ", ".join([orig, cor, type])
+        cond = "Cond: " + str(self.cond)
+        return ", ".join([orig, cor, type, cond])
