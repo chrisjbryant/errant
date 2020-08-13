@@ -15,10 +15,10 @@ Just like source install in ERRANT:
 
 If you prefer to install ERRANT from source, you can instead run the following commands:
 ```
-git clone https://github.com/chrisjbryant/errant.git
-cd errant
-python3 -m venv errant_env
-source errant_env/bin/activate_syntactically
+git clone https://github.com/matanel-oren/serrant.git
+cd serrant
+python3 -m venv serrant_env
+source serrant_env/bin/activate_syntactically
 pip3 install -e .
 python3 -m spacy download en
 ```
