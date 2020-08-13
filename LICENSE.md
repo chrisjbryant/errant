@@ -1,5 +1,6 @@
 # MIT License
 
+Copyright (c) 2020 Omri Abend, Leshem Choshen, Matanel Oren   
 Copyright (c) 2017 Christopher Bryant, Mariano Felice
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
