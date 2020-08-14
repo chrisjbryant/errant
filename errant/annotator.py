@@ -21,7 +21,7 @@ class Annotator:
         if tokenise:
             text = self.nlp(text)
         else:
-            text = self.nlp.tokenizer.tokens_from_list(text.split())
+            text = self.nlp.tokenizer(text)
             self.nlp.tagger(text)
             self.nlp.parser(text)
         return text
