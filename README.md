@@ -1,4 +1,4 @@
-# ERRANT v2.2.1
+# ERRANT v2.2.2
 
 This repository contains the grammatical ERRor ANnotation Toolkit (ERRANT) described in:
 
@@ -37,7 +37,7 @@ source errant_env/bin/activate
 pip3 install errant
 python3 -m spacy download en
 ```
-This will create and activate a new python3 environment called `errant_env` in the current directory. `pip` will then install ERRANT, [spaCy](https://spacy.io/), [NLTK](http://www.nltk.org/), [python-Levenshtein](https://pypi.org/project/python-Levenshtein/) and spaCy's default English model in this environment. You can deactivate the environment at any time by running `deactivate`, but must remember to activate it again whenever you want to use ERRANT.  
+This will create and activate a new python3 environment called `errant_env` in the current directory. `pip` will then install ERRANT, [spaCy](https://spacy.io/), [python-Levenshtein](https://pypi.org/project/python-Levenshtein/) and spaCy's default English model in this environment. You can deactivate the environment at any time by running `deactivate`, but must remember to activate it again whenever you want to use ERRANT.  
 
 #### ERRANT and spaCy 2
 

@@ -1,6 +1,6 @@
 from pathlib import Path
 import Levenshtein
-from nltk.stem import LancasterStemmer
+from errant.en.lancaster import LancasterStemmer
 import spacy
 import spacy.symbols as POS
 
