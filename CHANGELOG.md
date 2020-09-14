@@ -2,6 +2,12 @@
 
 This log describes all the changes made to ERRANT since its release.
 
+## v2.2.2 (14-08-20)
+
+1. Added a copy of the NLTK Lancaster stemmer to `errant.en.lancaster` and removed the NLTK dependency. It was overkill to require the entire NLTK package just for this stemmer so we now bundle it with ERRANT. 
+
+2. Replaced the deprecated `tokens_from_list` function from spaCy v1 with the `Doc` function from spaCy v2 in `Annotator.parse`.
+
 ## v2.2.1 (17-05-20)
 
 Fixed key error in the classifier for rare spaCy 2 POS tags: _SP, BES, HVS.

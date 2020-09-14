@@ -1,6 +1,7 @@
 from errant.alignment import Alignment
 from errant.edit import Edit
 from copy import copy
+from spacy.tokens import Doc
 
 
 # Main ERRANT Annotator class
@@ -26,7 +27,7 @@ class Annotator:
         if tokenise:
             text = self.nlp(text)
         else:
-            text = self.nlp.tokenizer.tokens_from_list(text.split())
+            text = Doc(self.nlp.vocab, text.split())
             self.nlp.tagger(text)
             self.nlp.parser(text)
         return text
