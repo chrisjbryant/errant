@@ -1,7 +1,21 @@
-## ERRANT Demo
+## SERRANT Demo
 
-Assuming you have read the main readme and installed ERRANT successfully, you can try running it on the sample text in this directory to make sure it's running properly:
+Assuming you have read the main readme and installed SERRANT successfully, you can try running it on the sample text in this directory to make sure it's running properly:
 
-`errant_parallel -orig orig.txt -cor cor1.txt cor2.txt -out test.m2`
+##### Annotated by ERRANT:
 
-This should produce a file called `test.m2` which is identical to `out.m2`.
+`errant_parallel -orig orig.txt -cor cor.txt -out test_errant.m2 -annotator errant`
+
+This should produce a file called `test_errant.m2` which is identical to `out_errant.m2`.
+
+##### Annotated by SerCl:
+
+`errant_parallel -orig orig.txt -cor cor.txt -out test_sercl.m2 -annotator sercl`
+
+This should produce a file called `test_sercl.m2` which is identical to `out_sercl.m2`.
+
+##### Our combination of both:
+
+`errant_parallel -orig orig.txt -cor cor.txt -out test_combined.m2 -annotator combined`
+
+This should produce a file called `test_combined.m2` which is identical to `out_combined.m2`.
