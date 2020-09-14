@@ -2,19 +2,19 @@
 
 Assuming you have read the main readme and installed SERRANT successfully, you can try running it on the sample text in this directory to make sure it's running properly:
 
-##### Annotated by ERRANT:
+#### Annotated by ERRANT:
 
 `errant_parallel -orig orig.txt -cor cor.txt -out test_errant.m2 -annotator errant`
 
 This should produce a file called `test_errant.m2` which is identical to `out_errant.m2`.
 
-##### Annotated by SerCl:
+#### Annotated by SerCl:
 
 `errant_parallel -orig orig.txt -cor cor.txt -out test_sercl.m2 -annotator sercl`
 
 This should produce a file called `test_sercl.m2` which is identical to `out_sercl.m2`.
 
-##### Our combination of both:
+#### Our combination of both:
 
 `errant_parallel -orig orig.txt -cor cor.txt -out test_combined.m2 -annotator combined`
 
