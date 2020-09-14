@@ -27,7 +27,7 @@ We have followed ERRANT usage with small changes as detailed below.
 
 ## CLI
 
-Three main commands are provided with ERRANT: `errant_parallel`, `errant_m2` and `errant_compare`. You can run them from anywhere on the command line without having to invoke a specific python script.  
+Three main commands are provided with SERRANT: `errant_parallel`, `errant_m2` and `errant_compare`. You can run them from anywhere on the command line without having to invoke a specific python script.  
 
 1. `errant_parallel`  
 
@@ -80,7 +80,7 @@ for e in edits:
 ### Loading
 
 `errant`.**load**(lang, nlp=None)  
-Create an ERRANT Annotator object. The `lang` parameter currently only accepts `'en'` for English, but we hope to extend it for other languages in the future. The optional `nlp` parameter can be used if you have already preloaded spacy and do not want ERRANT to load it again.
+Create an SERRANT Annotator object. The `lang` parameter currently only accepts `'en'` for English, but we hope to extend it for other languages in the future. The optional `nlp` parameter can be used if you have already preloaded spacy and do not want SERRANT to load it again.
 
 ```
 import errant
@@ -92,7 +92,7 @@ annotator = errant.load('en', nlp)
 
 ### Annotator Objects
 
-An Annotator object is the main interface for ERRANT.
+An Annotator object is the main interface for SERRANT.
 
 #### Methods
 
