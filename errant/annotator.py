@@ -16,7 +16,7 @@ class Annotator:
         self.lang = lang
         self.nlp = nlp
         self.merger = merger
-        self.classifier = classifier
+        self.errant_classifier = classifier
         self.syntax_classifier = syntax_classifier
         self.combiner = classification_combiner
 
@@ -63,8 +63,8 @@ class Annotator:
 
     # Input: An Edit object
     # Output: The same Edit object with an updated error type by errant
-    def classify(self, edit):
-        return self.classifier.classify(edit)
+    def classify_by_errant(self, edit):
+        return self.errant_classifier.classify(edit)
 
     # Input: An Edit object
     # Output: The same Edit object with an updated error type by sercl
@@ -80,7 +80,7 @@ class Annotator:
         alignment = self.align(orig, cor, lev)
         edits = self.merge(alignment, merging)
         for edit in edits:
-            edit = self.classify(edit)
+            edit = self.classify_by_errant(edit)
         return edits
 
     # Input 1: An original text string parsed by spacy
@@ -136,7 +136,7 @@ class Annotator:
             edit = edit.minimise()
         # Classify edit
         if not old_cat:
-            errant_edit = self.classify(copy(edit))
+            errant_edit = self.classify_by_errant(copy(edit))
             sercl_edit = self.classify_syntactically(copy(edit))
             if self.combiner is None or annotator == 'errant':
                 edit = errant_edit

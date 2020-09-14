@@ -111,7 +111,7 @@ Extract edits from the optimum alignment in an Alignment object. Four different 
 
 Returns a list of Edit objects.
 
-`annotator`.**classify**(edit)  
+**ADDED**: `annotator`.**classify_by_errant**(edit)
 Classify an edit according to ERRANT rules. Sets the `edit.type` attribute in an Edit object and returns the same Edit object.
 
 **ADDED**: `annotator`.**classify_syntactically**(edit)
@@ -135,7 +135,7 @@ cor = annotator.parse('This is a grammatical sentence .')
 alignment = annotator.align(orig, cor)
 edits = annotator.merge(alignment)
 for e in edits:
-    e = annotator.classify(e)
+    e = annotator.classify_syntactically(e)
 ```
 
 **CHANGED**: `annotator`.**import_edit**(orig, cor, edit, min=True, old_cat=False, annotator='combined')  
