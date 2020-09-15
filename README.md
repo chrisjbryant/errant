@@ -34,18 +34,18 @@ Three main commands are provided with SERRANT: `serrant_parallel`, `serrant_m2` 
      This is the main annotation command that takes an original text file and at least one parallel corrected text file as input, and outputs an annotated M2 file. By default, it is assumed that the original and corrected text files are word tokenised with one sentence per line.  
 	 Example:
 	 ```
-	 serrant_parallel -orig <orig_file> -cor <cor_file1> [<cor_file2> ...] -out <out_m2> [-annotator {errant|sercl|comboned}]
+	 serrant_parallel -orig <orig_file> -cor <cor_file1> [<cor_file2> ...] -out <out_m2> [-annotator {errant|sercl|combined}]
 	 ```
-	 **SERRANT additional flag**: `-annotator {errant|sercl|comboned}` that determines which approach to use: original ERRANT, pure SErCl, or the combination of both that seems to give us the most informative annotation.
+	 **SERRANT additional flag**: `-annotator {errant|sercl|combined}` that determines which approach to use: original ERRANT, pure SErCl, or the combination of both that seems to give us the most informative annotation.
 
 2. `serrant_m2`  
 
      This is a variant of `serrant_parallel` that operates on an M2 file instead of parallel text files. This makes it easier to reprocess existing M2 files. You must also specify whether you want to use gold or auto edits; i.e. `-gold` will only classify the existing edits, while `-auto` will extract and classify automatic edits. In both settings, uncorrected edits and noops are preserved.  
      Example:
 	 ```
-	 serrant_m2 {-auto|-gold} m2_file -out <out_m2> [-annotator {errant|sercl|comboned}]
+	 serrant_m2 {-auto|-gold} m2_file -out <out_m2> [-annotator {errant|sercl|combined}]
 	 ```
-	 **SERRANT additional flag**: `-annotator {errant|sercl|comboned}` that determines which approach to use: original ERRANT, pure SErCl, or the combination of both that seems to give us the most informative annotation.
+	 **SERRANT additional flag**: `-annotator {errant|sercl|combined}` that determines which approach to use: original ERRANT, pure SErCl, or the combination of both that seems to give us the most informative annotation.
 
 3. `serrant_compare`  
 
