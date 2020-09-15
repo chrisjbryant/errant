@@ -9,15 +9,15 @@ with open(base_dir/"README.md") as f:
     readme = f.read()
     
 setup(
-    name = "errant",
-    version = "2.2.2",
+    name = "serrant",
+    version = "1.0",
     license = "MIT",
-    description = "The ERRor ANnotation Toolkit (ERRANT). Automatically extract and classify edits in parallel sentences.",
+    description = "Syntactic ERRor ANnotation Toolkit (SERRANT). A fork of ERRANT that allows also classification by Syntactic Errors",
     long_description = readme,
     long_description_content_type = "text/markdown",
-    author = "Christopher Bryant, Mariano Felice",
-    author_email = "christopher.bryant@cl.cam.ac.uk",
-    url = "https://github.com/chrisjbryant/errant",    
+    author = "Leshem Choshen, Matanel Oren",
+    author_email = "leshem.choshen@mail.huji.ac.il",
+    url = "https://github.com/matanel-oren/serrant",
     keywords = ["automatic annotation", "grammatical errors", "natural language processing"],
     python_requires = ">= 3.3",
     install_requires = ["spacy>=2.2.0", "python-Levenshtein==0.12.0"],
@@ -25,9 +25,9 @@ setup(
     include_package_data=True,
     entry_points = {
         "console_scripts": [
-            "errant_compare = errant.commands.compare_m2:main",
-            "errant_m2 = errant.commands.m2_to_m2:main",
-            "errant_parallel = errant.commands.parallel_to_m2:main"]},
+            "serrant_compare = serrant.commands.compare_m2:main",
+            "serrant_m2 = serrant.commands.m2_to_m2:main",
+            "serrant_parallel = serrant.commands.parallel_to_m2:main"]},
     classifiers = [
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Education",

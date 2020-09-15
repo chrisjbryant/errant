@@ -1,5 +1,5 @@
-from errant.alignment import Alignment
-from errant.edit import Edit
+from serrant.alignment import Alignment
+from serrant.edit import Edit
 from copy import copy
 from spacy.tokens import Doc
 

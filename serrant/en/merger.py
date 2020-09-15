@@ -3,7 +3,7 @@ from re import sub
 from string import punctuation
 import Levenshtein
 import spacy.symbols as POS
-from errant.edit import Edit
+from serrant.edit import Edit
 
 # Merger resources
 open_pos = {POS.ADJ, POS.AUX, POS.ADV, POS.NOUN, POS.VERB}

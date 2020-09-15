@@ -1,6 +1,6 @@
 from pathlib import Path
 import Levenshtein
-from errant.en.lancaster import LancasterStemmer
+from serrant.en.lancaster import LancasterStemmer
 import spacy
 import spacy.symbols as POS
 

@@ -1,12 +1,12 @@
 import argparse
-import errant
+import serrant
 
 def main():
     # Parse command line args
     args = parse_args()
     print("Loading resources...")
     # Load Errant
-    annotator = errant.load("en")
+    annotator = serrant.load("en")
     # Open output M2 file
     out_m2 = open(args.out, "w")
 

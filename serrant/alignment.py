@@ -1,7 +1,7 @@
 from itertools import groupby
 import Levenshtein
 import spacy.parts_of_speech as POS
-from errant.edit import Edit
+from serrant.edit import Edit
 
 class Alignment:
     # Protected class resource

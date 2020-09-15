@@ -4,7 +4,7 @@
 
 This repository is under construction. If you want to use, please contact us first:
 leshem.choshen@mail.huji.ac.il,
-matanel.oren@mail.huji.ac.il
+matanel.oren@mail.huji.ac.il.
 
 
 # Installation
@@ -27,35 +27,35 @@ We have followed ERRANT usage with small changes as detailed below.
 
 ## CLI
 
-Three main commands are provided with SERRANT: `errant_parallel`, `errant_m2` and `errant_compare`. You can run them from anywhere on the command line without having to invoke a specific python script.  
+Three main commands are provided with SERRANT: `serrant_parallel`, `serrant_m2` and `serrant_compare`. You can run them from anywhere on the command line without having to invoke a specific python script.  
 
-1. `errant_parallel`  
+1. `serrant_parallel`  
 
      This is the main annotation command that takes an original text file and at least one parallel corrected text file as input, and outputs an annotated M2 file. By default, it is assumed that the original and corrected text files are word tokenised with one sentence per line.  
 	 Example:
 	 ```
-	 errant_parallel -orig <orig_file> -cor <cor_file1> [<cor_file2> ...] -out <out_m2> [-annotator {errant|sercl|comboned}]
+	 serrant_parallel -orig <orig_file> -cor <cor_file1> [<cor_file2> ...] -out <out_m2> [-annotator {errant|sercl|comboned}]
 	 ```
 	 **SERRANT additional flag**: `-annotator {errant|sercl|comboned}` that determines which approach to use: original ERRANT, pure SErCl, or the combination of both that seems to give us the most informative annotation.
 
-2. `errant_m2`  
+2. `serrant_m2`  
 
-     This is a variant of `errant_parallel` that operates on an M2 file instead of parallel text files. This makes it easier to reprocess existing M2 files. You must also specify whether you want to use gold or auto edits; i.e. `-gold` will only classify the existing edits, while `-auto` will extract and classify automatic edits. In both settings, uncorrected edits and noops are preserved.  
+     This is a variant of `serrant_parallel` that operates on an M2 file instead of parallel text files. This makes it easier to reprocess existing M2 files. You must also specify whether you want to use gold or auto edits; i.e. `-gold` will only classify the existing edits, while `-auto` will extract and classify automatic edits. In both settings, uncorrected edits and noops are preserved.  
      Example:
 	 ```
-	 errant_m2 {-auto|-gold} m2_file -out <out_m2> [-annotator {errant|sercl|comboned}]
+	 serrant_m2 {-auto|-gold} m2_file -out <out_m2> [-annotator {errant|sercl|comboned}]
 	 ```
 	 **SERRANT additional flag**: `-annotator {errant|sercl|comboned}` that determines which approach to use: original ERRANT, pure SErCl, or the combination of both that seems to give us the most informative annotation.
 
-3. `errant_compare`  
+3. `serrant_compare`  
 
      This is the evaluation command that compares a hypothesis M2 file against a reference M2 file. The default behaviour evaluates the hypothesis overall in terms of span-based correction. The `-cat {1,2,3}` flag can be used to evaluate error types at increasing levels of granularity, while the `-ds` or `-dt` flag can be used to evaluate in terms of span-based or token-based detection (i.e. ignoring the correction). All scores are presented in terms of Precision, Recall and F-score (default: F0.5), and counts for True Positives (TP), False Positives (FP) and False Negatives (FN) are also shown.  
 	 Examples:
 	 ```
-     errant_compare -hyp <hyp_m2> -ref <ref_m2>
-     errant_compare -hyp <hyp_m2> -ref <ref_m2> -cat {1,2,3}
-     errant_compare -hyp <hyp_m2> -ref <ref_m2> -ds
-     errant_compare -hyp <hyp_m2> -ref <ref_m2> -ds -cat {1,2,3}
+     serrant_compare -hyp <hyp_m2> -ref <ref_m2>
+     serrant_compare -hyp <hyp_m2> -ref <ref_m2> -cat {1,2,3}
+     serrant_compare -hyp <hyp_m2> -ref <ref_m2> -ds
+     serrant_compare -hyp <hyp_m2> -ref <ref_m2> -ds -cat {1,2,3}
 	 ```
 
 All these scripts also have additional advanced command line options which can be displayed using the `-h` flag.
@@ -67,9 +67,9 @@ SERRANT API is the same as ERRANT except for those which are **NOTED** below.
 ### Quick Start
 
 ```
-import errant
+import serrant
 
-annotator = errant.load('en')
+annotator = serrant.load('en')
 orig = annotator.parse('This are gramamtical sentence .')
 cor = annotator.parse('This is a grammatical sentence .')
 edits = annotator.annotate(orig, cor)
@@ -79,15 +79,15 @@ for e in edits:
 
 ### Loading
 
-`errant`.**load**(lang, nlp=None)  
+`serrant`.**load**(lang, nlp=None)  
 Create an SERRANT Annotator object. The `lang` parameter currently only accepts `'en'` for English, but we hope to extend it for other languages in the future. The optional `nlp` parameter can be used if you have already preloaded spacy and do not want SERRANT to load it again.
 
 ```
-import errant
+import serrant
 import spacy
 
 nlp = spacy.load('en')
-annotator = errant.load('en', nlp)
+annotator = serrant.load('en', nlp)
 ```
 
 ### Annotator Objects
@@ -127,9 +127,9 @@ Run the full annotation pipeline to align two sequences and extract and classify
 Run the full annotation pipeline to align two sequences and extract and classify the edits by the specified classifier (the options are: "errant", "sercl", and "combined").
 
 ```
-import errant
+import serrant
 
-annotator = errant.load('en')
+annotator = serrant.load('en')
 orig = annotator.parse('This are gramamtical sentence .')
 cor = annotator.parse('This is a grammatical sentence .')
 alignment = annotator.align(orig, cor)
@@ -142,9 +142,9 @@ for e in edits:
 Load an Edit object from a list. `orig` and `cor` must be spacy-parsed Doc objects and the edit must be of the form: `[o_start, o_end, c_start, c_end(, type)]`. The values must be integers that correspond to the token start and end offsets in the original and corrected Doc objects. The `type` value is an optional string that denotes the error type of the edit (if known). Set `min` to True to minimise the edit (e.g. [a b -> a c] = [b -> c]) and `old_cat` to True to preserve the old error type category (i.e. turn off the classifier). use `annotator` parameter to choose the classifier from "errant", "sercl", and "combined".
 
 ```
-import errant
+import serrant
 
-annotator = errant.load('en')
+annotator = serrant.load('en')
 orig = annotator.parse('This are gramamtical sentence .')
 cor = annotator.parse('This is a grammatical sentence .')
 edit = [1, 2, 1, 2, 'SVA'] # are -> is
