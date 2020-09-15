@@ -15,7 +15,7 @@ Just like source install in ERRANT:
 git clone https://github.com/matanel-oren/serrant.git
 cd serrant
 python3 -m venv serrant_env
-source serrant_env/bin/activate_syntactically
+source serrant_env/bin/activate
 pip3 install -e .
 python3 -m spacy download en
 ```
