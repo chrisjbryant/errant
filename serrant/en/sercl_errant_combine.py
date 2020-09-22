@@ -88,7 +88,7 @@ def classification_combiner(errant_edit, sercl_edit):
         if token.text.lower() in MODAL_VERBS:
             new_edit.type = errant_edit.type[:2] + 'MODAL'
 
-    elif cond == 35:  # Under aux relation, could be a tense issue, a modal verb, or other (one sided).
+    elif cond == 35:  # Under aux relation, could be a tense issue, a modal verb, or other (two sided).
         # It is not a simple tense issue
         if (errant_edit.o_toks[0].lemma_.lower() not in {'be', 'have'} and errant_edit.o_toks[0].text.lower() != 'will')\
                 or (errant_edit.c_toks[0].lemma_.lower() not in {'be', 'have'} and errant_edit.c_toks[0].text.lower() != 'will'):
