@@ -8,13 +8,11 @@ def main():
     print("Loading resources...")
     # Load Errant
     annotator = errant.load("en")
-    # Open output m2 file
-    out_m2 = open(args.out, "w")
 
     print("Processing parallel files...")
     # Process an arbitrary number of files line by line simultaneously. Python 3.3+
     # See https://tinyurl.com/y4cj4gth
-    with ExitStack() as stack:
+    with open(args.out, "w") as out_m2, ExitStack() as stack:
         in_files = [stack.enter_context(open(i)) for i in [args.orig]+args.cor]
         # Process each line of all input files
         for line in zip(*in_files):
