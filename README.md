@@ -202,13 +202,13 @@ Format the edit for an output M2 file. `id` is the annotator id.
 This work is a composition of two previous work. While a technical report would be soon published and should be cited upon use, we kindly ask that the original work would be cited as well.
 
 This work:
-`Soon to appear`
+```Soon to appear```
 
 SerCl:
-`Soon to appear in CoNLL`
+```Soon to appear in CoNLL```
 
 Errant:
-`@inproceedings{bryant-etal-2017-automatic,
+```@inproceedings{bryant-etal-2017-automatic,
     title = "Automatic Annotation and Evaluation of Error Types for Grammatical Error Correction",
     author = "Bryant, Christopher  and
       Felice, Mariano  and
@@ -221,4 +221,4 @@ Errant:
     url = "https://www.aclweb.org/anthology/P17-1074",
     doi = "10.18653/v1/P17-1074",
     pages = "793--805",
-}`
+}```
