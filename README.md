@@ -197,3 +197,28 @@ Which case of ERRANT conditions was typed this error.
 
 `edit`.**to_m2**(id=0)  
 Format the edit for an output M2 file. `id` is the annotator id.
+
+## Cite
+This work is a composition of two previous work. While a technical report would be soon published and should be cited upon use, we kindly ask that the original work would be cited as well.
+
+This work:
+`Soon to appear`
+
+SerCl:
+`Soon to appear in CoNLL`
+
+Errant:
+`@inproceedings{bryant-etal-2017-automatic,
+    title = "Automatic Annotation and Evaluation of Error Types for Grammatical Error Correction",
+    author = "Bryant, Christopher  and
+      Felice, Mariano  and
+      Briscoe, Ted",
+    booktitle = "Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+    month = jul,
+    year = "2017",
+    address = "Vancouver, Canada",
+    publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/P17-1074",
+    doi = "10.18653/v1/P17-1074",
+    pages = "793--805",
+}`
