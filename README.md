@@ -6,6 +6,7 @@ This repository is under construction. If you want to use, please contact us fir
 leshem.choshen@mail.huji.ac.il,
 matanel.oren@mail.huji.ac.il.
 
+The repository is based upon [ERRANT](https://github.com/chrisjbryant/errant) and [SErCl](https://github.com/borgr/GEC_UD_divergences)
 
 # Installation
 
