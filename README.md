@@ -2,9 +2,10 @@
 
 # Overview
 
-This repository is under construction. If you want to use, please contact us first:
-leshem.choshen@mail.huji.ac.il,
-matanel.oren@mail.huji.ac.il.
+This repository combines ERRANT rules with SErCL rules. When ERRANT rules are less informative we go by SErCL notion of "a type is what changed into what".
+The repository also allows for use of ERRANT or SErCL separately, do note that currntly SErCL only compares POS tags, so when POS tag doesn't change it does not compare the morphological change (e.g. book->books is of type Noun and not Noun:singular->plural), contributions are welcome.
+
+This repository is under construction. 
 
 The repository is based upon [ERRANT](https://github.com/chrisjbryant/errant) and [SErCl](https://github.com/borgr/GEC_UD_divergences)
 
@@ -35,7 +36,8 @@ Three main commands are provided with SERRANT: `serrant_parallel`, `serrant_m2` 
      This is the main annotation command that takes an original text file and at least one parallel corrected text file as input, and outputs an annotated M2 file. By default, it is assumed that the original and corrected text files are word tokenised with one sentence per line.  
 	 Example:
 	 ```
-	 serrant_parallel -orig <orig_file> -cor <cor_file1> [<cor_file2> ...] -out <out_m2> [-annotator {errant|sercl|combined}]
+	 serrant_parallel -orig <orig_file> -cor <cor_file1> [<cor_file2> ...] -out <out_m2> [-annotator {errant|
+	 l|combined}]
 	 ```
 	 **SERRANT additional flag**: `-annotator {errant|sercl|combined}` that determines which approach to use: original ERRANT, pure SErCl, or the combination of both that seems to give us the most informative annotation.
 
@@ -206,7 +208,20 @@ This work:
 ```Soon to appear```
 
 SerCl:
-```Soon to appear in CoNLL```
+```@inproceedings{choshen-etal-2020-classifying,
+    title = "Classifying Syntactic Errors in Learner Language",
+    author = "Choshen, Leshem  and
+      Nikolaev, Dmitry  and
+      Berzak, Yevgeni  and
+      Abend, Omri",
+    booktitle = "Proceedings of the 24th Conference on Computational Natural Language Learning",
+    month = nov,
+    year = "2020",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/2020.conll-1.7",
+    pages = "97--107",
+    }```
 
 Errant:
 ```@inproceedings{bryant-etal-2017-automatic,
