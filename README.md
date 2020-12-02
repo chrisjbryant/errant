@@ -3,6 +3,7 @@
 # Overview
 
 This repository combines ERRANT rules with SErCL rules. When ERRANT rules are less informative we go by SErCL notion of "a type is what changed into what".
+
 The repository also allows for use of ERRANT or SErCL separately, do note that currntly SErCL only compares POS tags, so when POS tag doesn't change it does not compare the morphological change (e.g. book->books is of type Noun and not Noun:singular->plural), contributions are welcome.
 
 This repository is under construction. 
