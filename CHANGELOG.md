@@ -2,6 +2,10 @@
 
 This log describes all the changes made to ERRANT since its release.
 
+## v2.2.3 (12-02-21)
+
+1. Changed the dependency version requirements in `setup.py` since ERRANT v2.2.x is not compatible with spaCy 3. 
+
 ## v2.2.2 (14-08-20)
 
 1. Added a copy of the NLTK Lancaster stemmer to `errant.en.lancaster` and removed the NLTK dependency. It was overkill to require the entire NLTK package just for this stemmer so we now bundle it with ERRANT. 
