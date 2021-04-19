@@ -6,7 +6,7 @@ def main():
     args = parse_args()
     print("Loading resources...")
     # Load Errant
-    annotator = serrant.load("en")
+    annotator = serrant.load("en_core_web_sm")
     # Open output M2 file
     out_m2 = open(args.out, "w")
 
