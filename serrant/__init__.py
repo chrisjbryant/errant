@@ -14,7 +14,8 @@ def load(lang, nlp=None):
         raise Exception("%s is an unsupported or unknown language" % lang)
 
     # Load spacy
-    nlp = nlp or spacy.load(lang, disable=["ner"])
+    model_per_lang={"en":"en_core_web_sm"}
+    nlp = nlp or spacy.load(model_per_lang[lang], disable=["ner"])
 
     # Load language edit merger
     merger = import_module("serrant.%s.merger" % lang)
