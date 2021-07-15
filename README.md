@@ -1,4 +1,4 @@
-# ERRANT v2.2.3
+# ERRANT v2.3.0
 
 This repository contains the grammatical ERRor ANnotation Toolkit (ERRANT) described in:
 
@@ -6,7 +6,7 @@ This repository contains the grammatical ERRor ANnotation Toolkit (ERRANT) descr
 
 > Mariano Felice, Christopher Bryant, and Ted Briscoe. 2016. [**Automatic extraction of learner errors in ESL sentences using linguistically enhanced alignments**](https://www.aclweb.org/anthology/C16-1079/). In Proceedings of COLING 2016, the 26th International Conference on Computational Linguistics: Technical Papers. Osaka, Japan.
 
-If you make use of this code, please cite the above papers. More information about ERRANT can be found [here](https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-938.html).
+If you make use of this code, please cite the above papers. More information about ERRANT can be found [here](https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-938.html). In particular, see Chapter 5 for definitions of error types.
 
 # Overview
 
@@ -40,11 +40,11 @@ python3 -m spacy download en
 ```
 This will create and activate a new python3 environment called `errant_env` in the current directory. `pip` will then update some setup tools and install ERRANT, [spaCy](https://spacy.io/), [python-Levenshtein](https://pypi.org/project/python-Levenshtein/) and spaCy's default English model in this environment. You can deactivate the environment at any time by running `deactivate`, but must remember to activate it again whenever you want to use ERRANT.  
 
-#### ERRANT and spaCy 2
+#### ERRANT and spaCy
 
-ERRANT was originally designed to work with spaCy v1.9.0 and works best with this version. SpaCy v1.9.0 does not work with Python >= 3.7 however, and so we were forced to update ERRANT to be compatible with spaCy 2. Since spaCy 2 uses a neural system to trade speed for accuracy, this means ERRANT v2.2.0 is **~4x slower** than ERRANT v2.1.0.
+ERRANT was originally designed to work with spaCy v1.9.0 and works best with this version. SpaCy v1.9.0 does not work with Python >= 3.7 however, and so we were forced to update ERRANT to be compatible with spaCy 2. Since spaCy 2 uses a neural system to trade speed for accuracy, this means ERRANT v2.2 is **~4x slower** than ERRANT v2.1. We have not yet extended ERRANT to work with spaCy 3, but preliminary tests suggest ERRANT will become even slower. 
 
-There is no way around this if you use Python >= 3.7, but *we recommend installing ERRANT v2.1.0 if you use Python < 3.7*.  
+Consequently, we recommend ERRANT v2.1.0 if speed is a priority and you can use Python < 3.7.  
 ```
 pip3 install errant==2.1.0
 ```
@@ -64,6 +64,7 @@ git clone https://github.com/chrisjbryant/errant.git
 cd errant
 python3 -m venv errant_env
 source errant_env/bin/activate
+pip3 install -U pip setuptools wheel
 pip3 install -e .
 python3 -m spacy download en
 ```

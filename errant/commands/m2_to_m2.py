@@ -7,66 +7,72 @@ def main():
     print("Loading resources...")
     # Load Errant
     annotator = errant.load("en")
-    # Open output M2 file
-    out_m2 = open(args.out, "w")
 
     print("Processing M2 file...")
-    # Open the m2 file and split it into text+edit blocks
-    m2 = open(args.m2_file).read().strip().split("\n\n")
-    # Loop through the blocks
-    for m2_block in m2:
-        m2_block = m2_block.strip().split("\n")
-        # Write the original text to the output M2 file
-        out_m2.write(m2_block[0]+"\n")
-        # Parse orig with spacy
-        orig = annotator.parse(m2_block[0][2:])
-        # Simplify the edits and sort by coder id
-        edit_dict = simplify_edits(m2_block[1:])
-        # Loop through coder ids
-        for id, raw_edits in sorted(edit_dict.items()):
-            # If the first edit is a noop
-            if raw_edits[0][2] == "noop":
-                # Write the noop and continue
-                out_m2.write(noop_edit(id)+"\n")
-                continue
-            # Apply the edits to generate the corrected text
-            # Also redefine the edits as orig and cor token offsets
-            cor, gold_edits = get_cor_and_edits(m2_block[0][2:], raw_edits)
-            # Parse cor with spacy
-            cor = annotator.parse(cor)
-            # Save detection edits here for auto
-            det_edits = []
-            # Loop through the gold edits
-            for gold_edit in gold_edits:
-                # Do not minimise detection edits
-                if gold_edit[-2] in {"Um", "UNK"}:
-                    edit = annotator.import_edit(orig, cor, gold_edit[:-1],
-                        min=False, old_cat=args.old_cats)
-                    # Overwrite the pseudo correction and set it in the edit
-                    edit.c_toks = annotator.parse(gold_edit[-1])
-                    # Save the edit for auto
-                    det_edits.append(edit)
-                    # Write the edit for gold
-                    if args.gold:
-                        # Write the edit
-                        out_m2.write(edit.to_m2(id)+"\n")
-                # Gold annotation
-                elif args.gold:
-                    edit = annotator.import_edit(orig, cor, gold_edit[:-1],
-                        not args.no_min, args.old_cats)
-                    # Write the edit
-                    out_m2.write(edit.to_m2(id)+"\n")
-            # Auto annotations
-            if args.auto:
-                # Auto edits
-                edits = annotator.annotate(orig, cor, args.lev, args.merge)
-                # Combine detection and auto edits and sort by orig offsets
-                edits = sorted(det_edits+edits, key=lambda e:(e.o_start, e.o_end))
-                # Write the edits to the output M2 file
-                for edit in edits:
-                    out_m2.write(edit.to_m2(id)+"\n")
-        # Write a newline when there are no more edits
-        out_m2.write("\n")
+    # Open the m2 file and split it into text+edits blocks. Also open out_m2.
+    with open(args.m2_file) as m2, open(args.out, "w") as out_m2:
+        # Store the current m2_block here
+        m2_block = []
+        # Loop through m2 lines
+        for line in m2:
+            line = line.strip()
+            # If the line isn't empty, add it to the m2_block
+            if line: m2_block.append(line)
+            # Otherwise, process the complete blocks
+            else:
+                # Write the original text to the output M2 file
+                out_m2.write(m2_block[0]+"\n")
+                # Parse orig with spacy
+                orig = annotator.parse(m2_block[0][2:])
+                # Simplify the edits and sort by coder id
+                edit_dict = simplify_edits(m2_block[1:])
+                # Loop through coder ids
+                for id, raw_edits in sorted(edit_dict.items()):
+                    # If the first edit is a noop
+                    if raw_edits[0][2] == "noop":
+                        # Write the noop and continue
+                        out_m2.write(noop_edit(id)+"\n")
+                        continue
+                    # Apply the edits to generate the corrected text
+                    # Also redefine the edits as orig and cor token offsets
+                    cor, gold_edits = get_cor_and_edits(m2_block[0][2:], raw_edits)
+                    # Parse cor with spacy
+                    cor = annotator.parse(cor)
+                    # Save detection edits here for auto
+                    det_edits = []
+                    # Loop through the gold edits
+                    for gold_edit in gold_edits:
+                        # Do not minimise detection edits
+                        if gold_edit[-2] in {"Um", "UNK"}:
+                            edit = annotator.import_edit(orig, cor, gold_edit[:-1],
+                                min=False, old_cat=args.old_cats)
+                            # Overwrite the pseudo correction and set it in the edit
+                            edit.c_toks = annotator.parse(gold_edit[-1])
+                            # Save the edit for auto
+                            det_edits.append(edit)
+                            # Write the edit for gold
+                            if args.gold:
+                                # Write the edit
+                                out_m2.write(edit.to_m2(id)+"\n")
+                        # Gold annotation
+                        elif args.gold:
+                            edit = annotator.import_edit(orig, cor, gold_edit[:-1],
+                                not args.no_min, args.old_cats)
+                            # Write the edit
+                            out_m2.write(edit.to_m2(id)+"\n")
+                    # Auto annotations
+                    if args.auto:
+                        # Auto edits
+                        edits = annotator.annotate(orig, cor, args.lev, args.merge)
+                        # Combine detection and auto edits and sort by orig offsets
+                        edits = sorted(det_edits+edits, key=lambda e:(e.o_start, e.o_end))
+                        # Write the edits to the output M2 file
+                        for edit in edits:
+                            out_m2.write(edit.to_m2(id)+"\n")
+                # Write a newline when there are no more edits
+                out_m2.write("\n")
+                # Reset the m2 block
+                m2_block = []
 
 # Parse command line args
 def parse_args():

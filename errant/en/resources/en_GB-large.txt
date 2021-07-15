@@ -1367,6 +1367,8 @@ Antichrists
 Anticosti
 Antietam
 Antietam's
+Antifa
+Antifa's
 Antifederalist
 Antigone
 Antigone's
@@ -4505,6 +4507,7 @@ COD
 COL
 COLA
 CORE
+COVID
 CP
 CPA
 CPA's
@@ -8041,8 +8044,6 @@ Dumbledore's
 Dumbo
 Dumbo's
 Dumfries
-Dumpster
-Dumpster's
 Dumuzi
 Dumuzi's
 Dumyat
@@ -15537,6 +15538,7 @@ Latino
 Latino's
 Latinos
 Latins
+Latinx
 Latisha
 Latisha's
 Latium
@@ -22480,7 +22482,9 @@ Qumran's
 Quonset
 Quonset's
 Qur'an
+Qur'an's
 Qur'anic
+Qur'ans
 Quran
 Quranic
 Québecois
@@ -31423,7 +31427,6 @@ adorns
 adown
 adrenal
 adrenal's
-adrenalin
 adrenalin's
 adrenaline
 adrenaline's
@@ -31761,6 +31764,7 @@ aerostation
 aerotherapeutics
 aerothermodynamics
 aerugo
+aery
 aesthesia
 aesthete
 aesthete's
@@ -33912,7 +33916,6 @@ anaesthetically
 anaesthetics
 anaesthetisation
 anaesthetisation's
-anaesthetisations
 anaesthetise
 anaesthetised
 anaesthetises
@@ -33922,7 +33925,6 @@ anaesthetist's
 anaesthetists
 anaesthetization
 anaesthetization's
-anaesthetizations
 anaesthetize
 anaesthetized
 anaesthetizes
@@ -34004,6 +34006,7 @@ analytic
 analytical
 analyticalally
 analytically
+analytics
 anamneses
 anamnesis
 anamorphic
@@ -35799,6 +35802,10 @@ apprise
 apprised
 apprises
 apprising
+apprize
+apprized
+apprizes
+apprizing
 approach
 approach's
 approachability
@@ -42682,6 +42689,9 @@ blockbuster's
 blockbusters
 blockbusting
 blockbusting's
+blockchain
+blockchain's
+blockchains
 blocked
 blocker
 blocker's
@@ -46887,7 +46897,6 @@ caliphates
 caliphs
 calisaya
 calisayas
-calisthenic
 calisthenics's
 call
 call's
@@ -46930,6 +46939,7 @@ callipers
 callipygean
 callipygian
 callipygous
+callisthenic
 callisthenics
 callosities
 callosity
@@ -51459,6 +51469,9 @@ chyme
 chyme's
 chymotrypsin
 chymous
+chyron
+chyron's
+chyrons
 château
 château's
 châteaux
@@ -51770,10 +51783,12 @@ cirrus
 cirrus's
 cirsoid
 ciré
+cis
 cisalpine
 cisco
 ciscoes
 ciscos
+cisgender
 cislunar
 cismontane
 cispadane
@@ -52341,6 +52356,7 @@ clichés
 click
 click's
 clickable
+clickbait
 clicked
 clicker
 clicker's
@@ -53774,6 +53790,7 @@ colophonies
 colophons
 colophony
 coloquintida
+colorado
 coloration
 coloration's
 coloratura
@@ -53797,7 +53814,6 @@ colotomy
 colour
 colour's
 colourable
-colourado
 colourant
 colourant's
 colourants
@@ -56136,6 +56152,7 @@ contact's
 contactable
 contacted
 contacting
+contactless
 contactor
 contacts
 contagion
@@ -57277,6 +57294,9 @@ coronas
 coronation
 coronation's
 coronations
+coronavirus
+coronavirus's
+coronaviruses
 coroner
 coroner's
 coroners
@@ -60446,6 +60466,9 @@ cynosures
 cyperaceous
 cypher
 cypher's
+cyphered
+cyphering
+cyphers
 cypress
 cypress's
 cypresses
@@ -60964,6 +60987,7 @@ database's
 databases
 datable
 datary
+dataset
 dataset's
 datasets
 datatype
@@ -61377,6 +61401,9 @@ decagonal
 decagonally
 decagons
 decagram
+decagram's
+decagramme
+decagramme's
 decagrams
 decahedra
 decahedral
@@ -61393,11 +61420,15 @@ decalcifying
 decalcomania
 decalcomanias
 decalescence
+decaliters
 decalitre
+decalitre's
 decalitres
 decalogue
 decals
+decameters
 decametre
+decametre's
 decametres
 decamp
 decamped
@@ -61936,6 +61967,9 @@ deepening
 deepens
 deeper
 deepest
+deepfake
+deepfake's
+deepfakes
 deepfreeze
 deepfreezes
 deepfroze
@@ -62396,13 +62430,7 @@ dejection
 dejection's
 dejects
 dekagram
-dekagramme
-dekagrammes
 dekagrams
-dekalitre
-dekalitres
-dekametre
-dekametres
 dekko
 dekkos
 del
@@ -62547,6 +62575,7 @@ delitescent
 deliver
 deliverability
 deliverable
+deliverables
 deliverance
 deliverance's
 delivered
@@ -64885,7 +64914,6 @@ digitalis
 digitalis's
 digitalise
 digitalised
-digitalises
 digitalising
 digitalism
 digitalize
@@ -66477,6 +66505,8 @@ disruptive
 disruptively
 disruptor
 disrupts
+diss
+diss's
 dissatisfaction
 dissatisfaction's
 dissatisfactory
@@ -66540,6 +66570,7 @@ disserve
 disservice
 disservice's
 disservices
+disses
 dissever
 dissevered
 dissevering
@@ -69021,7 +69052,9 @@ dying
 dying's
 dyke
 dyke's
+dyked
 dykes
+dyking
 dynameter
 dynamic
 dynamic's
@@ -73600,6 +73633,8 @@ exaggerator
 exaggerator's
 exaggerators
 exaggeratory
+exajoule
+exajoules
 exalt
 exaltation
 exaltation's
@@ -74926,6 +74961,9 @@ eyot
 eyra
 eyras
 eyre
+eyrie
+eyrie's
+eyries
 eyrir
 f
 fMRI
@@ -76160,6 +76198,8 @@ fennel's
 fennelflower
 fenny
 fens
+fentanyl
+fentanyl's
 fenugreek
 fenugreeks
 feoff
@@ -77641,10 +77681,7 @@ flavine
 flavone
 flavoprotein
 flavopurpurin
-flavor
-flavorful
 flavorous
-flavors
 flavour
 flavour's
 flavoured
@@ -82365,16 +82402,24 @@ gigabyte
 gigabyte's
 gigabytes
 gigaflops
+gigagram
+gigagramme
+gigagrammes
+gigagrams
 gigahertz
 gigahertz's
 gigajoule
 gigajoule's
 gigajoules
+gigametre
+gigametres
 gigantean
 gigantic
 gigantically
 gigantism
 gigantisms
+gigapascal
+gigapascals
 gigapixel
 gigapixel's
 gigapixels
@@ -88421,6 +88466,9 @@ hitting
 hive
 hive's
 hived
+hivemind
+hivemind's
+hiveminds
 hives
 hiving
 hiya
@@ -88512,6 +88560,7 @@ hobo's
 hoboes
 hobos
 hobs
+hoc
 hock
 hock's
 hocked
@@ -89654,6 +89703,9 @@ hovel
 hovel's
 hovels
 hover
+hoverboard
+hoverboard's
+hoverboards
 hovercraft
 hovercraft's
 hovercrafts
@@ -93977,6 +94029,7 @@ initiator
 initiator's
 initiators
 initiatory
+initio
 inject
 injected
 injecting
@@ -94447,6 +94500,7 @@ instability's
 instable
 instal
 install
+installable
 installation
 installation's
 installations
@@ -94716,6 +94770,8 @@ integument's
 integumental
 integumentary
 integuments
+intel
+intel's
 intellect
 intellect's
 intellection
@@ -95300,6 +95356,8 @@ intersected
 intersecting
 intersection
 intersection's
+intersectional
+intersectionality
 intersections
 intersects
 interservice
@@ -97959,6 +98017,8 @@ ketches
 ketchup
 ketchup's
 ketene
+keto
+ketogenic
 ketone
 ketones
 ketonuria
@@ -98176,6 +98236,8 @@ kilobyte's
 kilobytes
 kilocalorie
 kilocalories
+kilocoulomb
+kilocoulombs
 kilocycle
 kilocycle's
 kilocycles
@@ -98187,6 +98249,7 @@ kilogrammes
 kilograms
 kilohertz
 kilohertz's
+kilojoule
 kilojoules
 kilolitre
 kilolitre's
@@ -98195,6 +98258,10 @@ kilometre
 kilometre's
 kilometres
 kilometric
+kilonewton
+kilonewtons
+kilopascal
+kilopascals
 kilos
 kiloton
 kiloton's
@@ -105275,11 +105342,10 @@ meadowlarks
 meadows
 meadowsweet
 meadowy
-meagerly
-meagerness
-meagerness's
 meagre
+meagrely
 meagreness
+meagreness's
 meal
 meal's
 mealie
@@ -105591,8 +105657,13 @@ megadose
 megafauna
 megaflops
 megagamete
+megagram
+megagramme
+megagrammes
+megagrams
 megahertz
 megahertz's
+megajoule
 megajoules
 megalith
 megalith's
@@ -105609,7 +105680,11 @@ megalomanic
 megalopolis
 megalopolis's
 megalopolises
+megametre
+megametres
 megaparsec
+megapascal
+megapascals
 megaphone
 megaphone's
 megaphoned
@@ -106751,6 +106826,7 @@ microfloppies
 microfloppy
 microgamete
 microgram
+microgramme
 micrograms
 micrograph
 micrography
@@ -106811,6 +106887,7 @@ microphones
 microphotograph
 microphysics
 microphyte
+microplastics
 microprint
 microprocessor
 microprocessor's
@@ -110840,9 +110917,6 @@ name
 name's
 nameable
 named
-namedrop
-namedropping
-namedropping's
 nameless
 namelessly
 namelessness
@@ -110868,6 +110942,7 @@ nanny
 nanny's
 nanobot
 nanobots
+nanogrammes
 nanoid
 nanometre
 nanometres
@@ -111161,6 +111236,7 @@ naumachias
 nauplius
 nausea
 nausea's
+nauseam
 nauseate
 nauseated
 nauseates
@@ -114948,6 +115024,7 @@ onus
 onus's
 onuses
 onward
+onwards
 onyx
 onyx's
 onyxes
@@ -115116,6 +115193,8 @@ opinionated
 opinionative
 opinions
 opioid
+opioid's
+opioids
 opisthognathous
 opium
 opium's
@@ -120628,6 +120707,7 @@ peroxides
 peroxiding
 peroxidise
 peroxidize
+perpend
 perpendicular
 perpendicular's
 perpendicularity
@@ -120931,6 +121011,8 @@ pet's
 petabyte
 petabyte's
 petabytes
+petajoule
+petajoules
 petal
 petal's
 petaliferous
@@ -120941,6 +121023,8 @@ petard
 petard's
 petards
 petasus
+petawatt
+petawatts
 petcock
 petcock's
 petcocks
@@ -141656,7 +141740,6 @@ shames
 shaming
 shammed
 shammer
-shammies
 shamming
 shampoo
 shampoo's
@@ -143550,6 +143633,7 @@ sitters
 sitting
 sitting's
 sittings
+situ
 situate
 situated
 situates
@@ -147376,8 +147460,6 @@ spondylitis
 spondylitises
 sponge
 sponge's
-spongecake
-spongecake's
 sponged
 sponger
 sponger's
@@ -151788,6 +151870,9 @@ supersonic
 supersonically
 supersonics
 supersophisticated
+superspreader
+superspreader's
+superspreaders
 superspy
 superstar
 superstar's
@@ -154953,6 +155038,8 @@ terabytes
 teraflops
 terahertz
 terahertz's
+terajoule
+terajoules
 terapixel
 terapixel's
 terapixels
@@ -154965,6 +155052,8 @@ teratological
 teratologies
 teratologist
 teratology
+terawatt
+terawatts
 terbia
 terbium
 terbium's
@@ -158303,6 +158392,9 @@ transparency
 transparency's
 transparent
 transparently
+transphobia
+transphobia's
+transphobic
 transpicuous
 transpierce
 transpiration

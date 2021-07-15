@@ -53,6 +53,9 @@ def process_seq(seq, alignment):
         # Get the tokens in orig and cor. They will now never be empty.
         o = alignment.orig[seq[start][1]:seq[end][2]]
         c = alignment.cor[seq[start][3]:seq[end][4]]
+        # First token possessive suffixes
+        if start == 0 and (o[0].tag_ == "POS" or c[0].tag_ == "POS"):
+            return [seq[0]] + process_seq(seq[1:], alignment)
         # Merge possessive suffixes: [friends -> friend 's]
         if o[-1].tag_ == "POS" or c[-1].tag_ == "POS":
             return process_seq(seq[:end-1], alignment) + \
@@ -61,8 +64,8 @@ def process_seq(seq, alignment):
         # Case changes
         if o[-1].lower == c[-1].lower:
             # Merge first token I or D: [Cat -> The big cat]
-            if start == 0 and (len(o) == 1 and c[0].text[0].isupper()) or \
-                    (len(c) == 1 and o[0].text[0].isupper()):
+            if start == 0 and ((len(o) == 1 and c[0].text[0].isupper()) or \
+                    (len(c) == 1 and o[0].text[0].isupper())):
                 return merge_edits(seq[start:end+1]) + \
                     process_seq(seq[end+1:], alignment)
             # Merge with previous punctuation: [, we -> . We], [we -> . We]

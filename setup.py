@@ -10,7 +10,7 @@ with open(base_dir/"README.md") as f:
     
 setup(
     name = "errant",
-    version = "2.2.3",
+    version = "2.3.0",
     license = "MIT",
     description = "The ERRor ANnotation Toolkit (ERRANT). Automatically extract and classify edits in parallel sentences.",
     long_description = readme,

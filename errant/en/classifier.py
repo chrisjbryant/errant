@@ -213,20 +213,26 @@ def get_two_sided_type(o_toks, c_toks):
                         return "MORPH"
                 # Use string similarity to detect true spelling errors.
                 else:
-                    char_ratio = Levenshtein.ratio(o_toks[0].text, c_toks[0].text)
-                    # Ratio > 0.5 means both side share at least half the same chars.
+                    # Normalised Lev distance works better than Lev ratio
+                    levdist = Levenshtein.distance(o_toks[0].lower_, c_toks[0].lower_)
+                    str_sim = 1-levdist/max(len(o_toks[0].lower_), len(c_toks[0].lower_))
                     # WARNING: THIS IS AN APPROXIMATION.
-                    if char_ratio > 0.5:
+                    # Thresholds tuned manually on FCE_train + W&I_train
+                    # str_sim > 0.55 is almost always a true spelling error
+                    if str_sim > 0.55:
                         return "SPELL"
-                    # If ratio is <= 0.5, the error is more complex e.g. tolk -> say
+                    # Special scores for shorter sequences are usually SPELL
+                    if str_sim == 0.5 or round(str_sim, 3) == 0.333:
+                        # Short strings are more likely to be spell: eles -> else
+                        if len(o_toks[0].text) <= 4 and len(c_toks[0].text) <= 4:
+                            return "SPELL"
+                    # The remainder are usually word choice: amounght -> number
+                    # Classifying based on cor_pos alone is generally enough.
+                    if c_pos[0] not in rare_pos:
+                        return c_pos[0]
+                    # Anything that remains is OTHER
                     else:
-                        # If POS is the same, this takes precedence over spelling.
-                        if o_pos == c_pos and \
-                                o_pos[0] not in rare_pos:
-                            return o_pos[0]
-                        # Tricky cases.
-                        else:
-                            return "OTHER"
+                        return "OTHER"
 
         # 3. MORPHOLOGY
         # Only ADJ, ADV, NOUN and VERB can have inflectional changes.
@@ -281,8 +287,7 @@ def get_two_sided_type(o_toks, c_toks):
                 return "MORPH"
         # Derivational morphology.
         if stemmer.stem(o_toks[0].text) == stemmer.stem(c_toks[0].text) and \
-                o_pos[0] in open_pos2 and \
-                c_pos[0] in open_pos2:
+                o_pos[0] in open_pos2 and c_pos[0] in open_pos2:
             return "MORPH"
 
         # 4. GENERAL
@@ -307,7 +312,103 @@ def get_two_sided_type(o_toks, c_toks):
             # "poss" indicates possessive determiner
             if c_dep[0] == "poss":
                 return "DET"
-        # Tricky cases.
+        # NUM and DET are usually DET; e.g. a <-> one
+        if set(o_pos+c_pos) == {"NUM", "DET"}:
+            return "DET"
+        # Special: other <-> another
+        if {o_toks[0].lower_, c_toks[0].lower_} == {"other", "another"}:
+            return "DET"
+        # Special: your (sincerely) -> yours (sincerely)
+        if o_toks[0].lower_ == "your" and c_toks[0].lower_ == "yours":
+            return "PRON"
+        # Special: no <-> not; this is very context sensitive
+        if {o_toks[0].lower_, c_toks[0].lower_} == {"no", "not"}:
+            return "OTHER"
+            
+        # 5. STRING SIMILARITY
+        # These rules are quite language specific.
+        if o_toks[0].text.isalpha() and c_toks[0].text.isalpha():
+            # Normalised Lev distance works better than Lev ratio
+            levdist = Levenshtein.distance(o_toks[0].lower_, c_toks[0].lower_)
+            str_sim = 1-levdist/max(len(o_toks[0].lower_), len(c_toks[0].lower_))
+            # WARNING: THIS IS AN APPROXIMATION.
+            # Thresholds tuned manually on FCE_train + W&I_train
+            # A. Short sequences are likely to be SPELL or function word errors
+            if len(o_toks[0].text) == 1:
+                # i -> in, a -> at
+                if len(c_toks[0].text) == 2 and str_sim == 0.5:
+                    return "SPELL"
+            if len(o_toks[0].text) == 2:
+                # in -> is, he -> the, to -> too
+                if 2 <= len(c_toks[0].text) <= 3 and str_sim >= 0.5:
+                    return "SPELL"
+            if len(o_toks[0].text) == 3:
+                # Special: the -> that (relative pronoun)
+                if o_toks[0].lower_ == "the" and c_toks[0].lower_ == "that":
+                    return "PRON"
+                # Special: all -> everything
+                if o_toks[0].lower_ == "all" and c_toks[0].lower_ == "everything":
+                    return "PRON"
+                # off -> of, too -> to, out -> our, now -> know
+                if 2 <= len(c_toks[0].text) <= 4 and str_sim >= 0.5:
+                    return "SPELL"
+            # B. Longer sequences are also likely to include content word errors
+            if len(o_toks[0].text) == 4:
+                # Special: that <-> what
+                if {o_toks[0].lower_, c_toks[0].lower_} == {"that", "what"}:
+                    return "PRON"
+                # Special: well <-> good
+                if {o_toks[0].lower_, c_toks[0].lower_} == {"good", "well"} and \
+                        c_pos[0] not in rare_pos:
+                    return c_pos[0]
+                # knew -> new, 
+                if len(c_toks[0].text) == 3 and str_sim > 0.5:
+                    return "SPELL"
+                # then <-> than, form -> from
+                if len(c_toks[0].text) == 4 and str_sim >= 0.5:
+                    return "SPELL"
+                # gong -> going, hole -> whole
+                if len(c_toks[0].text) == 5 and str_sim == 0.8:
+                    return "SPELL"
+                # high -> height, west -> western
+                if len(c_toks[0].text) > 5 and str_sim > 0.5 and \
+                        c_pos[0] not in rare_pos:
+                    return c_pos[0]
+            if len(o_toks[0].text) == 5:
+                # Special: after -> later
+                if {o_toks[0].lower_, c_toks[0].lower_} == {"after", "later"} and \
+                        c_pos[0] not in rare_pos:
+                    return c_pos[0]
+                # where -> were, found -> fund
+                if len(c_toks[0].text) == 4 and str_sim == 0.8:
+                    return "SPELL"
+                # thing <-> think, quite -> quiet, their <-> there
+                if len(c_toks[0].text) == 5 and str_sim >= 0.6:
+                    return "SPELL"
+                # house -> domestic, human -> people
+                if len(c_toks[0].text) > 5 and c_pos[0] not in rare_pos:
+                    return c_pos[0]
+            # C. Longest sequences include MORPH errors
+            if len(o_toks[0].text) > 5 and len(c_toks[0].text) > 5:
+                # Special: therefor -> therefore
+                if o_toks[0].lower_ == "therefor" and c_toks[0].lower_ == "therefore":
+                    return "SPELL"
+                # Special: though <-> thought
+                if {o_toks[0].lower_, c_toks[0].lower_} == {"though", "thought"}:
+                    return "SPELL"
+                # Morphology errors: stress -> stressed, health -> healthy
+                if (o_toks[0].text.startswith(c_toks[0].text) or \
+                        c_toks[0].text.startswith(o_toks[0].text)) and \
+                        str_sim >= 0.66:
+                    return "MORPH"
+                # Spelling errors: exiting -> exciting, wether -> whether
+                if str_sim > 0.8:
+                    return "SPELL"
+                # Content word errors: learning -> studying, transport -> travel
+                if str_sim < 0.55 and c_pos[0] not in rare_pos:
+                    return c_pos[0]
+                # NOTE: Errors between 0.55 and 0.8 are a mix of SPELL, MORPH and POS
+        # Tricky cases
         else:
             return "OTHER"
 

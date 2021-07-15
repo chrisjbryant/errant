@@ -2,6 +2,32 @@
 
 This log describes all the changes made to ERRANT since its release.
 
+## v2.3.0 (15-07-021)
+
+1. Added some new rules to reduce the number of OTHER-type 1:1 edits and classify them as something else. Specifically, there are now ~40% fewer 1:1 OTHER edits and ~15% fewer n:n OTHER edits overall (tested on the FCE and W&I training sets combined). The changes are as follows:
+
+    * A possessive suffix at the start of a merge sequence is now always split:
+    
+    | Example | people life -> people 's lives                             |
+    |---------|------------------------------------------------------------|
+    | Old     |  _life_ -> _'s lives_ (R:OTHER)                            |
+    | New     |  _ε_ -> _'s_ (M:NOUN:POSS), _life_ -> _lives_ (R:NOUN:NUM) |
+    
+    * NUM <-> DET edits are now classified as R:DET; e.g. _one (cat)_ -> _a (cat)_. Thanks to [@katkorre](https://github.com/katkorre/ERRANT-reclassification)!
+    
+    * Changed the string similarity score in the classifier from the Levenshtein ratio to the normalised Levenshtein distance based on the length of the longest input string. This is because we felt some ratio scores were unintuitive; e.g. _smt_ -> _something_ has a ratio score of 0.5 despite the insertion of 6 characters (the new normalised score is 0.33).  
+    
+    * The non-word spelling error rules were updated slightly to take the new normalised Levenshtein score into account. Additionally, dissimilar strings are now classified based on the POS tag of the correction rather than as OTHER; e.g. _amougnht_ -> _number_ (R:NOUN).
+
+    * The new normalised Levenshtein score is also used to classify many of the remaining 1:1 replacement edits that were previously classified as OTHER. Many of these are real-word spelling errors (e.g. _their_ <-> _there_), but there are also some morphological errors (e.g. _health_ -> _healthy_) and POS-based errors (e.g. _transport_ -> _travel_). Note that these rules are a little complex and depend on both the similarity score and the length of the original and corrected strings. For example, _form_ -> _from_ (R:SPELL) and _eventually_ -> _finally_ (R:ADV) both have the same similarity score of 0.5 yet are differentiated as different error types based on their string lengths. 
+
+2. Various minor updates:  
+    * `out_m2` in `parallel_to_m2.py` and `m2_to_m2.py` is now opened and closed properly. [#20](https://github.com/chrisjbryant/errant/pull/20)
+    * Fixed a bracketing error that deleted a valid edit in rare circumstances. [#26](https://github.com/chrisjbryant/errant/issues/26) [#28](https://github.com/chrisjbryant/errant/issues/28)
+    * Updated the English wordlist.
+    * Minor changes to the readme.
+    * Tidied up some code comments.
+
 ## v2.2.3 (12-02-21)
 
 1. Changed the dependency version requirements in `setup.py` since ERRANT v2.2.x is not compatible with spaCy 3. 
@@ -27,13 +53,13 @@ Fixed key error in the classifier for rare spaCy 2 POS tags: _SP, BES, HVS.
 1. The character level cost in the sentence alignment function is now computed by the much faster [python-Levenshtein](https://pypi.org/project/python-Levenshtein/) library instead of python's native `difflib.SequenceMatcher`. This makes ERRANT 3x faster!
 
 2. Various minor updates:  
-* Updated the English wordlist.
-* Fixed a broken rule for classifying contraction errors.
-* Changed a condition in the calculation of transposition errors to be more intuitive.
-* Partially updated the ERRANT POS tag map to match the updated [Universal POS tag map](https://universaldependencies.org/tagset-conversion/en-penn-uposf.html). Specifically, EX now maps to PRON rather than ADV, LS maps to X rather than PUNCT, and CONJ has been renamed CCONJ. I did not change the mapping of RP from PART to ADP yet because this breaks several rules involving phrasal verbs.
-* Added an `errant.__version__` attribute.
-* Added a warning about using ERRANT with spaCy 2.
-* Tidied some code in the classifier.
+    * Updated the English wordlist.
+    * Fixed a broken rule for classifying contraction errors.
+    * Changed a condition in the calculation of transposition errors to be more intuitive.
+    * Partially updated the ERRANT POS tag map to match the updated [Universal POS tag map](https://universaldependencies.org/tagset-conversion/en-penn-uposf.html). Specifically, EX now maps to PRON rather than ADV, LS maps to X rather than PUNCT, and CONJ has been renamed CCONJ. I did not change the mapping of RP from PART to ADP yet because this breaks several rules involving phrasal verbs.
+    * Added an `errant.__version__` attribute.
+    * Added a warning about using ERRANT with spaCy 2.
+    * Tidied some code in the classifier.
 
 ## v2.0.0 (10-12-19)
 
