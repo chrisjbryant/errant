@@ -3,7 +3,7 @@ import spacy
 from errant.annotator import Annotator
 
 # ERRANT version
-__version__ = '2.3.0'
+__version__ = '2.3.1'
 
 # Load an ERRANT Annotator object for a given language
 def load(lang, nlp=None):

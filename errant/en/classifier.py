@@ -1,5 +1,5 @@
 from pathlib import Path
-import Levenshtein
+from rapidfuzz.distance import Levenshtein
 from errant.en.lancaster import LancasterStemmer
 import spacy
 import spacy.symbols as POS
@@ -214,8 +214,7 @@ def get_two_sided_type(o_toks, c_toks):
                 # Use string similarity to detect true spelling errors.
                 else:
                     # Normalised Lev distance works better than Lev ratio
-                    levdist = Levenshtein.distance(o_toks[0].lower_, c_toks[0].lower_)
-                    str_sim = 1-levdist/max(len(o_toks[0].lower_), len(c_toks[0].lower_))
+                    str_sim = 1-Levenshtein.normalized_distance(o_toks[0].lower_, c_toks[0].lower_)
                     # WARNING: THIS IS AN APPROXIMATION.
                     # Thresholds tuned manually on FCE_train + W&I_train
                     # str_sim > 0.55 is almost always a true spelling error
@@ -329,8 +328,7 @@ def get_two_sided_type(o_toks, c_toks):
         # These rules are quite language specific.
         if o_toks[0].text.isalpha() and c_toks[0].text.isalpha():
             # Normalised Lev distance works better than Lev ratio
-            levdist = Levenshtein.distance(o_toks[0].lower_, c_toks[0].lower_)
-            str_sim = 1-levdist/max(len(o_toks[0].lower_), len(c_toks[0].lower_))
+            str_sim = 1-Levenshtein.normalized_distance(o_toks[0].lower_, c_toks[0].lower_)
             # WARNING: THIS IS AN APPROXIMATION.
             # Thresholds tuned manually on FCE_train + W&I_train
             # A. Short sequences are likely to be SPELL or function word errors

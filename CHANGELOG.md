@@ -2,7 +2,11 @@
 
 This log describes all the changes made to ERRANT since its release.
 
-## v2.3.0 (15-07-021)
+## v2.3.1 (13-04-22)
+
+1. Replaced the dependency on [python-Levenshtein](https://pypi.org/project/python-Levenshtein/) with [rapidfuzz](https://pypi.org/project/rapidfuzz/) to overcome a licensing conflict. ERRANT and its dependencies now all use the MIT license. This change has a negligible effect on a tiny number of alignments. [#34](https://github.com/chrisjbryant/errant/issues/34)
+
+## v2.3.0 (15-07-21)
 
 1. Added some new rules to reduce the number of OTHER-type 1:1 edits and classify them as something else. Specifically, there are now ~40% fewer 1:1 OTHER edits and ~15% fewer n:n OTHER edits overall (tested on the FCE and W&I training sets combined). The changes are as follows:
 

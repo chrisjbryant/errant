@@ -1,5 +1,5 @@
 from itertools import groupby
-import Levenshtein
+from rapidfuzz import fuzz
 import spacy.parts_of_speech as POS
 from errant.edit import Edit
 
@@ -94,7 +94,7 @@ class Alignment:
         elif o.pos in self._open_pos and c.pos in self._open_pos: pos_cost = 0.25
         else: pos_cost = 0.5
         # Char cost
-        char_cost = 1-Levenshtein.ratio(o.text, c.text)
+        char_cost = 1-(fuzz.ratio(o.text, c.text)/100)
         # Combine the costs
         return lemma_cost + pos_cost + char_cost
 
