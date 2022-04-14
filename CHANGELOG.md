@@ -2,9 +2,14 @@
 
 This log describes all the changes made to ERRANT since its release.
 
+## v2.3.2 (14-04-22)
+
+1. Add more details to verbose ERRANT scoring. [#29](https://github.com/chrisjbryant/errant/pull/29)
+2. Simplified the new rapidfuzz functions. [#35](https://github.com/chrisjbryant/errant/pull/35)
+
 ## v2.3.1 (13-04-22)
 
-1. Replaced the dependency on [python-Levenshtein](https://pypi.org/project/python-Levenshtein/) with [rapidfuzz](https://pypi.org/project/rapidfuzz/) to overcome a licensing conflict. ERRANT and its dependencies now all use the MIT license. This change has a negligible effect on a tiny number of alignments. [#34](https://github.com/chrisjbryant/errant/issues/34)
+1. Replaced the dependency on [python-Levenshtein](https://pypi.org/project/python-Levenshtein/) with [rapidfuzz](https://pypi.org/project/rapidfuzz/) to overcome a licensing conflict. ERRANT and its dependencies now all use the MIT license. [#34](https://github.com/chrisjbryant/errant/issues/34)
 
 ## v2.3.0 (15-07-21)
 
