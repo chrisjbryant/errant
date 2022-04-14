@@ -1,7 +1,7 @@
 from itertools import combinations, groupby
 from re import sub
 from string import punctuation
-import Levenshtein
+from rapidfuzz.distance import Indel
 import spacy.symbols as POS
 from errant.edit import Edit
 
@@ -117,7 +117,7 @@ def is_punct(token):
 
 # Calculate the cost of character alignment; i.e. char similarity
 def char_cost(a, b):
-    return Levenshtein.ratio(a.text, b.text)
+    return 1-Indel.normalized_distance(a.text, b.text)
     
 # Merge the input alignment sequence to a single edit span
 def merge_edits(seq):

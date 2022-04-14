@@ -2,6 +2,10 @@
 
 This log describes all the changes made to ERRANT since its release.
 
+## v2.3.3 (14-04-22)
+
+1. Missed one case of changing Levenshtein to rapidfuzz... Now fixed.
+
 ## v2.3.2 (14-04-22)
 
 1. Add more details to verbose ERRANT scoring. [#29](https://github.com/chrisjbryant/errant/pull/29)
