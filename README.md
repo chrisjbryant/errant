@@ -38,7 +38,7 @@ pip3 install -U pip setuptools wheel
 pip3 install errant
 python3 -m spacy download en
 ```
-This will create and activate a new python3 environment called `errant_env` in the current directory. `pip` will then update some setup tools and install ERRANT, [spaCy](https://spacy.io/), [python-Levenshtein](https://pypi.org/project/python-Levenshtein/) and spaCy's default English model in this environment. You can deactivate the environment at any time by running `deactivate`, but must remember to activate it again whenever you want to use ERRANT.  
+This will create and activate a new python3 environment called `errant_env` in the current directory. `pip` will then update some setup tools and install ERRANT, [spaCy](https://spacy.io/), [rapidfuzz](https://pypi.org/project/rapidfuzz/) and spaCy's default English model in this environment. You can deactivate the environment at any time by running `deactivate`, but must remember to activate it again whenever you want to use ERRANT.  
 
 #### ERRANT and spaCy
 
