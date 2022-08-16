@@ -23,8 +23,7 @@ class Annotator:
             text = self.nlp(text)
         else:
             text = Doc(self.nlp.vocab, text.split())
-            self.nlp.tagger(text)
-            self.nlp.parser(text)
+            text = self.nlp(text)
         return text
 
     # Input 1: An original text string parsed by spacy
