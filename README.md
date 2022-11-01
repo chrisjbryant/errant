@@ -1,4 +1,4 @@
-# ERRANT v2.3.3
+# ERRANT v3.0.0
 
 This repository contains the grammatical ERRor ANnotation Toolkit (ERRANT) described in:
 
@@ -36,13 +36,13 @@ python3 -m venv errant_env
 source errant_env/bin/activate
 pip3 install -U pip setuptools wheel
 pip3 install errant
-python3 -m spacy download en
+python3 -m spacy download en_core_web_sm
 ```
 This will create and activate a new python3 environment called `errant_env` in the current directory. `pip` will then update some setup tools and install ERRANT, [spaCy](https://spacy.io/), [rapidfuzz](https://pypi.org/project/rapidfuzz/) and spaCy's default English model in this environment. You can deactivate the environment at any time by running `deactivate`, but must remember to activate it again whenever you want to use ERRANT.  
 
 #### ERRANT and spaCy
 
-ERRANT was originally designed to work with spaCy v1.9.0 and works best with this version. SpaCy v1.9.0 does not work with Python >= 3.7 however, and so we were forced to update ERRANT to be compatible with spaCy 2. Since spaCy 2 uses a neural system to trade speed for accuracy, this means ERRANT v2.2 is **~4x slower** than ERRANT v2.1. We have not yet extended ERRANT to work with spaCy 3, but preliminary tests suggest ERRANT will become even slower. 
+ERRANT was originally designed to work with spaCy v1.9.0 and works best with this version. SpaCy v1.9.0 does not work with Python >= 3.7 however, and so we were forced to update ERRANT to be compatible with spaCy 2. Since spaCy 2 uses a neural system to trade speed for accuracy, this means ERRANT v2.2 is **~4x slower** than ERRANT v2.1. The latest version of ERRANT also works with spaCy 3 though the speed has not yet been tested. 
 
 Consequently, we recommend ERRANT v2.1.0 if speed is a priority and you can use Python < 3.7.  
 ```
@@ -66,7 +66,7 @@ python3 -m venv errant_env
 source errant_env/bin/activate
 pip3 install -U pip setuptools wheel
 pip3 install -e .
-python3 -m spacy download en
+python3 -m spacy download en_core_web_sm
 ```
 This will clone the github ERRANT source into the current directory, build and activate a python environment inside it, and then install ERRANT and all its dependencies. If you wish to modify ERRANT code, this is the recommended way to install it.
 

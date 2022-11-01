@@ -2,6 +2,10 @@
 
 This log describes all the changes made to ERRANT since its release.
 
+## v3.0.0 (11-01-2022)
+
+1. ERRANT updated to work with spaCy 3.
+
 ## v2.3.3 (14-04-22)
 
 1. Missed one case of changing Levenshtein to rapidfuzz... Now fixed.
@@ -21,10 +25,10 @@ This log describes all the changes made to ERRANT since its release.
 
     * A possessive suffix at the start of a merge sequence is now always split:
     
-    | Example | people life -> people 's lives                             |
-    |---------|------------------------------------------------------------|
-    | Old     |  _life_ -> _'s lives_ (R:OTHER)                            |
-    | New     |  _ε_ -> _'s_ (M:NOUN:POSS), _life_ -> _lives_ (R:NOUN:NUM) |
+    | Example | people life -> people 's lives                            |
+    | ------- | --------------------------------------------------------- |
+    | Old     | _life_ -> _'s lives_ (R:OTHER)                            |
+    | New     | _ε_ -> _'s_ (M:NOUN:POSS), _life_ -> _lives_ (R:NOUN:NUM) |
     
     * NUM <-> DET edits are now classified as R:DET; e.g. _one (cat)_ -> _a (cat)_. Thanks to [@katkorre](https://github.com/katkorre/ERRANT-reclassification)!
     
@@ -99,7 +103,7 @@ This significantly increased the speed, but also slightly decreased performance 
 The differences between the old and new version are summarised in the following table.
 
 | Dataset      | Sents |    Setting |              P |              R |                 F1 |  Time<br>(secs) |
-|--------------|------:|-----------:|---------------:|---------------:|-------------------:|----------------:|
+| ------------ | ----: | ---------: | -------------: | -------------: | -----------------: | --------------: |
 | FCE Dev      |  2371 | Old<br>New | 82.77<br>84.00 | 85.22<br>85.52 | 83.98<br>**84.75** |   260<br>**40** |
 | FCE Test     |  2805 | Old<br>New | 83.88<br>85.17 | 85.84<br>85.93 | 84.85<br>**85.55** |   300<br>**45** |
 | FCE Train    | 30200 | Old<br>New | 82.69<br>84.06 | 85.12<br>85.38 | 83.89<br>**84.72** | 2965<br>**340** |
