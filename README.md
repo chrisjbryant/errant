@@ -105,7 +105,7 @@ As of v2.0.0, ERRANT now also comes with an API.
 ```
 import errant
 
-annotator = errant.load('en')
+annotator = errant.load('en_core_web_sm')
 orig = annotator.parse('This are gramamtical sentence .')
 cor = annotator.parse('This is a grammatical sentence .')
 edits = annotator.annotate(orig, cor)
@@ -122,7 +122,7 @@ Create an ERRANT Annotator object. The `lang` parameter currently only accepts `
 import errant
 import spacy
 
-nlp = spacy.load('en')
+nlp = spacy.load('en_core_web_sm') # Or en_core_web_X for other spacy models
 annotator = errant.load('en', nlp)
 ```
 
@@ -156,7 +156,7 @@ Run the full annotation pipeline to align two sequences and extract and classify
 ```
 import errant
 
-annotator = errant.load('en')
+annotator = errant.load('en_core_web_sm')
 orig = annotator.parse('This are gramamtical sentence .')
 cor = annotator.parse('This is a grammatical sentence .')
 alignment = annotator.align(orig, cor)
@@ -171,7 +171,7 @@ Load an Edit object from a list. `orig` and `cor` must be spacy-parsed Doc objec
 ```
 import errant
 
-annotator = errant.load('en')
+annotator = errant.load('en_core_web_sm')
 orig = annotator.parse('This are gramamtical sentence .')
 cor = annotator.parse('This is a grammatical sentence .')
 edit = [1, 2, 1, 2, 'SVA'] # are -> is
