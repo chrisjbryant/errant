@@ -2,6 +2,14 @@
 
 This log describes all the changes made to ERRANT since its release.
 
+## v3.0.0 (04-11-23)
+
+1. Finally updated ERRANT to support Spacy 3! 
+    * I specifically tested Spacy 3.2 - 3.7 and found a negligible difference in performance on the BEA19 dev set. 
+    * This update also comes with an unexpected 10-20% speed gain.
+
+2. Added a `.gitignore` file. [#39](https://github.com/chrisjbryant/errant/issues/39)
+
 ## v2.3.3 (14-04-22)
 
 1. Missed one case of changing Levenshtein to rapidfuzz... Now fixed.

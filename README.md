@@ -1,4 +1,4 @@
-# ERRANT v2.3.3
+# ERRANT v3.0.0
 
 This repository contains the grammatical ERRor ANnotation Toolkit (ERRANT) described in:
 
@@ -30,30 +30,21 @@ A "noop" edit is a special kind of edit that explicitly indicates an annotator/s
 
 ## Pip Install
 
-The easiest way to install ERRANT and its dependencies is using `pip`. We also recommend installing it in a clean virtual environment (e.g. with `venv`). The latest version of ERRANT only supports Python >= 3.6.
+The easiest way to install ERRANT and its dependencies is using `pip`. We also recommend installing it in a clean virtual environment (e.g. with `venv`). The latest version of ERRANT only supports Python >= 3.7.
 ```
 python3 -m venv errant_env
 source errant_env/bin/activate
-pip3 install -U pip setuptools wheel
-pip3 install errant
-python3 -m spacy download en
+pip install -U pip setuptools wheel
+pip install errant
+python3 -m spacy download en_core_web_sm
 ```
 This will create and activate a new python3 environment called `errant_env` in the current directory. `pip` will then update some setup tools and install ERRANT, [spaCy](https://spacy.io/), [rapidfuzz](https://pypi.org/project/rapidfuzz/) and spaCy's default English model in this environment. You can deactivate the environment at any time by running `deactivate`, but must remember to activate it again whenever you want to use ERRANT.  
 
-#### ERRANT and spaCy
-
-ERRANT was originally designed to work with spaCy v1.9.0 and works best with this version. SpaCy v1.9.0 does not work with Python >= 3.7 however, and so we were forced to update ERRANT to be compatible with spaCy 2. Since spaCy 2 uses a neural system to trade speed for accuracy, this means ERRANT v2.2 is **~4x slower** than ERRANT v2.1. We have not yet extended ERRANT to work with spaCy 3, but preliminary tests suggest ERRANT will become even slower. 
-
-Consequently, we recommend ERRANT v2.1.0 if speed is a priority and you can use Python < 3.7.  
-```
-pip3 install errant==2.1.0
-```
-
 #### BEA-2019 Shared Task
 
-ERRANT v2.0.0 was designed to be fully compatible with the [BEA-2019 Shared Task](https://www.cl.cam.ac.uk/research/nl/bea2019st/). If you want to directly compare against the results in the shared task, you should make sure to install ERRANT v2.0.0 as newer versions may produce slightly different scores. You can also use [Codalab](https://competitions.codalab.org/competitions/20228) to evaluate anonymously on the shared task datasets. ERRANT v2.0.0 is not compatible with Python >= 3.7.  
+ERRANT v2.0.0 was designed to be fully compatible with the [BEA-2019 Shared Task](https://www.cl.cam.ac.uk/research/nl/bea2019st/). If you want to directly compare against the results in the shared task, you may want to install ERRANT v2.0.0 as newer versions may produce slightly different scores. You can also use [Codalab](https://codalab.lisn.upsaclay.fr/competitions/4057) to evaluate anonymously on the shared task datasets. ERRANT v2.0.0 is not compatible with Python >= 3.7.  
 ```
-pip3 install errant==2.0.0
+pip install errant==2.0.0
 ```
 
 ## Source Install
@@ -64,9 +55,9 @@ git clone https://github.com/chrisjbryant/errant.git
 cd errant
 python3 -m venv errant_env
 source errant_env/bin/activate
-pip3 install -U pip setuptools wheel
-pip3 install -e .
-python3 -m spacy download en
+pip install -U pip setuptools wheel
+pip install -e .
+python3 -m spacy download en_core_web_sm
 ```
 This will clone the github ERRANT source into the current directory, build and activate a python environment inside it, and then install ERRANT and all its dependencies. If you wish to modify ERRANT code, this is the recommended way to install it.
 
