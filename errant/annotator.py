@@ -19,12 +19,11 @@ class Annotator:
     # Input 2: A flag for word tokenisation
     # Output: The input string parsed by spacy
     def parse(self, text, tokenise=False):
-        if tokenise:
-            text = self.nlp(text)
-        else:
+        # Create Doc object from pretokenised text
+        if not tokenise:
             text = Doc(self.nlp.vocab, text.split())
-            self.nlp.tagger(text)
-            self.nlp.parser(text)
+        # POS tag and parse
+        text = self.nlp(text)
         return text
 
     # Input 1: An original text string parsed by spacy

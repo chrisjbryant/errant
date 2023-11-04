@@ -10,7 +10,7 @@ with open(base_dir/"README.md") as f:
     
 setup(
     name = "errant",
-    version = "2.3.3",
+    version = "3.0.0",
     license = "MIT",
     description = "The ERRor ANnotation Toolkit (ERRANT). Automatically extract and classify edits in parallel sentences.",
     long_description = readme,
@@ -19,8 +19,8 @@ setup(
     author_email = "christopher.bryant@cl.cam.ac.uk",
     url = "https://github.com/chrisjbryant/errant",    
     keywords = ["automatic annotation", "grammatical errors", "natural language processing"],
-    python_requires = ">= 3.6",
-    install_requires = ["spacy>=2.2.0,<3", "rapidfuzz>=2.0.0"],
+    python_requires = ">= 3.7",
+    install_requires = ["spacy>=3.2.0,<4", "rapidfuzz>=3.4.0"],
     packages = find_packages(),    
     include_package_data=True,
     entry_points = {
@@ -35,10 +35,11 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
         "Operating System :: OS Independent",
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         "Topic :: Education",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Topic :: Scientific/Engineering :: Information Analysis",

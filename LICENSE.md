@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2017 Christopher Bryant, Mariano Felice
+Copyright (c) 2023 Christopher Bryant, Mariano Felice
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
