@@ -10,6 +10,8 @@ This log describes all the changes made to ERRANT since its release.
 
 2. Added a `.gitignore` file. [#39](https://github.com/chrisjbryant/errant/issues/39)
 
+3. Renamed `master` branch to `main`.
+
 ## v2.3.3 (14-04-22)
 
 1. Missed one case of changing Levenshtein to rapidfuzz... Now fixed.
