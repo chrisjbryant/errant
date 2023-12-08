@@ -8,6 +8,8 @@ This repository contains the grammatical ERRor ANnotation Toolkit (ERRANT) descr
 
 If you make use of this code, please cite the above papers. More information about ERRANT can be found [here](https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-938.html). In particular, see Chapter 5 for definitions of error types.
 
+_Update - 09/12/23_: You can now try out ERRANT in our [online demo](https://nlptoolbox.cl.cam.ac.uk/errant/)!
+
 # Overview
 
 The main aim of ERRANT is to automatically annotate parallel English sentences with error type information. Specifically, given an original and corrected sentence pair, ERRANT will extract the edits that transform the former to the latter and classify them according to a rule-based error type framework. This can be used to standardise parallel datasets or facilitate detailed error type evaluation. Annotated output files are in M2 format and an evaluation script is provided.
