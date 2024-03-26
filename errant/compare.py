@@ -21,7 +21,7 @@ def compare_from_raw(
     refs: List[List[str]],
     beta: float=0.5,
     cat: int=1,
-    detection: bool=False, # correction is default
+    mode='cs',
     single: bool=False,
     multi: bool=False,
     filt: List[str]=[],
@@ -41,7 +41,11 @@ def compare_from_raw(
             1: Only show operation tier scores; e.g. R.
             2: Only show main tier scores; e.g. NOUN.
             3: Show all category scores; e.g. R:NOUN.
-        detection: To calculate detection score.
+        mode:
+            'cs': Span-based correction
+            'cse': Span-based correction with error types
+            'ds': Span-based detection
+            'dt': Token-based detection
         single: Only evaluate single token edits; i.e. 0:1, 1:0 or 1:1
         mulit: Only evaluate multi token edits; i.e. 2+:n or n:2+
         filt: Do not evaluate the specified error types.
@@ -62,24 +66,6 @@ def compare_from_raw(
         orig, cor, refs
     )
     annotator = errant.load('en')
-    # parsed_s = []
-    # for s in orig:
-    #     s = annotator.parse(s)
-    #     parsed_s.append(s)
-    # # parsed_s = [annotator.parse(s) for s in sources]
-    # hyp_edits: List[List[Edit]] = []
-    # for i, h in enumerate(cor):
-    #     parsed_h = annotator.parse(h)
-    #     edits = annotator.annotate(parsed_s[i], parsed_h)
-    #     hyp_edits.append(edits)
-    # ref_edits: List[List[List[Edit]]] = []  # (num_refs, num_sents, num_edits)
-    # for ref in refs:
-    #     ref_ith_edits = []
-    #     for i, r in enumerate(ref):
-    #         parsed_r = annotator.parse(r)
-    #         edits = annotator.annotate(parsed_s[i], parsed_r)
-    #         ref_ith_edits.append(edits)
-    #     ref_edits.append(ref_ith_edits)
     # Parse each sentences
     orig = [annotator.parse(o) for o in orig]
     cor = [annotator.parse(c) for c in cor]
@@ -92,7 +78,7 @@ def compare_from_raw(
         ref_edits,
         beta=beta,
         cat=cat,
-        detection=detection,
+        mode=mode,
         single=single,
         multi=multi,
         filt=filt,
@@ -150,7 +136,7 @@ def can_update_best(
 def filter_edits(
     edits: List[List[Edit]],
     cat: int=1,
-    detection: bool=False, # correction is default
+    mode: str='cs',
     single: bool=False,
     multi: bool=False,
     filt: list=[],
@@ -162,30 +148,48 @@ def filter_edits(
     for edit in edits:
         l = []
         for e in edit:
-            # 'noop' edits are ignored
-            if e.o_start == -1:
-                continue
-            # Filtered error types are ignored
+            # Process error type filtering condition
             if e.type in filt:
                 continue
+            # Process single or multi condition
             if single and e.is_multi():
                 continue
             if multi and e.is_single():
                 continue 
-            if detection:
+            # Process detection or correction condition
+            if mode in ['dt', 'ds']:
                 # To ignore c_str in the detection scoring,
                 #   it is replaced with an empty string.
                 e.c_str = ''
             elif e.type in ['UNK']:
-                # UNK is treated for only detection
+                # UNK is ignored in correction scoring
                 continue
+            # Only dt treats noop edits.
+            if mode != 'dt' and e.o_start == -1:
+                continue
+
+            # Process the error type
+            if mode == 'cse':
+                e.c_str = e.c_str + e.type
             if cat == 1:
                 # e.g. 'M:NOUN:NUM' -> 'M'
-                e.type = e.type[0]
+                e.type = e.type[0] if e.type != 'UNK' else 'UNK'
             elif cat == 2:
                 # e.g. 'M:NOUN:NUM' -> 'NOUN:NUM'
-                e.type = e.type[2:]
-            l.append(e)
+                e.type = e.type[2:] if e.type != 'UNK' else 'UNK'
+
+            if mode == 'dt':
+                if e.o_start != -1 and e.o_start == e.o_end and e.o_start >= 0:
+                    e.o_end = e.o_start + 1
+                elif e.o_start != e.o_end:
+                    for tok_id in range(e.o_start, e.o_end):
+                        new_edit = copy.copy(e)
+                        new_edit.o_start = tok_id
+                        new_edit.o_end = tok_id + 1
+                        l.append(copy.copy(new_edit))
+                    e = None
+            if e is not None:
+                l.append(e)
         new_edits.append(l)
     return new_edits
     
@@ -235,7 +239,7 @@ def compare_from_edits(
     ref_edits: List[List[List[Edit]]],  # (num_annotations, num_sents, num_edts)
     beta: float=0.5,
     cat: int=1,
-    detection: bool=False, # correction is default
+    mode='cs',
     single: bool=False,
     multi: bool=False,
     filt: List[str]=[],
@@ -250,7 +254,7 @@ def compare_from_edits(
     '''
     filter_args = {
         'cat': cat,
-        'detection': detection,
+        'mode': mode,
         'single': single,
         'multi': multi,
         'filt': filt
