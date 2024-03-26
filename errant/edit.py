@@ -56,9 +56,6 @@ class Edit:
         return ", ".join([orig, cor, type])
     
     def __eq__(self, other):
-        # print(self.o_start == other.o_start)
-        # print(self.o_end == other.o_end)
-        # print(self.c_str == other.c_str)
         return isinstance(other, Edit) \
             and self.o_start == other.o_start \
             and self.o_end == other.o_end \
