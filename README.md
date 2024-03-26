@@ -189,7 +189,6 @@ It provides API-based errant_compare.
 ```py
 import errant
 import pprint
-annotator = errant.load('en')
 orig_raw = ['This are gramamtical sentence .']
 cor_raw = ['This is grammatical sentence .']
 # refs_raw: List[List[str]] = (num_annotation, num_sents)
@@ -197,7 +196,7 @@ refs_raw = [
     ['This is a grammatical sentence .'],
     ['These are grammatical sentences .']
 ]
-entire_score, etype_score = errant.compare_from_raw(
+overall_score, etype_score = errant.compare_from_raw(
     orig=orig_raw,
     cor=cor_raw,
     refs=refs_raw,
@@ -206,18 +205,18 @@ entire_score, etype_score = errant.compare_from_raw(
     single=False,
     multi=False,
     detection=False,
-    cat_filter=[]
+    filt=[]
 )
 
 print('=== etype score ===')
 pprint.pprint(etype_score, width=100)
-print('=== entire score ===')
-print(entire_score)
+print('=== overall score ===')
+print(overall_score)
 """
 === etype score ===
 {'M': {'f_0.5': 0.0, 'fn': 1, 'fp': 0, 'p': 1.0, 'r': 0.0, 'tp': 0},
  'R': {'f_0.5': 1.0, 'fn': 0, 'fp': 0, 'p': 1.0, 'r': 1.0, 'tp': 2}}
-=== entire score ===
+=== overall score ===
 {'tp': 2, 'fp': 0, 'fn': 1, 'p': 1.0, 'r': 0.6667, 'f_0.5': 0.9091}
 """
 ```
@@ -248,7 +247,7 @@ entire_score, etype_score = errant.compare_from_edits(
     single=False,
     multi=False,
     detection=False,
-    cat_filter=[]
+    filt=[]
 )
 
 print('=== etype score ===')
