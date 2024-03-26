@@ -54,3 +54,19 @@ class Edit:
         cor = "Cor: "+str([self.c_start, self.c_end, self.c_str])
         type = "Type: "+repr(self.type)
         return ", ".join([orig, cor, type])
+    
+    def __eq__(self, other):
+        return isinstance(other, Edit) \
+            and self.o_start == other.o_start \
+            and self.o_end == other.o_end \
+            and self.c_str == other.c_str \
+            # and self.type == other.type
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
+        
+    def is_single(self):
+        return max(len(self.o_str.split()), len(self.c_str.split())) <= 1
+    
+    def is_multi(self):
+        return not self.is_single()

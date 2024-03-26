@@ -1,13 +1,14 @@
 from importlib import import_module
 import spacy
 from errant.annotator import Annotator
+from errant.compare import compare_from_raw, compare_from_edits
 
 # ERRANT version
 __version__ = '3.0.0'
 
 # Load an ERRANT Annotator object for a given language
 def load(lang, nlp=None):
-    # Make sure the language is supported
+        # Make sure the language is supported
     supported = {"en"}
     if lang not in supported:
         raise Exception(f"{lang} is an unsupported or unknown language")

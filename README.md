@@ -181,6 +181,81 @@ edit = annotator.import_edit(orig, cor, edit)
 print(edit.to_m2())
 ```
 
+### API-based errant_compare
+
+It provides API-based errant_compare.
+
+- From raw text
+```py
+import errant
+import pprint
+orig_raw = ['This are gramamtical sentence .']
+cor_raw = ['This is grammatical sentence .']
+# refs_raw: List[List[str]] = (num_annotation, num_sents)
+refs_raw = [
+    ['This is a grammatical sentence .'],
+    ['These are grammatical sentences .']
+]
+overall_score, etype_score = errant.compare_from_raw(
+    orig=orig_raw,
+    cor=cor_raw,
+    refs=refs_raw,
+    beta=0.5,  # beta for F-score
+    cat=1,  # can be 1, 2, 3
+    single=False,
+    multi=False,
+    mode='cs',  # can be 'cs', 'ds', 'dt', 'cse'
+    filt=[]  # error type filtering
+)
+
+print('=== etype score ===')
+pprint.pprint(etype_score, width=100)
+print('=== overall score ===')
+print(overall_score)
+"""
+=== etype score ===
+{'M': {'f_0.5': 0.0, 'fn': 1, 'fp': 0, 'p': 1.0, 'r': 0.0, 'tp': 0},
+ 'R': {'f_0.5': 1.0, 'fn': 0, 'fp': 0, 'p': 1.0, 'r': 1.0, 'tp': 2}}
+=== overall score ===
+{'tp': 2, 'fp': 0, 'fn': 1, 'p': 1.0, 'r': 0.6667, 'f_0.5': 0.9091}
+"""
+```
+
+- From edits
+```py
+import errant
+import pprint
+annotator = errant.load('en')
+orig_raw = ['This are gramamtical sentence .']
+cor_raw = ['This is grammatical sentence .']
+# refs_raw: List[List[str]] = (num_annotation, num_sents)
+# This contains two annotations for one sentence
+refs_raw = [
+    ['This is a grammatical sentence .'],
+    ['These are grammatical sentences .']
+]
+orig = [annotator.parse(o) for o in orig_raw]
+cor = [annotator.parse(c) for c in cor_raw]
+refs = [[annotator.parse(r) for r in ref] for ref in refs_raw]
+hyp_edits = [annotator.annotate(o, c) for o, c in zip(orig, cor)]
+ref_edits = [[annotator.annotate(o, r) for o, r in zip(orig, ref)] for ref in refs]
+entire_score, etype_score = errant.compare_from_edits(
+    hyp_edits=hyp_edits,
+    ref_edits=ref_edits,
+    beta=0.5,
+    cat=1,
+    single=False,
+    multi=False,
+    mode='cs',
+    filt=[]
+)
+
+print('=== etype score ===')
+pprint.pprint(etype_score, width=100)
+print('=== entire score ===')
+print(entire_score)
+```
+
 ### Alignment Objects
 
 An Alignment object is created from two spacy-parsed text sequences.
