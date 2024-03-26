@@ -200,12 +200,12 @@ overall_score, etype_score = errant.compare_from_raw(
     orig=orig_raw,
     cor=cor_raw,
     refs=refs_raw,
-    beta=0.5,
-    cat=1,
+    beta=0.5,  # beta for F-score
+    cat=1,  # can be 1, 2, 3
     single=False,
     multi=False,
-    detection=False,
-    filt=[]
+    mode='cs',  # can be 'cs', 'ds', 'dt', 'cse'
+    filt=[]  # error type filtering
 )
 
 print('=== etype score ===')
@@ -246,7 +246,7 @@ entire_score, etype_score = errant.compare_from_edits(
     cat=1,
     single=False,
     multi=False,
-    detection=False,
+    mode='cs',
     filt=[]
 )
 
