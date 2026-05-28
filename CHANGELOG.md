@@ -2,6 +2,12 @@
 
 This log describes all the changes made to ERRANT since its release.
 
+## v3.0.1 (28-05-26)
+
+1. Fix regex warning in Lancaster stemmer code. [#55](https://github.com/chrisjbryant/errant/issues/55)
+
+2. Migrated from old `setup.py` installer to the current `pyproject.toml` standard.
+
 ## v3.0.0 (04-11-23)
 
 1. Finally updated ERRANT to support Spacy 3! 
