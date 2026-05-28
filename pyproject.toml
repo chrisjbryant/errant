@@ -1,0 +1,31 @@
+[project]
+name = "errant"
+version = "3.0.1"
+description = "The ERRor ANnotation Toolkit (ERRANT). Automatically extract and classify edits in parallel sentences."
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "Christopher Bryant", email = "christopher.bryant@cl.cam.ac.uk" },
+    { name = "Mariano Felice" },
+]
+keywords = ["automatic annotation", "grammatical errors", "natural language processing"]
+requires-python = ">=3.7"
+dependencies = [
+    "spacy>=3.2.0,<4",
+    "rapidfuzz>=3.4.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.urls]
+Homepage = "https://github.com/chrisjbryant/errant"
+
+[project.scripts]
+errant_compare = "errant.commands.compare_m2:main"
+errant_m2 = "errant.commands.m2_to_m2:main"
+errant_parallel = "errant.commands.parallel_to_m2:main"
+
+[tool.hatch.build.targets.wheel]
+include = ["errant"]
