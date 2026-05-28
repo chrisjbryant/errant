@@ -2,6 +2,12 @@
 
 This log describes all the changes made to ERRANT since its release.
 
+## v3.0.2 (28-05-26)
+
+1. Forgot to update `__version__`. 
+
+2. Deleted unneeded `MANIFEST.in` file after pyproject migration.
+
 ## v3.0.1 (28-05-26)
 
 1. Fix regex warning in Lancaster stemmer code. [#55](https://github.com/chrisjbryant/errant/issues/55)

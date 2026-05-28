@@ -1,4 +1,4 @@
-# ERRANT v3.0.1
+# ERRANT v3.0.2
 
 This repository contains the grammatical ERRor ANnotation Toolkit (ERRANT) described in:
 
