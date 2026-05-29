@@ -7,7 +7,7 @@ def main():
     args = parse_args()
     print("Loading resources...")
     # Load Errant
-    annotator = errant.load("en")
+    annotator = errant.load(args.lang)
 
     print("Processing parallel files...")
     # Process an arbitrary number of files line by line simultaneously. Python 3.3+
@@ -64,6 +64,13 @@ def parse_args():
         "-out", 
         help="The output filepath.",
         required=True)
+    parser.add_argument(
+        "-lang", 
+        help="The language you are working with, loads the appropriate spacy model.\n"
+            "en: English (default)\n"
+            "de: German",
+        choices=["en", "de"],
+        default="en")
     parser.add_argument(
         "-tok", 
         help="Word tokenise the text using spacy (default: False).",
