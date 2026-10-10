@@ -2,6 +2,11 @@
 
 This log describes all the changes made to ERRANT since its release.
 
+## Unreleased
+
+1. Preserve the final input block in `errant_m2` when no blank separator follows
+   it, and ignore repeated blank separators.
+
 ## v3.0.2 (28-05-26)
 
 1. Forgot to update `__version__`. 

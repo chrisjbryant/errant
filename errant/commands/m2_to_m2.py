@@ -1,5 +1,6 @@
 import argparse
 import errant
+from itertools import chain
 
 def main():
     # Parse command line args
@@ -14,12 +15,12 @@ def main():
         # Store the current m2_block here
         m2_block = []
         # Loop through m2 lines
-        for line in m2:
+        for line in chain(m2, ["\n"]):
             line = line.strip()
             # If the line isn't empty, add it to the m2_block
             if line: m2_block.append(line)
             # Otherwise, process the complete blocks
-            else:
+            elif m2_block:
                 # Write the original text to the output M2 file
                 out_m2.write(m2_block[0]+"\n")
                 # Parse orig with spacy
